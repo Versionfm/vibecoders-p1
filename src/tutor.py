@@ -8,7 +8,10 @@ from course_material import CourseMaterial, load_all_course_materials
 from prompts import ROUTER_PROMPT_VERSION, TUTOR_PROMPT_VERSION, fill, load_prompt
 
 OUT_OF_SCOPE = "OUT_OF_SCOPE"
-CITATION = re.compile(r"\[((?:GAIF|PEID|AITB|DTGS)-\d+\.\d+)\]")
+# A bracket holds one Section identifier or several separated by "," or ";". Any ID-shaped token in a bracket
+# (upper-case code, hyphen, numbers) counts as a citation, so malformed or unknown ones can be reported as invalid.
+BRACKET = re.compile(r"\[([^\[\]\n]{1,200})\]")
+CITATION_LIKE = re.compile(r"[A-Z]{2,}-\d+(?:\.\d+)*")
 ROUTER_TEMPERATURE = 0.0
 TUTOR_TEMPERATURE = 0.0
 
@@ -68,8 +71,7 @@ def answer_question(
         result.error = _model_failure("Course Tutor", error)
         return result
     result.citations = extract_citations(result.answer)
-    known_sections = {sid for m in materials.values() for sid in m.sections}
-    result.invalid_citations = [c for c in result.citations if c not in known_sections]
+    result.invalid_citations = [c for c in result.citations if c not in material.sections]
     result.is_refusal = is_refusal(result.answer, material.code)
     return result
 
@@ -79,11 +81,16 @@ class RouterReplyError(ValueError):
 
 
 def parse_router_reply(reply: str, courses: set[str]) -> tuple[str, str]:
-    """Strict: the reply must be a JSON object naming a known Course or OUT_OF_SCOPE. No default Course."""
+    """The reply must contain a JSON object naming a known Course or OUT_OF_SCOPE. No default Course.
+
+    A code fence or text around the object is tolerated: the first JSON object in the reply is used.
+    """
     try:
         route = json.loads(reply)
-    except json.JSONDecodeError as error:
-        raise RouterReplyError(f"Router reply is not valid JSON: {reply[:200]!r}") from error
+    except json.JSONDecodeError:
+        route = _first_json_object(reply)
+        if route is None:
+            raise RouterReplyError(f"Router reply is not valid JSON: {reply[:200]!r}") from None
     if not isinstance(route, dict):
         raise RouterReplyError(f"Router reply is not a JSON object: {reply[:200]!r}")
     course = route.get("course")
@@ -91,6 +98,20 @@ def parse_router_reply(reply: str, courses: set[str]) -> tuple[str, str]:
         raise RouterReplyError(f"Router returned an unknown Course: {course!r}")
     evidence = route.get("evidence")
     return course, evidence if isinstance(evidence, str) else ""
+
+
+def _first_json_object(text: str) -> dict | None:
+    decoder = json.JSONDecoder()
+    start = text.find("{")
+    while start != -1:
+        try:
+            value, _ = decoder.raw_decode(text, start)
+        except json.JSONDecodeError:
+            value = None
+        if isinstance(value, dict):
+            return value
+        start = text.find("{", start + 1)
+    return None
 
 
 def refusal_sentence(course: str) -> str:
@@ -102,7 +123,12 @@ def is_refusal(answer: str, course: str) -> bool:
 
 
 def extract_citations(answer: str) -> list[str]:
-    return list(dict.fromkeys(CITATION.findall(answer)))
+    found = []
+    for bracket in BRACKET.findall(answer):
+        for part in re.split(r"[,;]", bracket):
+            if CITATION_LIKE.fullmatch(part.strip()):
+                found.append(part.strip())
+    return list(dict.fromkeys(found))
 
 
 def _model_failure(step: str, error: Exception) -> str:

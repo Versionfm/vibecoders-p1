@@ -66,6 +66,18 @@ class CitationPatternTest(unittest.TestCase):
         result = self.answer_with("See GAIF-2.2 and (GAIF-2.1) and [GAIF 2.3] and [gaif-2.4].")
         self.assertEqual(result.citations, [])
 
+    def test_a_combined_bracket_cites_every_section_in_it(self):
+        for reply in ("Two facts [GAIF-2.2, GAIF-2.1].", "Two facts [GAIF-2.2; GAIF-2.1].", "[GAIF-2.2,GAIF-2.1]"):
+            with self.subTest(reply=reply):
+                result = self.answer_with(reply)
+                self.assertEqual(result.citations, ["GAIF-2.2", "GAIF-2.1"])
+                self.assertEqual(result.invalid_citations, [])
+
+    def test_ordinary_bracketed_prose_is_not_a_citation(self):
+        result = self.answer_with("Neurons fire [in simple terms] above a threshold [1] [GAIF-2.2].")
+        self.assertEqual(result.citations, ["GAIF-2.2"])
+        self.assertEqual(result.invalid_citations, [])
+
 
 if __name__ == "__main__":
     unittest.main()

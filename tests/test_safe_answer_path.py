@@ -64,6 +64,18 @@ class InvalidCitationTest(unittest.TestCase):
         self.assertEqual(result.invalid_citations, ["PEID-99.1", "PEID-2.99"])
         self.assertIsNone(result.error)
 
+    def test_malformed_or_unknown_code_identifiers_in_brackets_are_reported_as_invalid(self):
+        model = FakeChatModel([router_reply("PEID"), "Parts [PEID-2.3]. Chapter only [PEID-2]. Unknown [XYZ-1.1]."])
+        result = answer_question("What are the parts of a prompt?", model)
+        self.assertEqual(result.citations, ["PEID-2.3", "PEID-2", "XYZ-1.1"])
+        self.assertEqual(result.invalid_citations, ["PEID-2", "XYZ-1.1"])
+
+    def test_a_section_of_another_course_is_invalid_for_the_routed_course(self):
+        model = FakeChatModel([router_reply("PEID"), "Parts [PEID-2.3]. Tools [AITB-1.5]."])
+        result = answer_question("What are the parts of a prompt?", model)
+        self.assertEqual(result.citations, ["PEID-2.3", "AITB-1.5"])
+        self.assertEqual(result.invalid_citations, ["AITB-1.5"])
+
 
 class BrokenRouterReplyTest(unittest.TestCase):
     def test_malformed_or_unknown_router_reply_is_an_error_without_a_default_course(self):
@@ -85,6 +97,30 @@ class BrokenRouterReplyTest(unittest.TestCase):
                 self.assertIsNone(result.course)
                 self.assertEqual(result.answer, "")
                 self.assertEqual(len(model.calls), 1)
+
+
+class WrappedRouterReplyTest(unittest.TestCase):
+    def test_json_in_a_code_fence_or_surrounded_by_text_is_accepted(self):
+        payload = '{"course": "PEID", "evidence": "prompt"}'
+        for reply in (
+            f"```json\n{payload}\n```",
+            f"```\n{payload}\n```",
+            f"\n  {payload}  \n",
+            f"Here is my choice: {payload} Done.",
+        ):
+            with self.subTest(reply=reply):
+                model = FakeChatModel([reply, "A prompt has parts [PEID-2.3]."])
+                result = answer_question("What is a prompt?", model)
+                self.assertIsNone(result.error)
+                self.assertEqual(result.course, "PEID")
+                self.assertEqual(result.evidence, "prompt")
+
+    def test_a_wrapped_reply_with_an_unknown_course_is_still_an_error(self):
+        model = FakeChatModel(['```json\n{"course": "MATH", "evidence": "integral"}\n```', "unused"])
+        result = answer_question("What is an integral?", model)
+        self.assertIsNotNone(result.error)
+        self.assertIsNone(result.course)
+        self.assertEqual(len(model.calls), 1)
 
 
 class ModelFailureTest(unittest.TestCase):
