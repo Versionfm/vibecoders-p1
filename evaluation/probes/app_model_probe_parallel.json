@@ -1,0 +1,846 @@
+[
+ {
+  "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+  "router": [
+   {
+    "q": "How does a perceptron update its weights",
+    "expected": "GAIF",
+    "got": "GAIF",
+    "strict_json": true,
+    "secs": 1.0,
+    "toks": 17,
+    "err": null
+   },
+   {
+    "q": "Why does putting key instructions in the",
+    "expected": "PEID",
+    "got": "PEID",
+    "strict_json": true,
+    "secs": 0.8,
+    "toks": 28,
+    "err": null
+   },
+   {
+    "q": "How should I check the sources an AI res",
+    "expected": "AITB",
+    "got": "AITB",
+    "strict_json": true,
+    "secs": 0.9,
+    "toks": 24,
+    "err": null
+   },
+   {
+    "q": "What is the difference between pricing a",
+    "expected": "DTGS",
+    "got": "DTGS",
+    "strict_json": true,
+    "secs": 0.8,
+    "toks": 24,
+    "err": null
+   },
+   {
+    "q": "Is gradient descent with backpropagation",
+    "expected": "PEID",
+    "got": "PEID",
+    "strict_json": true,
+    "secs": 0.7,
+    "toks": 20,
+    "err": null
+   },
+   {
+    "q": "What is a good recipe for a vegetarian l",
+    "expected": "OUT_OF_SCOPE",
+    "got": "OUT_OF_SCOPE",
+    "strict_json": true,
+    "secs": 0.7,
+    "toks": 22,
+    "err": null
+   }
+  ],
+  "tutor": [
+   {
+    "course": "PEID",
+    "kind": "answer",
+    "secs": 7.3,
+    "toks": 75,
+    "err": null,
+    "refusal": false,
+    "cites": [],
+    "invalid": [],
+    "answer": "Context engineering is about curating the optimal set of tokens in the model's window at inference time, rather than writing instructions. The term was popularised in June 2025 when Shopify's CEO Tobi Lütke preferred it to \"prompt engineering\", followed by Andrej Karpathy and Simon Willison, and later Gartner and Anthropic."
+   },
+   {
+    "course": "DTGS",
+    "kind": "answer",
+    "secs": 3.9,
+    "toks": 62,
+    "err": null,
+    "refusal": false,
+    "cites": [],
+    "invalid": [],
+    "answer": "Published 2026 per-resolution rates in customer service differ about fourfold for nominally the same unit: roughly $0.50 at HubSpot, $0.99 at Fin, $1.50 at Zendesk and $2.00 at Salesforce Agentforce."
+   },
+   {
+    "course": "GAIF",
+    "kind": "refusal",
+    "secs": 1.5,
+    "toks": 11,
+    "err": null,
+    "refusal": true,
+    "cites": [],
+    "invalid": [],
+    "answer": "This is not covered in the GAIF material."
+   },
+   {
+    "course": "AITB",
+    "kind": "refusal",
+    "secs": 1.0,
+    "toks": 12,
+    "err": null,
+    "refusal": true,
+    "cites": [],
+    "invalid": [],
+    "answer": "This is not covered in the AITB material."
+   }
+  ]
+ },
+ {
+  "model": "nvidia/nemotron-3-super-120b-a12b",
+  "router": [
+   {
+    "q": "How does a perceptron update its weights",
+    "expected": "GAIF",
+    "got": "GAIF",
+    "strict_json": true,
+    "secs": 1.0,
+    "toks": 20,
+    "err": null
+   },
+   {
+    "q": "Why does putting key instructions in the",
+    "expected": "PEID",
+    "got": "PEID",
+    "strict_json": true,
+    "secs": 0.6,
+    "toks": 25,
+    "err": null
+   },
+   {
+    "q": "How should I check the sources an AI res",
+    "expected": "AITB",
+    "got": "AITB",
+    "strict_json": true,
+    "secs": 0.6,
+    "toks": 24,
+    "err": null
+   },
+   {
+    "q": "What is the difference between pricing a",
+    "expected": "DTGS",
+    "got": "DTGS",
+    "strict_json": true,
+    "secs": 6.7,
+    "toks": 16,
+    "err": null
+   },
+   {
+    "q": "Is gradient descent with backpropagation",
+    "expected": "PEID",
+    "got": "PEID",
+    "strict_json": true,
+    "secs": 0.6,
+    "toks": 20,
+    "err": null
+   },
+   {
+    "q": "What is a good recipe for a vegetarian l",
+    "expected": "OUT_OF_SCOPE",
+    "got": "OUT_OF_SCOPE",
+    "strict_json": true,
+    "secs": 0.7,
+    "toks": 28,
+    "err": null
+   }
+  ],
+  "tutor": [
+   {
+    "course": "PEID",
+    "kind": "answer",
+    "secs": 1.4,
+    "toks": 61,
+    "err": null,
+    "refusal": false,
+    "cites": [
+     "PEID-3.2"
+    ],
+    "invalid": [],
+    "answer": "Context engineering is about curating the optimal set of tokens in the window at inference time, and the term was popularised by Shopify's CEO Tobi Lütke, Andrej Karpathy, and Simon Willison in June 2025. [PEID-3.2]"
+   },
+   {
+    "course": "DTGS",
+    "kind": "answer",
+    "secs": 1.4,
+    "toks": 72,
+    "err": null,
+    "refusal": false,
+    "cites": [
+     "DTGS-3.15"
+    ],
+    "invalid": [],
+    "answer": "Published 2026 per-resolution rates in customer service differ about fourfold for nominally the same unit (roughly $0.50 at HubSpot, $0.99 at Fin, $1.50 at Zendesk and $2.00 at Salesforce Agentforce). [DTGS-3.15]"
+   },
+   {
+    "course": "GAIF",
+    "kind": "refusal",
+    "secs": 0.7,
+    "toks": 11,
+    "err": null,
+    "refusal": true,
+    "cites": [],
+    "invalid": [],
+    "answer": "This is not covered in the GAIF material."
+   },
+   {
+    "course": "AITB",
+    "kind": "refusal",
+    "secs": 1.2,
+    "toks": 12,
+    "err": null,
+    "refusal": true,
+    "cites": [],
+    "invalid": [],
+    "answer": "This is not covered in the AITB material."
+   }
+  ]
+ },
+ {
+  "model": "openai/gpt-oss-20b",
+  "router": [
+   {
+    "q": "How does a perceptron update its weights",
+    "expected": "GAIF",
+    "got": null,
+    "strict_json": false,
+    "secs": 90.2,
+    "toks": 0,
+    "err": "APITimeoutError: Request timed out."
+   },
+   {
+    "q": "Why does putting key instructions in the",
+    "expected": "PEID",
+    "got": "PEID",
+    "strict_json": true,
+    "secs": 87.1,
+    "toks": 45,
+    "err": null
+   },
+   {
+    "q": "How should I check the sources an AI res",
+    "expected": "AITB",
+    "got": "AITB",
+    "strict_json": true,
+    "secs": 24.8,
+    "toks": 83,
+    "err": null
+   },
+   {
+    "q": "What is the difference between pricing a",
+    "expected": "DTGS",
+    "got": null,
+    "strict_json": false,
+    "secs": 90.0,
+    "toks": 0,
+    "err": "APITimeoutError: Request timed out."
+   },
+   {
+    "q": "Is gradient descent with backpropagation",
+    "expected": "PEID",
+    "got": null,
+    "strict_json": false,
+    "secs": 90.1,
+    "toks": 0,
+    "err": "APITimeoutError: Request timed out."
+   },
+   {
+    "q": "What is a good recipe for a vegetarian l",
+    "expected": "OUT_OF_SCOPE",
+    "got": "OUT_OF_SCOPE",
+    "strict_json": true,
+    "secs": 19.5,
+    "toks": 44,
+    "err": null
+   }
+  ],
+  "tutor": [
+   {
+    "course": "PEID",
+    "kind": "answer",
+    "secs": 90.0,
+    "toks": 0,
+    "err": "APITimeoutError: Request timed out.",
+    "refusal": false,
+    "cites": [],
+    "invalid": [],
+    "answer": ""
+   },
+   {
+    "course": "DTGS",
+    "kind": "answer",
+    "secs": 90.1,
+    "toks": 0,
+    "err": "APITimeoutError: Request timed out.",
+    "refusal": false,
+    "cites": [],
+    "invalid": [],
+    "answer": ""
+   },
+   {
+    "course": "GAIF",
+    "kind": "refusal",
+    "secs": 22.5,
+    "toks": 234,
+    "err": null,
+    "refusal": false,
+    "cites": [],
+    "invalid": [],
+    "answer": "The perceptron’s net input is  \n\n\\[\ny_{\\text{in}} = 0.5 \\times 1 + (-0.3) \\times 1 = 0.2 .\n\\]\n\nWith a threshold of 0, the rule is: output +1 if \\(y_{\\text{in}} > 0\\) (otherwise –1).  \nSince \\(0.2 > 0\\), the perceptron outputs **+1**."
+   },
+   {
+    "course": "AITB",
+    "kind": "refusal",
+    "secs": 12.7,
+    "toks": 25,
+    "err": null,
+    "refusal": true,
+    "cites": [],
+    "invalid": [],
+    "answer": "This is not covered in the AITB material."
+   }
+  ]
+ },
+ {
+  "model": "google/gemma-4-31b-it",
+  "router": [
+   {
+    "q": "How does a perceptron update its weights",
+    "expected": "GAIF",
+    "got": "GAIF",
+    "strict_json": false,
+    "secs": 34.0,
+    "toks": 22,
+    "err": null
+   },
+   {
+    "q": "Why does putting key instructions in the",
+    "expected": "PEID",
+    "got": null,
+    "strict_json": false,
+    "secs": 90.0,
+    "toks": 0,
+    "err": "APITimeoutError: Request timed out."
+   },
+   {
+    "q": "How should I check the sources an AI res",
+    "expected": "AITB",
+    "got": null,
+    "strict_json": false,
+    "secs": 90.1,
+    "toks": 0,
+    "err": "APITimeoutError: Request timed out."
+   },
+   {
+    "q": "What is the difference between pricing a",
+    "expected": "DTGS",
+    "got": null,
+    "strict_json": false,
+    "secs": 90.1,
+    "toks": 0,
+    "err": "APITimeoutError: Request timed out."
+   },
+   {
+    "q": "Is gradient descent with backpropagation",
+    "expected": "PEID",
+    "got": null,
+    "strict_json": false,
+    "secs": 90.1,
+    "toks": 0,
+    "err": "APITimeoutError: Request timed out."
+   },
+   {
+    "q": "What is a good recipe for a vegetarian l",
+    "expected": "OUT_OF_SCOPE",
+    "got": null,
+    "strict_json": false,
+    "secs": 90.1,
+    "toks": 0,
+    "err": "APITimeoutError: Request timed out."
+   }
+  ],
+  "tutor": [
+   {
+    "course": "PEID",
+    "kind": "answer",
+    "secs": 90.1,
+    "toks": 0,
+    "err": "APITimeoutError: Request timed out.",
+    "refusal": false,
+    "cites": [],
+    "invalid": [],
+    "answer": ""
+   },
+   {
+    "course": "DTGS",
+    "kind": "answer",
+    "secs": 90.2,
+    "toks": 0,
+    "err": "APITimeoutError: Request timed out.",
+    "refusal": false,
+    "cites": [],
+    "invalid": [],
+    "answer": ""
+   },
+   {
+    "course": "GAIF",
+    "kind": "refusal",
+    "secs": 90.1,
+    "toks": 0,
+    "err": "APITimeoutError: Request timed out.",
+    "refusal": false,
+    "cites": [],
+    "invalid": [],
+    "answer": ""
+   },
+   {
+    "course": "AITB",
+    "kind": "refusal",
+    "secs": 90.1,
+    "toks": 0,
+    "err": "APITimeoutError: Request timed out.",
+    "refusal": false,
+    "cites": [],
+    "invalid": [],
+    "answer": ""
+   }
+  ]
+ },
+ {
+  "model": "z-ai/glm-5.3-flash",
+  "router": [
+   {
+    "q": "How does a perceptron update its weights",
+    "expected": "GAIF",
+    "got": "GAIF",
+    "strict_json": true,
+    "secs": 73.1,
+    "toks": 173,
+    "err": null
+   },
+   {
+    "q": "Why does putting key instructions in the",
+    "expected": "PEID",
+    "got": "PEID",
+    "strict_json": true,
+    "secs": 77.0,
+    "toks": 117,
+    "err": null
+   },
+   {
+    "q": "How should I check the sources an AI res",
+    "expected": "AITB",
+    "got": null,
+    "strict_json": false,
+    "secs": 90.0,
+    "toks": 0,
+    "err": "APITimeoutError: Request timed out."
+   },
+   {
+    "q": "What is the difference between pricing a",
+    "expected": "DTGS",
+    "got": null,
+    "strict_json": false,
+    "secs": 90.2,
+    "toks": 0,
+    "err": "APITimeoutError: Request timed out."
+   },
+   {
+    "q": "Is gradient descent with backpropagation",
+    "expected": "PEID",
+    "got": "PEID",
+    "strict_json": true,
+    "secs": 87.7,
+    "toks": 147,
+    "err": null
+   },
+   {
+    "q": "What is a good recipe for a vegetarian l",
+    "expected": "OUT_OF_SCOPE",
+    "got": null,
+    "strict_json": false,
+    "secs": 90.0,
+    "toks": 0,
+    "err": "APITimeoutError: Request timed out."
+   }
+  ],
+  "tutor": [
+   {
+    "course": "PEID",
+    "kind": "answer",
+    "secs": 90.1,
+    "toks": 0,
+    "err": "APITimeoutError: Request timed out.",
+    "refusal": false,
+    "cites": [],
+    "invalid": [],
+    "answer": ""
+   },
+   {
+    "course": "DTGS",
+    "kind": "answer",
+    "secs": 90.2,
+    "toks": 0,
+    "err": "APITimeoutError: Request timed out.",
+    "refusal": false,
+    "cites": [],
+    "invalid": [],
+    "answer": ""
+   },
+   {
+    "course": "GAIF",
+    "kind": "refusal",
+    "secs": 90.1,
+    "toks": 0,
+    "err": "APITimeoutError: Request timed out.",
+    "refusal": false,
+    "cites": [],
+    "invalid": [],
+    "answer": ""
+   },
+   {
+    "course": "AITB",
+    "kind": "refusal",
+    "secs": 87.1,
+    "toks": 120,
+    "err": null,
+    "refusal": true,
+    "cites": [],
+    "invalid": [],
+    "answer": "This is not covered in the AITB material."
+   }
+  ]
+ },
+ {
+  "model": "deepseek-ai/deepseek-v4.1-flash",
+  "router": [
+   {
+    "q": "How does a perceptron update its weights",
+    "expected": "GAIF",
+    "got": "GAIF",
+    "strict_json": true,
+    "secs": 81.8,
+    "toks": 21,
+    "err": null
+   },
+   {
+    "q": "Why does putting key instructions in the",
+    "expected": "PEID",
+    "got": "PEID",
+    "strict_json": true,
+    "secs": 82.9,
+    "toks": 22,
+    "err": null
+   },
+   {
+    "q": "How should I check the sources an AI res",
+    "expected": "AITB",
+    "got": null,
+    "strict_json": false,
+    "secs": 90.0,
+    "toks": 0,
+    "err": "APITimeoutError: Request timed out."
+   },
+   {
+    "q": "What is the difference between pricing a",
+    "expected": "DTGS",
+    "got": "DTGS",
+    "strict_json": true,
+    "secs": 79.7,
+    "toks": 23,
+    "err": null
+   },
+   {
+    "q": "Is gradient descent with backpropagation",
+    "expected": "PEID",
+    "got": null,
+    "strict_json": false,
+    "secs": 90.0,
+    "toks": 0,
+    "err": "APITimeoutError: Request timed out."
+   },
+   {
+    "q": "What is a good recipe for a vegetarian l",
+    "expected": "OUT_OF_SCOPE",
+    "got": null,
+    "strict_json": false,
+    "secs": 90.1,
+    "toks": 0,
+    "err": "APITimeoutError: Request timed out."
+   }
+  ],
+  "tutor": [
+   {
+    "course": "PEID",
+    "kind": "answer",
+    "secs": 90.1,
+    "toks": 0,
+    "err": "APITimeoutError: Request timed out.",
+    "refusal": false,
+    "cites": [],
+    "invalid": [],
+    "answer": ""
+   },
+   {
+    "course": "DTGS",
+    "kind": "answer",
+    "secs": 90.2,
+    "toks": 0,
+    "err": "APITimeoutError: Request timed out.",
+    "refusal": false,
+    "cites": [],
+    "invalid": [],
+    "answer": ""
+   },
+   {
+    "course": "GAIF",
+    "kind": "refusal",
+    "secs": 90.1,
+    "toks": 0,
+    "err": "APITimeoutError: Request timed out.",
+    "refusal": false,
+    "cites": [],
+    "invalid": [],
+    "answer": ""
+   },
+   {
+    "course": "AITB",
+    "kind": "refusal",
+    "secs": 90.1,
+    "toks": 0,
+    "err": "APITimeoutError: Request timed out.",
+    "refusal": false,
+    "cites": [],
+    "invalid": [],
+    "answer": ""
+   }
+  ]
+ },
+ {
+  "model": "mistralai/mistral-large-2-instruct",
+  "router": [
+   {
+    "q": "How does a perceptron update its weights",
+    "expected": "GAIF",
+    "got": null,
+    "strict_json": false,
+    "secs": 0.4,
+    "toks": 0,
+    "err": "NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '7fadd4de-e22a-48e4-90e9-f02ef14a74b9': Not "
+   },
+   {
+    "q": "Why does putting key instructions in the",
+    "expected": "PEID",
+    "got": null,
+    "strict_json": false,
+    "secs": 0.1,
+    "toks": 0,
+    "err": "NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '7fadd4de-e22a-48e4-90e9-f02ef14a74b9': Not "
+   },
+   {
+    "q": "How should I check the sources an AI res",
+    "expected": "AITB",
+    "got": null,
+    "strict_json": false,
+    "secs": 0.2,
+    "toks": 0,
+    "err": "NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '7fadd4de-e22a-48e4-90e9-f02ef14a74b9': Not "
+   },
+   {
+    "q": "What is the difference between pricing a",
+    "expected": "DTGS",
+    "got": null,
+    "strict_json": false,
+    "secs": 0.1,
+    "toks": 0,
+    "err": "NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '7fadd4de-e22a-48e4-90e9-f02ef14a74b9': Not "
+   },
+   {
+    "q": "Is gradient descent with backpropagation",
+    "expected": "PEID",
+    "got": null,
+    "strict_json": false,
+    "secs": 0.2,
+    "toks": 0,
+    "err": "NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '7fadd4de-e22a-48e4-90e9-f02ef14a74b9': Not "
+   },
+   {
+    "q": "What is a good recipe for a vegetarian l",
+    "expected": "OUT_OF_SCOPE",
+    "got": null,
+    "strict_json": false,
+    "secs": 0.1,
+    "toks": 0,
+    "err": "NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '7fadd4de-e22a-48e4-90e9-f02ef14a74b9': Not "
+   }
+  ],
+  "tutor": [
+   {
+    "course": "PEID",
+    "kind": "answer",
+    "secs": 0.2,
+    "toks": 0,
+    "err": "NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '7fadd4de-e22a-48e4-90e9-f02ef14a74b9': Not ",
+    "refusal": false,
+    "cites": [],
+    "invalid": [],
+    "answer": ""
+   },
+   {
+    "course": "DTGS",
+    "kind": "answer",
+    "secs": 0.2,
+    "toks": 0,
+    "err": "NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '7fadd4de-e22a-48e4-90e9-f02ef14a74b9': Not ",
+    "refusal": false,
+    "cites": [],
+    "invalid": [],
+    "answer": ""
+   },
+   {
+    "course": "GAIF",
+    "kind": "refusal",
+    "secs": 0.2,
+    "toks": 0,
+    "err": "NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '7fadd4de-e22a-48e4-90e9-f02ef14a74b9': Not ",
+    "refusal": false,
+    "cites": [],
+    "invalid": [],
+    "answer": ""
+   },
+   {
+    "course": "AITB",
+    "kind": "refusal",
+    "secs": 0.2,
+    "toks": 0,
+    "err": "NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '7fadd4de-e22a-48e4-90e9-f02ef14a74b9': Not ",
+    "refusal": false,
+    "cites": [],
+    "invalid": [],
+    "answer": ""
+   }
+  ]
+ },
+ {
+  "model": "moonshotai/kimi-k2.6",
+  "router": [
+   {
+    "q": "How does a perceptron update its weights",
+    "expected": "GAIF",
+    "got": null,
+    "strict_json": false,
+    "secs": 0.5,
+    "toks": 0,
+    "err": "NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '23d4f03a-b8a6-4adb-a183-7daa083a09cc': Not "
+   },
+   {
+    "q": "Why does putting key instructions in the",
+    "expected": "PEID",
+    "got": null,
+    "strict_json": false,
+    "secs": 0.1,
+    "toks": 0,
+    "err": "NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '23d4f03a-b8a6-4adb-a183-7daa083a09cc': Not "
+   },
+   {
+    "q": "How should I check the sources an AI res",
+    "expected": "AITB",
+    "got": null,
+    "strict_json": false,
+    "secs": 0.2,
+    "toks": 0,
+    "err": "NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '23d4f03a-b8a6-4adb-a183-7daa083a09cc': Not "
+   },
+   {
+    "q": "What is the difference between pricing a",
+    "expected": "DTGS",
+    "got": null,
+    "strict_json": false,
+    "secs": 0.2,
+    "toks": 0,
+    "err": "NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '23d4f03a-b8a6-4adb-a183-7daa083a09cc': Not "
+   },
+   {
+    "q": "Is gradient descent with backpropagation",
+    "expected": "PEID",
+    "got": null,
+    "strict_json": false,
+    "secs": 0.1,
+    "toks": 0,
+    "err": "NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '23d4f03a-b8a6-4adb-a183-7daa083a09cc': Not "
+   },
+   {
+    "q": "What is a good recipe for a vegetarian l",
+    "expected": "OUT_OF_SCOPE",
+    "got": null,
+    "strict_json": false,
+    "secs": 0.1,
+    "toks": 0,
+    "err": "NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '23d4f03a-b8a6-4adb-a183-7daa083a09cc': Not "
+   }
+  ],
+  "tutor": [
+   {
+    "course": "PEID",
+    "kind": "answer",
+    "secs": 0.2,
+    "toks": 0,
+    "err": "NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '23d4f03a-b8a6-4adb-a183-7daa083a09cc': Not ",
+    "refusal": false,
+    "cites": [],
+    "invalid": [],
+    "answer": ""
+   },
+   {
+    "course": "DTGS",
+    "kind": "answer",
+    "secs": 0.3,
+    "toks": 0,
+    "err": "NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '23d4f03a-b8a6-4adb-a183-7daa083a09cc': Not ",
+    "refusal": false,
+    "cites": [],
+    "invalid": [],
+    "answer": ""
+   },
+   {
+    "course": "GAIF",
+    "kind": "refusal",
+    "secs": 0.2,
+    "toks": 0,
+    "err": "NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '23d4f03a-b8a6-4adb-a183-7daa083a09cc': Not ",
+    "refusal": false,
+    "cites": [],
+    "invalid": [],
+    "answer": ""
+   },
+   {
+    "course": "AITB",
+    "kind": "refusal",
+    "secs": 0.2,
+    "toks": 0,
+    "err": "NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '23d4f03a-b8a6-4adb-a183-7daa083a09cc': Not ",
+    "refusal": false,
+    "cites": [],
+    "invalid": [],
+    "answer": ""
+   }
+  ]
+ }
+]

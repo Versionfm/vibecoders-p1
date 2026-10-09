@@ -56,7 +56,7 @@ class LlmSettingsTest(unittest.TestCase):
     def test_defaults_point_to_the_nvidia_endpoint_and_app_model(self):
         settings = load_settings({"LLM_API_KEY": "test-key"})
         self.assertEqual(settings.base_url, "https://integrate.api.nvidia.com/v1")
-        self.assertEqual(settings.app_model, "nvidia/nemotron-3.5-lightning-30b-a3b")
+        self.assertEqual(settings.app_model, "nvidia/nemotron-3-super-120b-a12b")
         self.assertEqual(settings.api_key, "test-key")
 
     def test_every_setting_comes_from_the_environment(self):
@@ -75,7 +75,7 @@ class LlmSettingsTest(unittest.TestCase):
     def test_empty_values_fall_back_to_defaults(self):
         settings = load_settings({"LLM_API_KEY": "k", "LLM_BASE_URL": "", "LLM_MODEL": ""})
         self.assertEqual(settings.base_url, "https://integrate.api.nvidia.com/v1")
-        self.assertEqual(settings.app_model, "nvidia/nemotron-3.5-lightning-30b-a3b")
+        self.assertEqual(settings.app_model, "nvidia/nemotron-3-super-120b-a12b")
 
     def test_thinking_is_off_unless_switched_on(self):
         self.assertFalse(load_settings({"LLM_API_KEY": "k"}).thinking)

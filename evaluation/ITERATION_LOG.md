@@ -58,3 +58,23 @@ Copy this block for each entry:
 - **Decision:** pending (off is the default for latency).
 - **Reason:** thinking on made the screen slow and long evaluations prone to timeouts. Run the Golden Set with
   `LLM_THINKING=off` and `LLM_THINKING=on` and compare routing, citation and Refusal metrics before deciding.
+
+## 2026-10-09 App model: nemotron-3.5-lightning -> nemotron-3-super-120b-a12b (model probe)
+
+- **Change:** default app model (Router and Course Tutor) changed from `nvidia/nemotron-3.5-lightning-30b-a3b` to
+  `nvidia/nemotron-3-super-120b-a12b`, thinking off.
+- **Configuration:** Router `router_v1`, Course Tutor `tutor_v2`, thinking off, no judge. Probe script
+  `evaluation/probes/app_model_probe.py`: 6 Router questions (one per class plus a GAIF/PEID near-miss) and 4 Course
+  Tutor questions (two answers, one exercise Refusal, one off-topic Refusal). Throwaway questions, not the Golden Set.
+- **Run folder:** `evaluation/probes/app_model_probe_parallel.json` (8 models at once) and
+  `evaluation/probes/app_model_probe_sequential.json` (4 models one at a time).
+- **Result:** Super: routing 6/6 and valid JSON 6/6 in both probes; both answers cited the right Section
+  (PEID-3.2, DTGS-3.15); both Refusals exact; about 1 s per call. Lightning: both answers had **no citation at all**
+  in both probes, and one Router reply was not valid JSON (5/6). GLM-5.3: same quality as Super but 9-23 s per call.
+  Nemotron Ultra: 503 overloaded on half the calls. gpt-oss-20b, gemma-4-31b-it, glm-5.3-flash,
+  deepseek-v4.1-flash and kimi-k3 timed out (60-150 s) at probe time; mistral-large-2-instruct and kimi-k2.6 return
+  404 (listed but not deployed).
+- **Decision:** kept.
+- **Reason:** an answer without citations fails End-to-end Success by definition, and Super is as fast as Lightning
+  with thinking off. Tiny probe, not a score: confirm on the Golden Set baseline. Note for ticket #7: `z-ai/glm-5.3`
+  answered reliably and is not a Nemotron model, so it is a judge candidate.

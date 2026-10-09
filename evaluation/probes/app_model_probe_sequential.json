@@ -1,0 +1,430 @@
+[
+ {
+  "model": "nvidia/nemotron-3-super-120b-a12b",
+  "router": [
+   {
+    "q": "How does a perceptron update its weights",
+    "expected": "GAIF",
+    "got": "GAIF",
+    "strict_json": true,
+    "secs": 0.8,
+    "toks": 17,
+    "err": null
+   },
+   {
+    "q": "Why does putting key instructions in the",
+    "expected": "PEID",
+    "got": "PEID",
+    "strict_json": true,
+    "secs": 0.9,
+    "toks": 25,
+    "err": null
+   },
+   {
+    "q": "How should I check the sources an AI res",
+    "expected": "AITB",
+    "got": "AITB",
+    "strict_json": true,
+    "secs": 0.7,
+    "toks": 24,
+    "err": null
+   },
+   {
+    "q": "What is the difference between pricing a",
+    "expected": "DTGS",
+    "got": "DTGS",
+    "strict_json": true,
+    "secs": 0.6,
+    "toks": 16,
+    "err": null
+   },
+   {
+    "q": "Is gradient descent with backpropagation",
+    "expected": "PEID",
+    "got": "PEID",
+    "strict_json": true,
+    "secs": 0.8,
+    "toks": 20,
+    "err": null
+   },
+   {
+    "q": "What is a good recipe for a vegetarian l",
+    "expected": "OUT_OF_SCOPE",
+    "got": "OUT_OF_SCOPE",
+    "strict_json": true,
+    "secs": 0.7,
+    "toks": 28,
+    "err": null
+   }
+  ],
+  "tutor": [
+   {
+    "course": "PEID",
+    "kind": "answer",
+    "secs": 3.0,
+    "toks": 61,
+    "err": null,
+    "refusal": false,
+    "cites": [
+     "PEID-3.2"
+    ],
+    "invalid": [],
+    "answer": "Context engineering is about curating the optimal set of tokens in the window at inference time, and the term was popularised by Shopify's CEO Tobi Lütke, Andrej Karpathy, and Simon Willison in June 2025. [PEID-3.2]"
+   },
+   {
+    "course": "DTGS",
+    "kind": "answer",
+    "secs": 1.1,
+    "toks": 72,
+    "err": null,
+    "refusal": false,
+    "cites": [
+     "DTGS-3.15"
+    ],
+    "invalid": [],
+    "answer": "Published 2026 per-resolution rates in customer service differ about fourfold for nominally the same unit (roughly $0.50 at HubSpot, $0.99 at Fin, $1.50 at Zendesk and $2.00 at Salesforce Agentforce). [DTGS-3.15]"
+   },
+   {
+    "course": "GAIF",
+    "kind": "refusal",
+    "secs": 0.6,
+    "toks": 11,
+    "err": null,
+    "refusal": true,
+    "cites": [],
+    "invalid": [],
+    "answer": "This is not covered in the GAIF material."
+   },
+   {
+    "course": "AITB",
+    "kind": "refusal",
+    "secs": 0.8,
+    "toks": 12,
+    "err": null,
+    "refusal": true,
+    "cites": [],
+    "invalid": [],
+    "answer": "This is not covered in the AITB material."
+   }
+  ]
+ },
+ {
+  "model": "nvidia/nemotron-3-ultra-550b-a55b",
+  "router": [
+   {
+    "q": "How does a perceptron update its weights",
+    "expected": "GAIF",
+    "got": null,
+    "strict_json": false,
+    "secs": 0.3,
+    "toks": 0,
+    "err": "InternalServerError: Error code: 503 - {'error': {'message': 'Service temporarily overloaded', 'type': 'Service Unavailable', 'code': 503}}"
+   },
+   {
+    "q": "Why does putting key instructions in the",
+    "expected": "PEID",
+    "got": "PEID",
+    "strict_json": true,
+    "secs": 1.0,
+    "toks": 27,
+    "err": null
+   },
+   {
+    "q": "How should I check the sources an AI res",
+    "expected": "AITB",
+    "got": "AITB",
+    "strict_json": true,
+    "secs": 3.0,
+    "toks": 31,
+    "err": null
+   },
+   {
+    "q": "What is the difference between pricing a",
+    "expected": "DTGS",
+    "got": "DTGS",
+    "strict_json": true,
+    "secs": 1.6,
+    "toks": 24,
+    "err": null
+   },
+   {
+    "q": "Is gradient descent with backpropagation",
+    "expected": "PEID",
+    "got": null,
+    "strict_json": false,
+    "secs": 0.3,
+    "toks": 0,
+    "err": "InternalServerError: Error code: 503 - {'error': {'message': 'Service temporarily overloaded', 'type': 'Service Unavailable', 'code': 503}}"
+   },
+   {
+    "q": "What is a good recipe for a vegetarian l",
+    "expected": "OUT_OF_SCOPE",
+    "got": null,
+    "strict_json": false,
+    "secs": 0.3,
+    "toks": 0,
+    "err": "InternalServerError: Error code: 503 - {'error': {'message': 'Service temporarily overloaded', 'type': 'Service Unavailable', 'code': 503}}"
+   }
+  ],
+  "tutor": [
+   {
+    "course": "PEID",
+    "kind": "answer",
+    "secs": 0.6,
+    "toks": 0,
+    "err": "InternalServerError: Error code: 503 - {'error': {'message': 'Service temporarily overloaded', 'type': 'Service Unavailable', 'code': 503}}",
+    "refusal": false,
+    "cites": [],
+    "invalid": [],
+    "answer": ""
+   },
+   {
+    "course": "DTGS",
+    "kind": "answer",
+    "secs": 0.9,
+    "toks": 0,
+    "err": "InternalServerError: Error code: 503 - {'error': {'message': 'Service temporarily overloaded', 'type': 'Service Unavailable', 'code': 503}}",
+    "refusal": false,
+    "cites": [],
+    "invalid": [],
+    "answer": ""
+   },
+   {
+    "course": "GAIF",
+    "kind": "refusal",
+    "secs": 1.7,
+    "toks": 11,
+    "err": null,
+    "refusal": true,
+    "cites": [],
+    "invalid": [],
+    "answer": "This is not covered in the GAIF material."
+   },
+   {
+    "course": "AITB",
+    "kind": "refusal",
+    "secs": 1.6,
+    "toks": 12,
+    "err": null,
+    "refusal": true,
+    "cites": [],
+    "invalid": [],
+    "answer": "This is not covered in the AITB material."
+   }
+  ]
+ },
+ {
+  "model": "z-ai/glm-5.3",
+  "router": [
+   {
+    "q": "How does a perceptron update its weights",
+    "expected": "GAIF",
+    "got": "GAIF",
+    "strict_json": true,
+    "secs": 7.5,
+    "toks": 172,
+    "err": null
+   },
+   {
+    "q": "Why does putting key instructions in the",
+    "expected": "PEID",
+    "got": "PEID",
+    "strict_json": true,
+    "secs": 9.0,
+    "toks": 114,
+    "err": null
+   },
+   {
+    "q": "How should I check the sources an AI res",
+    "expected": "AITB",
+    "got": "AITB",
+    "strict_json": true,
+    "secs": 18.8,
+    "toks": 202,
+    "err": null
+   },
+   {
+    "q": "What is the difference between pricing a",
+    "expected": "DTGS",
+    "got": "DTGS",
+    "strict_json": true,
+    "secs": 6.5,
+    "toks": 105,
+    "err": null
+   },
+   {
+    "q": "Is gradient descent with backpropagation",
+    "expected": "PEID",
+    "got": "PEID",
+    "strict_json": true,
+    "secs": 9.9,
+    "toks": 366,
+    "err": null
+   },
+   {
+    "q": "What is a good recipe for a vegetarian l",
+    "expected": "OUT_OF_SCOPE",
+    "got": "OUT_OF_SCOPE",
+    "strict_json": true,
+    "secs": 3.4,
+    "toks": 97,
+    "err": null
+   }
+  ],
+  "tutor": [
+   {
+    "course": "PEID",
+    "kind": "answer",
+    "secs": 10.2,
+    "toks": 495,
+    "err": null,
+    "refusal": false,
+    "cites": [
+     "PEID-3.2"
+    ],
+    "invalid": [],
+    "answer": "Context engineering is about curating the optimal set of tokens in the model's context window at inference time, whereas prompt engineering is about writing and organising instructions — prompt engineering is one row inside context engineering [PEID-3.2]. The unit of work grows from the string you type to everything in the window, it is re-decided every turn by the application, and the typical failure becomes \"the model lacks the fact or drowns in facts\" rather than \"the model misunderstood\" [PEID-3.2].\n\nThe term spread within days in June 2025: Shopify's CEO Tobi Lütke said he preferred it to"
+   },
+   {
+    "course": "DTGS",
+    "kind": "answer",
+    "secs": 22.9,
+    "toks": 461,
+    "err": null,
+    "refusal": false,
+    "cites": [
+     "DTGS-3.15"
+    ],
+    "invalid": [],
+    "answer": "Published 2026 per-resolution rates in customer service differ about fourfold for nominally the same unit: roughly $0.50 at HubSpot, $0.99 at Fin, $1.50 at Zendesk and $2.00 at Salesforce Agentforce [DTGS-3.15]. HubSpot also cut its price from $1.00 per conversation to $0.50 per resolved conversation in April 2026, while Sierra built its whole business on pure outcome pricing and 11x charges per booked meeting rather than per seat [DTGS-3.15].\n\nThe key caveat is that the rates are not directly comparable, because the definition of the billable unit is the whole bill: one vendor's \"resolution\" "
+   },
+   {
+    "course": "GAIF",
+    "kind": "refusal",
+    "secs": 2.9,
+    "toks": 90,
+    "err": null,
+    "refusal": true,
+    "cites": [],
+    "invalid": [],
+    "answer": "This is not covered in the GAIF material."
+   },
+   {
+    "course": "AITB",
+    "kind": "refusal",
+    "secs": 4.0,
+    "toks": 116,
+    "err": null,
+    "refusal": true,
+    "cites": [],
+    "invalid": [],
+    "answer": "This is not covered in the AITB material."
+   }
+  ]
+ },
+ {
+  "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+  "router": [
+   {
+    "q": "How does a perceptron update its weights",
+    "expected": "GAIF",
+    "got": "GAIF",
+    "strict_json": true,
+    "secs": 2.2,
+    "toks": 27,
+    "err": null
+   },
+   {
+    "q": "Why does putting key instructions in the",
+    "expected": "PEID",
+    "got": "PEID",
+    "strict_json": true,
+    "secs": 5.6,
+    "toks": 25,
+    "err": null
+   },
+   {
+    "q": "How should I check the sources an AI res",
+    "expected": "AITB",
+    "got": null,
+    "strict_json": false,
+    "secs": 10.4,
+    "toks": 27,
+    "err": null
+   },
+   {
+    "q": "What is the difference between pricing a",
+    "expected": "DTGS",
+    "got": "DTGS",
+    "strict_json": true,
+    "secs": 1.9,
+    "toks": 24,
+    "err": null
+   },
+   {
+    "q": "Is gradient descent with backpropagation",
+    "expected": "PEID",
+    "got": "PEID",
+    "strict_json": true,
+    "secs": 0.6,
+    "toks": 20,
+    "err": null
+   },
+   {
+    "q": "What is a good recipe for a vegetarian l",
+    "expected": "OUT_OF_SCOPE",
+    "got": "OUT_OF_SCOPE",
+    "strict_json": true,
+    "secs": 0.9,
+    "toks": 22,
+    "err": null
+   }
+  ],
+  "tutor": [
+   {
+    "course": "PEID",
+    "kind": "answer",
+    "secs": 2.6,
+    "toks": 75,
+    "err": null,
+    "refusal": false,
+    "cites": [],
+    "invalid": [],
+    "answer": "Context engineering is about curating the optimal set of tokens in the model's window at inference time, rather than writing instructions. The term was popularised in June 2025 when Shopify's CEO Tobi Lütke preferred it to \"prompt engineering\", followed by Andrej Karpathy and Simon Willison, and later Gartner and Anthropic."
+   },
+   {
+    "course": "DTGS",
+    "kind": "answer",
+    "secs": 3.0,
+    "toks": 62,
+    "err": null,
+    "refusal": false,
+    "cites": [],
+    "invalid": [],
+    "answer": "Published 2026 per-resolution rates in customer service differ about fourfold for nominally the same unit: roughly $0.50 at HubSpot, $0.99 at Fin, $1.50 at Zendesk and $2.00 at Salesforce Agentforce."
+   },
+   {
+    "course": "GAIF",
+    "kind": "refusal",
+    "secs": 0.5,
+    "toks": 11,
+    "err": null,
+    "refusal": true,
+    "cites": [],
+    "invalid": [],
+    "answer": "This is not covered in the GAIF material."
+   },
+   {
+    "course": "AITB",
+    "kind": "refusal",
+    "secs": 0.7,
+    "toks": 12,
+    "err": null,
+    "refusal": true,
+    "cites": [],
+    "invalid": [],
+    "answer": "This is not covered in the AITB material."
+   }
+  ]
+ }
+]

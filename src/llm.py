@@ -4,7 +4,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 
 DEFAULT_BASE_URL = "https://integrate.api.nvidia.com/v1"
-DEFAULT_APP_MODEL = "nvidia/nemotron-3.5-lightning-30b-a3b"
+DEFAULT_APP_MODEL = "nvidia/nemotron-3-super-120b-a12b"
 DEFAULT_JUDGE_MODEL = ""  # chosen later by a probe; must not be a Nemotron model
 
 # A hung service raises a timeout, which the tutor turns into an error result. With one retry the worst case for
