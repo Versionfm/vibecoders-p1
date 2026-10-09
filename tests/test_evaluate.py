@@ -99,6 +99,43 @@ class EvaluationCommandTest(unittest.TestCase):
         self.assertIn("TimeoutError", failed["error"])
         self.assertAlmostEqual(run["metrics"]["Routing accuracy"], 5 / 6)
 
+    def test_an_interrupted_evaluation_keeps_the_runs_that_finished(self):
+        script = well_behaved_script()
+        # SAMPLE-01 is interrupted in its second run (KeyboardInterrupt is not a model failure, it stops the command)
+        script[QUESTIONS["SAMPLE-01"]] = [
+            route("PEID"), "Models predict plausible tokens [PEID-1.9].", KeyboardInterrupt(),
+        ]
+        model = QuestionScriptedModel(script, name="fake/app-model")
+        with tempfile.TemporaryDirectory() as folder:
+            with contextlib.redirect_stdout(io.StringIO()), self.assertRaises(KeyboardInterrupt):
+                main([str(SAMPLE_CASE_FILE), "--out", folder], model=model, clock=FIXED_CLOCK)
+            [run_dir] = Path(folder).iterdir()
+            self.assertEqual([p.name for p in run_dir.glob("run_*.json")], ["run_1.json"])
+            run = json.loads((run_dir / "run_1.json").read_text(encoding="utf-8"))
+            self.assertEqual(len(run["outputs"]), len(QUESTIONS))
+
+    def test_two_evaluations_started_in_the_same_second_get_separate_folders(self):
+        with tempfile.TemporaryDirectory() as folder:
+            for _ in range(2):
+                model = QuestionScriptedModel(well_behaved_script(), name="fake/app-model")
+                argv = [str(SAMPLE_CASE_FILE), "--out", folder, "--runs", "1"]
+                with contextlib.redirect_stdout(io.StringIO()):
+                    main(argv, model=model, clock=FIXED_CLOCK)
+            folders = sorted(Path(folder).iterdir())
+            self.assertEqual(len(folders), 2)
+            for run_dir in folders:
+                self.assertTrue((run_dir / "run_1.json").exists())
+                self.assertTrue((run_dir / "report.md").exists())
+
+    def test_cases_answered_in_parallel_are_stored_in_case_order_with_the_same_outputs(self):
+        sequential = json.loads((self.run_command(well_behaved_script()) / "run_1.json").read_text(encoding="utf-8"))
+        parallel_dir = self.run_command(well_behaved_script(), ["--workers", "4"])
+        parallel = json.loads((parallel_dir / "run_1.json").read_text(encoding="utf-8"))
+
+        self.assertEqual([o["case_id"] for o in parallel["outputs"]], list(QUESTIONS))
+        self.assertEqual(parallel["outputs"], sequential["outputs"])
+        self.assertEqual(parallel["metrics"], sequential["metrics"])
+
 
 if __name__ == "__main__":
     unittest.main()

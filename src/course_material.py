@@ -1,4 +1,5 @@
 """Loads the frozen Course Material files and splits them into citable Sections."""
+import functools
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -42,6 +43,12 @@ def load_course_material(code: str, material_dir: Path = MATERIAL_DIR) -> Course
 
 def load_all_course_materials(material_dir: Path = MATERIAL_DIR) -> dict[str, CourseMaterial]:
     return {code: load_course_material(code, material_dir) for code in COURSES}
+
+
+@functools.cache
+def default_course_materials() -> dict[str, CourseMaterial]:
+    """The frozen Course Material, read from disk once per process and shared. Treat it as read-only."""
+    return load_all_course_materials()
 
 
 def _parse_sections(text: str) -> tuple[list[str], dict[str, Section]]:

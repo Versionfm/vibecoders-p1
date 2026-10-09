@@ -4,7 +4,7 @@ import re
 from dataclasses import dataclass, field
 from typing import Protocol
 
-from course_material import CourseMaterial, load_all_course_materials
+from course_material import CourseMaterial, default_course_materials
 from prompts import ROUTER_PROMPT_VERSION, TUTOR_PROMPT_VERSION, fill, load_prompt
 
 OUT_OF_SCOPE = "OUT_OF_SCOPE"
@@ -44,7 +44,7 @@ def answer_question(
     model: ChatModel,
     materials: dict[str, CourseMaterial] | None = None,
 ) -> TutorResult:
-    materials = materials or load_all_course_materials()
+    materials = default_course_materials() if materials is None else materials
     result = TutorResult(question=question, model=model.name, thinking=getattr(model, "thinking", None))
 
     try:

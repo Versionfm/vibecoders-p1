@@ -1,23 +1,29 @@
 """The evaluation command: run a case file through the answer function, store each run, write a report.
 
     python src/evaluate.py evaluation/sample_cases.json            # 3 runs, results under evaluation/runs/
-    python src/evaluate.py <case file> --runs 3 --out evaluation/runs --label tutor_v3
+    python src/evaluate.py <case file> --runs 3 --out evaluation/runs --label tutor_v3 --workers 4
+
+Each run is stored as soon as it finishes, so an interrupted evaluation keeps the runs that completed.
 """
 import argparse
+import itertools
 import json
 import sys
 from collections import Counter
+from collections.abc import Callable
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 
 from cases import EvaluationCase, load_cases
-from course_material import CourseMaterial, load_all_course_materials
+from course_material import CourseMaterial, default_course_materials
 from prompts import ROUTER_PROMPT_VERSION, TUTOR_PROMPT_VERSION
 from scoring import CLASSES, MACRO_RECALL, score_run, summarise
 from tutor import ChatModel, TutorResult, answer_question
 
 DEFAULT_RUNS = 3
+DEFAULT_WORKERS = 1
 DEFAULT_OUT_DIR = Path(__file__).resolve().parent.parent / "evaluation" / "runs"
 
 # Metrics that need the LLM judge (ticket #7). Shown as pending until the judge exists.
@@ -43,14 +49,20 @@ def run_evaluation(
     case_file: str = "",
     clock=lambda: datetime.now(timezone.utc),
     materials: dict[str, CourseMaterial] | None = None,
+    on_run: Callable[[Run], None] = lambda run: None,
+    workers: int = DEFAULT_WORKERS,
 ) -> list[Run]:
-    materials = materials or load_all_course_materials()
+    """Answer every case once per run. `on_run` gets each run as soon as it finishes (e.g. to store it).
+
+    With `workers` > 1 the cases of a run are answered in parallel threads; results stay in case order.
+    """
+    materials = default_course_materials() if materials is None else materials
     stored = []
-    for number in range(1, runs + 1):
-        timestamp = clock().isoformat(timespec="seconds")
-        results = [answer_question(case.question, model, materials) for case in cases]
-        stored.append(
-            Run(
+    with ThreadPoolExecutor(max_workers=max(1, workers)) as pool:
+        for number in range(1, runs + 1):
+            timestamp = clock().isoformat(timespec="seconds")
+            results = list(pool.map(lambda case: answer_question(case.question, model, materials), cases))
+            run = Run(
                 number,
                 timestamp,
                 case_file,
@@ -60,7 +72,8 @@ def run_evaluation(
                 results,
                 score_run(cases, results),
             )
-        )
+            on_run(run)
+            stored.append(run)
     return stored
 
 
@@ -80,15 +93,26 @@ def run_record(run: Run, cases: list[EvaluationCase]) -> dict:
     }
 
 
-def write_evaluation(runs: list[Run], cases: list[EvaluationCase], out_dir: Path, label: str = "") -> Path:
-    stamp = datetime.fromisoformat(runs[0].timestamp).strftime("%Y-%m-%d_%H%M%S")
-    run_dir = Path(out_dir) / (f"{stamp}_{label}" if label else stamp)
-    run_dir.mkdir(parents=True, exist_ok=False)
-    for run in runs:
-        record = json.dumps(run_record(run, cases), indent=2, ensure_ascii=False)
-        (run_dir / f"run_{run.number}.json").write_text(record + "\n", encoding="utf-8")
+def create_run_folder(out_dir: Path, started: datetime, label: str = "") -> Path:
+    """A new folder `<date>_<time>[_<label>]`; a numeric suffix is added when that name is taken."""
+    name = started.strftime("%Y-%m-%d_%H%M%S") + (f"_{label}" if label else "")
+    Path(out_dir).mkdir(parents=True, exist_ok=True)
+    for attempt in itertools.count(1):
+        run_dir = Path(out_dir) / (name if attempt == 1 else f"{name}_{attempt}")
+        try:
+            run_dir.mkdir()
+            return run_dir
+        except FileExistsError:
+            continue
+
+
+def write_run(run: Run, cases: list[EvaluationCase], run_dir: Path) -> None:
+    record = json.dumps(run_record(run, cases), indent=2, ensure_ascii=False)
+    (run_dir / f"run_{run.number}.json").write_text(record + "\n", encoding="utf-8")
+
+
+def write_report(runs: list[Run], cases: list[EvaluationCase], run_dir: Path) -> None:
     (run_dir / "report.md").write_text(render_report(runs, cases), encoding="utf-8")
-    return run_dir
 
 
 def render_report(runs: list[Run], cases: list[EvaluationCase]) -> str:
@@ -160,6 +184,12 @@ def main(argv: list[str] | None = None, model: ChatModel | None = None, clock=No
     parser.add_argument("--runs", type=int, default=DEFAULT_RUNS, help="times each case is run (default 3)")
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT_DIR, help="folder for stored runs")
     parser.add_argument("--label", default="", help="short name added to the run folder, e.g. tutor_v3")
+    parser.add_argument(
+        "--workers",
+        type=int,
+        default=DEFAULT_WORKERS,
+        help=f"cases answered in parallel within a run (default {DEFAULT_WORKERS}; mind the endpoint's rate limit)",
+    )
     args = parser.parse_args(argv)
 
     cases = load_cases(args.case_file)
@@ -167,14 +197,23 @@ def main(argv: list[str] | None = None, model: ChatModel | None = None, clock=No
         from llm import get_chat_model
 
         model = get_chat_model()
+    clock = clock or (lambda: datetime.now(timezone.utc))
+    run_dir = create_run_folder(args.out, clock(), args.label)
+
+    def store(run: Run) -> None:
+        write_run(run, cases, run_dir)
+        print(f"Run {run.number} of {args.runs} stored in {run_dir / f'run_{run.number}.json'}")
+
     runs = run_evaluation(
         cases,
         model,
         runs=args.runs,
         case_file=_display_path(args.case_file),
-        clock=clock or (lambda: datetime.now(timezone.utc)),
+        clock=clock,
+        on_run=store,
+        workers=args.workers,
     )
-    run_dir = write_evaluation(runs, cases, args.out, args.label)
+    write_report(runs, cases, run_dir)
     print(f"Stored {len(runs)} runs of {len(cases)} cases in {run_dir}")
     print(f"Report: {run_dir / 'report.md'}")
     return 0

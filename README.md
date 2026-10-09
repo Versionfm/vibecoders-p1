@@ -44,8 +44,10 @@ One command runs a case file (JSON, in the Golden Set format) through the same a
 python src/evaluate.py evaluation/sample_cases.json
 ```
 
-Options: `--runs 3` (default), `--out evaluation/runs` (default), `--label tutor_v3` (added to the run folder name).
-It needs the API key in `.env`, like the app.
+Options: `--runs 3` (default), `--out evaluation/runs` (default), `--label tutor_v3` (added to the run folder name),
+`--workers 4` (cases answered in parallel within a run; default 1, keep it small because of the endpoint's rate limit).
+It needs the API key in `.env`, like the app. Each run is stored as soon as it finishes, so stopping the command
+keeps the runs already completed (the report is written at the end).
 
 Each evaluation writes a folder `evaluation/runs/<date>_<time>[_<label>]/` with:
 

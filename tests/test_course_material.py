@@ -1,7 +1,7 @@
 import re
 import unittest
 
-from course_material import COURSES, load_course_material
+from course_material import COURSES, default_course_materials, load_course_material
 
 SECTION_ID = re.compile(r"^(GAIF|PEID|AITB|DTGS)-\d+\.\d+$")
 
@@ -35,6 +35,14 @@ class CourseMaterialLoadingTest(unittest.TestCase):
     def test_material_keeps_the_whole_text(self):
         material = load_course_material("GAIF")
         self.assertIn("### GAIF-2.5 The McCulloch-Pitts neuron (1943)", material.text)
+
+
+class DefaultCourseMaterialsTest(unittest.TestCase):
+    def test_the_frozen_course_material_is_loaded_once_and_reused(self):
+        first = default_course_materials()
+        self.assertIs(default_course_materials(), first)
+        self.assertEqual(set(first), set(COURSES))
+        self.assertEqual(first["PEID"].sections, load_course_material("PEID").sections)
 
 
 if __name__ == "__main__":
