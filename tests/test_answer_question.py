@@ -49,7 +49,7 @@ class HappyPathTest(unittest.TestCase):
 
     def test_result_records_prompt_versions_and_model(self):
         self.assertEqual(self.result.router_prompt_version, "router_v1")
-        self.assertEqual(self.result.tutor_prompt_version, "tutor_v1")
+        self.assertEqual(self.result.tutor_prompt_version, "tutor_v2")
         self.assertEqual(self.result.model, "nvidia/test-model")
 
 

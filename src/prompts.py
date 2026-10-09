@@ -4,7 +4,7 @@ from pathlib import Path
 PROMPT_DIR = Path(__file__).resolve().parent.parent / "prompts"
 
 ROUTER_PROMPT_VERSION = "router_v1"
-TUTOR_PROMPT_VERSION = "tutor_v1"
+TUTOR_PROMPT_VERSION = "tutor_v2"
 
 
 def load_prompt(version: str, prompt_dir: Path = PROMPT_DIR) -> str:

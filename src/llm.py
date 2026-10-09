@@ -6,6 +6,7 @@ from dataclasses import dataclass
 DEFAULT_BASE_URL = "https://integrate.api.nvidia.com/v1"
 DEFAULT_APP_MODEL = "nvidia/nemotron-3.5-lightning-30b-a3b"
 DEFAULT_JUDGE_MODEL = ""  # chosen later by a probe; must not be a Nemotron model
+REQUEST_TIMEOUT_SECONDS = 60.0  # a hung service raises a timeout, which the tutor turns into an error result
 
 
 @dataclass(frozen=True)
@@ -49,5 +50,7 @@ def get_chat_model(model: str | None = None) -> OpenAIChatModel:
 
     load_dotenv()
     settings = load_settings()
-    client = OpenAI(base_url=settings.base_url, api_key=settings.api_key)
+    client = OpenAI(
+        base_url=settings.base_url, api_key=settings.api_key, timeout=REQUEST_TIMEOUT_SECONDS
+    )
     return OpenAIChatModel(client, model or settings.app_model)
