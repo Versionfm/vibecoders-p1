@@ -3,7 +3,8 @@ import streamlit as st
 
 from course_material import COURSE_NAMES
 from llm import get_chat_model
-from tutor import OUT_OF_SCOPE, answer_question
+from screen import ask, markdown_safe
+from tutor import OUT_OF_SCOPE
 
 OUT_OF_SCOPE_MESSAGE = (
     "This question is outside the four Courses (GAIF, PEID, AITB, DTGS), so the Course Tutor cannot answer it. "
@@ -19,31 +20,27 @@ question = st.text_area("Your question")
 
 if st.button("Ask") and question.strip():
     with st.spinner("Thinking..."):
-        model = get_chat_model()
-        try:
-            result = answer_question(question.strip(), model)
-        except Exception:
-            result = None
+        result = ask(question.strip(), get_chat_model)
 
     if result is None or result.error:
         st.info(RETRY_MESSAGE, icon=":material/refresh:")
     elif result.course == OUT_OF_SCOPE:
         st.markdown("**Course:** Out of scope")
-        st.markdown(f"**Why:** “{result.evidence}”")
+        st.markdown(f"**Why:** “{markdown_safe(result.evidence)}”")
         st.info(OUT_OF_SCOPE_MESSAGE, icon=":material/explore_off:")
     else:
         st.markdown(f"**Course:** {result.course} ({COURSE_NAMES.get(result.course, result.course)})")
-        st.markdown(f"**Why this Course:** “{result.evidence}”")
+        st.markdown(f"**Why this Course:** “{markdown_safe(result.evidence)}”")
         if result.is_refusal:
-            st.warning(f"**Refusal.** {result.answer.strip()}", icon=":material/block:")
+            st.warning(f"**Refusal.** {markdown_safe(result.answer.strip())}", icon=":material/block:")
         else:
             st.markdown("**Answer**")
-            st.markdown(result.answer)
+            st.markdown(markdown_safe(result.answer))
             if result.citations:
                 st.caption("Cited Sections: " + ", ".join(result.citations))
             if result.invalid_citations:
                 st.warning(
-                    "These cited Sections do not exist in the Course Material: "
+                    f"These cited Sections are not Sections of the {result.course} Course Material: "
                     + ", ".join(result.invalid_citations),
                     icon=":material/warning:",
                 )
