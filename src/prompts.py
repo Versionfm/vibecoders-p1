@@ -3,7 +3,7 @@ from pathlib import Path
 
 PROMPT_DIR = Path(__file__).resolve().parent.parent / "prompts"
 
-ROUTER_PROMPT_VERSION = "router_v1"
+ROUTER_PROMPT_VERSION = "router_v2"
 TUTOR_PROMPT_VERSION = "tutor_v2"
 
 

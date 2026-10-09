@@ -30,3 +30,17 @@ Copy this block for each entry:
 - **Decision:** kept.
 - **Reason:** the runner is needed before any prompt or model change can be measured. The first real entry will be
   the baseline on the Golden Set once it is frozen.
+
+## 2026-10-09 router_v2: Course logistics and exercises go to the named Course (review fix)
+
+- **Change:** router_v1 -> router_v2: a question about a named Course's logistics (exams, grading, deadlines,
+  schedule, attendance) or asking to solve an exercise on a Course topic is routed to that Course; OUT_OF_SCOPE only
+  for subjects none of the four Courses teaches. Under router_v1 such questions went to OUT_OF_SCOPE, so the
+  tutor_v2 Refusal for logistics and new exercises could not be reached.
+- **Configuration:** Router `router_v2`, Course Tutor `tutor_v2`, app model `nvidia/nemotron-3.5-lightning-30b-a3b`,
+  no judge yet, case file: none yet.
+- **Run folder:** none. Not evaluated yet.
+- **Result:** not evaluated yet. Compare with router_v1 on the Golden Set (Out of scope correctness, Refusal
+  correctness, routing accuracy) once it is frozen.
+- **Decision:** pending.
+- **Reason:** found in code review, not by a score. Made the default because the Refusal path was unreachable.
