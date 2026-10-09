@@ -1,29 +1,53 @@
-"""Single place where the LLM client is created. Reads settings from the environment."""
+"""The one place where model access is configured. Settings come only from environment variables (or .env)."""
 import os
+from collections.abc import Mapping
+from dataclasses import dataclass
 
-from dotenv import load_dotenv
-from openai import OpenAI
-
-load_dotenv()  # loads .env if present; harmless if not
-
-# Course proxy defaults (not secrets). Only LLM_API_KEY is personal to your group.
-DEFAULT_BASE_URL = "https://llm-proxy-obfzuamujq-ew.a.run.app/v1"
-DEFAULT_MODEL = "course-chat"
+DEFAULT_BASE_URL = "https://integrate.api.nvidia.com/v1"
+DEFAULT_APP_MODEL = "nvidia/nemotron-3.5-lightning-30b-a3b"
+DEFAULT_JUDGE_MODEL = ""  # chosen later by a probe; must not be a Nemotron model
 
 
-def get_client() -> OpenAI:
-    base_url = os.environ.get("LLM_BASE_URL") or DEFAULT_BASE_URL
-    api_key = os.environ.get("LLM_API_KEY")
+@dataclass(frozen=True)
+class LlmSettings:
+    api_key: str
+    base_url: str
+    app_model: str
+    judge_model: str
+
+
+def load_settings(env: Mapping[str, str] | None = None) -> LlmSettings:
+    env = os.environ if env is None else env
+    api_key = env.get("LLM_API_KEY")
     if not api_key:
         raise RuntimeError("LLM_API_KEY not set. Check your .env file.")
-    return OpenAI(base_url=base_url, api_key=api_key)
-
-
-def ask(prompt: str, system: str | None = None) -> str:
-    messages = ([{"role": "system", "content": system}] if system else []) + [
-        {"role": "user", "content": prompt}
-    ]
-    response = get_client().chat.completions.create(
-        model=os.environ.get("LLM_MODEL") or DEFAULT_MODEL, messages=messages
+    return LlmSettings(
+        api_key=api_key,
+        base_url=env.get("LLM_BASE_URL") or DEFAULT_BASE_URL,
+        app_model=env.get("LLM_MODEL") or DEFAULT_APP_MODEL,
+        judge_model=env.get("LLM_JUDGE_MODEL") or DEFAULT_JUDGE_MODEL,
     )
-    return response.choices[0].message.content
+
+
+class OpenAIChatModel:
+    """Adapter from an OpenAI-compatible client to the ChatModel interface used by the tutor."""
+
+    def __init__(self, client, name: str):
+        self._client = client
+        self.name = name
+
+    def complete(self, messages: list[dict], temperature: float = 0.0) -> str:
+        response = self._client.chat.completions.create(
+            model=self.name, messages=messages, temperature=temperature
+        )
+        return response.choices[0].message.content or ""
+
+
+def get_chat_model(model: str | None = None) -> OpenAIChatModel:
+    from dotenv import load_dotenv
+    from openai import OpenAI
+
+    load_dotenv()
+    settings = load_settings()
+    client = OpenAI(base_url=settings.base_url, api_key=settings.api_key)
+    return OpenAIChatModel(client, model or settings.app_model)

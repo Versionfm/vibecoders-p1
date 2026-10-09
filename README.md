@@ -1,29 +1,35 @@
-# Project starter
+# Course Tutor
+
+A single-screen tutor for four Courses (GAIF, PEID, AITB, DTGS). A Router picks the Course for your question, and the Course Tutor answers only from that Course's Course Material, citing the Section behind every claim (e.g. `[PEID-2.3]`). Vocabulary: [CONTEXT.md](CONTEXT.md).
+
+## Setup
+
+```bash
+python -m venv .venv
+.venv/Scripts/python -m pip install -r requirements.txt   # Windows; use .venv/bin/python elsewhere
+```
 
 ## Add your API key locally
 
-You will receive your group's API key by e-mail. They go in a local `.env` file, which Git ignores.
+The key goes in a local `.env` file, which Git ignores.
 
-1. Copy the example file:
+1. Copy the example file: `cp .env.example .env`
+2. Open `.env` and paste your NVIDIA API key after `LLM_API_KEY=`. The base URL (`https://integrate.api.nvidia.com/v1`) and app model are already the defaults.
+3. Do not rename the file and do not put the key anywhere else (code, notes, chat, issues).
+4. `git status` must **not** list `.env`.
 
-   ```bash
-   cp .env.example .env
-   ```
+Never commit `.env` or paste the key into any committed file.
 
-2. Open `.env` and paste the key from the e-mail:
+## Run
 
-   ```
-   LLM_API_KEY=...
-   ```
+```bash
+streamlit run src/app.py
+```
 
-   The proxy URL and model name are already built in; you do not need to set them.
+## Test
 
-3. Save the file. Do not rename it, and do not move the key anywhere else (code, notes, chat, issues).
+```bash
+python -m unittest discover -s tests -t .
+```
 
-4. Check that Git is not tracking it. This command must **not** list `.env`:
-
-   ```bash
-   git status
-   ```
-
-Never commit `.env` or paste the key into any file that is committed. If you think the key has leaked, e-mail the instructor straight away.
+The tests use a fake model: no API key and no network needed.
