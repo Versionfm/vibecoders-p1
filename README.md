@@ -26,6 +26,28 @@ Never commit `.env` or paste the key into any committed file.
 streamlit run src/app.py
 ```
 
+## Evaluate
+
+One command runs a case file (JSON, in the Golden Set format) through the same answer function the screen uses, three times:
+
+```bash
+python src/evaluate.py evaluation/sample_cases.json
+```
+
+Options: `--runs 3` (default), `--out evaluation/runs` (default), `--label tutor_v3` (added to the run folder name).
+It needs the API key in `.env`, like the app.
+
+Each evaluation writes a folder `evaluation/runs/<date>_<time>[_<label>]/` with:
+
+- `run_1.json`, `run_2.json`, `run_3.json`: timestamp, case file, prompt versions, model names, the metrics of that run and every case's output (routed Course, evidence, answer, citations, Refusal, invalid citations, error);
+- `report.md`: each metric as mean and range across the runs, plus a per-case table, ready to paste into the report.
+
+Metrics: routing accuracy (choice within Accepted Courses), recall per class over GAIF, PEID, AITB, DTGS and OUT_OF_SCOPE with its macro average (labelled "macro"), citation correctness, Refusal correctness and Out of scope correctness. End-to-end Success and the Supported and Responsive rates need the LLM judge and are shown as pending until it exists.
+
+Case file fields: `id`, `type` (`in_material`, `near_miss`, `overlap`, `out_of_scope`, `refusal`), `question`, `accepted_courses` (`["OUT_OF_SCOPE"]` for Out of scope cases), `expected_sections`, `expect_refusal`, `key_facts`. `evaluation/sample_cases.json` is a small synthetic SAMPLE for trying the command; it is not the Golden Set.
+
+Record every evaluated change, kept or abandoned, in [evaluation/ITERATION_LOG.md](evaluation/ITERATION_LOG.md).
+
 ## Test
 
 ```bash

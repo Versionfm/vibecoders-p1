@@ -9,6 +9,8 @@ Use the vocabulary in [CONTEXT.md](CONTEXT.md) (Course, Course Material, Section
 - `src/llm.py` — the only place model access is configured, from environment variables `LLM_API_KEY`, `LLM_BASE_URL`, `LLM_MODEL`, `LLM_JUDGE_MODEL`.
 - `src/course_material.py` — loads `data/courses/*.md` into Sections keyed by identifier.
 - `src/tutor.py` — `answer_question(question, model)`: the one answer function (Seam A). The screen and the evaluation runner both call it.
+- `src/cases.py` — loads case files in the Golden Set format. `src/scoring.py` — metrics as pure functions (Seam B).
+- `src/evaluate.py` — the evaluation command: `python src/evaluate.py <case file>` runs each case 3 times, stores runs and `report.md` under `evaluation/runs/`. Log results in `evaluation/ITERATION_LOG.md`.
 - `src/app.py` — the screen. `prompts/` — versioned prompt files. `tests/` — standard library `unittest`.
 - Run tests: `python -m unittest discover -s tests -t .` (no API key, no network; use fake models).
 
