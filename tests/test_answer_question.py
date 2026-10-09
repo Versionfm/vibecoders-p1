@@ -52,6 +52,12 @@ class HappyPathTest(unittest.TestCase):
         self.assertEqual(self.result.tutor_prompt_version, "tutor_v2")
         self.assertEqual(self.result.model, "nvidia/test-model")
 
+    def test_result_records_the_models_thinking_setting(self):
+        for thinking in (False, True):
+            with self.subTest(thinking=thinking):
+                model = FakeChatModel([router_reply("PEID", "prompt"), TUTOR_REPLY], thinking=thinking)
+                self.assertIs(answer_question(QUESTION, model).thinking, thinking)
+
 
 class CitationPatternTest(unittest.TestCase):
     def answer_with(self, tutor_reply, course="GAIF"):

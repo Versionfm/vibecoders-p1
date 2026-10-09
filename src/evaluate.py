@@ -30,6 +30,7 @@ class Run:
     timestamp: str
     case_file: str
     app_model: str
+    app_thinking: bool | None
     judge_model: str | None
     results: list[TutorResult]
     metrics: dict[str, float | None]
@@ -49,7 +50,16 @@ def run_evaluation(
         timestamp = clock().isoformat(timespec="seconds")
         results = [answer_question(case.question, model, materials) for case in cases]
         stored.append(
-            Run(number, timestamp, case_file, model.name, None, results, score_run(cases, results))
+            Run(
+                number,
+                timestamp,
+                case_file,
+                model.name,
+                getattr(model, "thinking", None),
+                None,
+                results,
+                score_run(cases, results),
+            )
         )
     return stored
 
@@ -61,6 +71,7 @@ def run_record(run: Run, cases: list[EvaluationCase]) -> dict:
         "case_file": run.case_file,
         "prompt_versions": {"router": ROUTER_PROMPT_VERSION, "tutor": TUTOR_PROMPT_VERSION},
         "models": {"app": run.app_model, "judge": run.judge_model},
+        "thinking": run.app_thinking,
         "metrics": run.metrics,
         "outputs": [
             {"case_id": case.id, "type": case.type, "accepted_courses": case.accepted_courses, **_output(result)}
@@ -89,7 +100,7 @@ def render_report(runs: list[Run], cases: list[EvaluationCase]) -> str:
         "",
         f"- Case file: `{first.case_file}` ({len(cases)} cases: {type_counts})",
         f"- Runs: {len(runs)} (every case answered once per run)",
-        f"- App model (Router and Course Tutor): `{first.app_model}`",
+        f"- App model (Router and Course Tutor): `{first.app_model}`. Thinking: {_on_off(first.app_thinking)}",
         f"- Prompt versions: Router `{ROUTER_PROMPT_VERSION}`, Course Tutor `{TUTOR_PROMPT_VERSION}`",
         f"- Judge model: {f'`{first.judge_model}`' if first.judge_model else 'none yet (LLM judge comes in ticket #7)'}",
         "",
@@ -171,7 +182,7 @@ def main(argv: list[str] | None = None, model: ChatModel | None = None, clock=No
 
 def _output(result: TutorResult) -> dict:
     fields = asdict(result)
-    for key in ("question", "router_prompt_version", "tutor_prompt_version", "model"):
+    for key in ("question", "router_prompt_version", "tutor_prompt_version", "model", "thinking"):
         fields.pop(key)
     return fields
 
@@ -188,6 +199,10 @@ def _notes(results: list[TutorResult]) -> str:
     if invalid:
         notes.append(f"invalid citations: {', '.join(invalid)}")
     return "; ".join(notes) or "-"
+
+
+def _on_off(thinking: bool | None) -> str:
+    return "not set" if thinking is None else ("on" if thinking else "off")
 
 
 def _pct(value: float | None) -> str:

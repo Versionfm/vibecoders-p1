@@ -44,3 +44,17 @@ Copy this block for each entry:
   correctness, routing accuracy) once it is frozen.
 - **Decision:** pending.
 - **Reason:** found in code review, not by a score. Made the default because the Refusal path was unreachable.
+
+## 2026-10-09 App model thinking off by default (LLM_THINKING)
+
+- **Change:** new setting `LLM_THINKING` (on/off, default off), sent to the app model as
+  `chat_template_kwargs.enable_thinking`. Each answer and each stored run records the setting.
+- **Configuration:** Router `router_v2`, Course Tutor `tutor_v2`, app model `nvidia/nemotron-3.5-lightning-30b-a3b`,
+  no judge yet, case file: none yet.
+- **Run folder:** none. Latency was measured on single Router calls on the NVIDIA endpoint, not with the evaluation
+  command.
+- **Result:** latency only: one Router call took 21.9 s and 813 tokens with thinking on, 2.1 s and 16 tokens with
+  thinking off. Answer quality is not compared yet.
+- **Decision:** pending (off is the default for latency).
+- **Reason:** thinking on made the screen slow and long evaluations prone to timeouts. Run the Golden Set with
+  `LLM_THINKING=off` and `LLM_THINKING=on` and compare routing, citation and Refusal metrics before deciding.

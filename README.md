@@ -20,6 +20,16 @@ The key goes in a local `.env` file, which Git ignores.
 
 Never commit `.env` or paste the key into any committed file.
 
+Other settings in `.env` (all optional):
+
+- `LLM_THINKING`: `on` or `off` (default `off`). Switches the app model's reasoning ("thinking") mode, sent as
+  `chat_template_kwargs.enable_thinking`. Off is much faster on Nemotron (a Router call took about 2 s instead of
+  about 22 s). Every answer and every stored evaluation run records the setting, so both can be compared.
+- `LLM_BASE_URL`, `LLM_MODEL`: endpoint and app model (defaults above). `LLM_JUDGE_MODEL`: the LLM judge (later).
+
+Each model call times out after 60 s and is retried at most once, so one call fails after about 2 minutes at worst
+and the screen then asks you to try again.
+
 ## Run
 
 ```bash

@@ -34,7 +34,7 @@ def well_behaved_script():
 
 class EvaluationCommandTest(unittest.TestCase):
     def run_command(self, script, extra_args=()):
-        self.model = QuestionScriptedModel(script, name="fake/app-model")
+        self.model = QuestionScriptedModel(script, name="fake/app-model", thinking=False)
         self.folder = tempfile.TemporaryDirectory()
         self.addCleanup(self.folder.cleanup)
         argv = [str(SAMPLE_CASE_FILE), "--out", self.folder.name, *extra_args]
@@ -62,6 +62,7 @@ class EvaluationCommandTest(unittest.TestCase):
         self.assertEqual(run["prompt_versions"], {"router": ROUTER_PROMPT_VERSION, "tutor": TUTOR_PROMPT_VERSION})
         self.assertEqual(run["models"]["app"], "fake/app-model")
         self.assertIn("judge", run["models"])
+        self.assertIs(run["thinking"], False)
         outputs = {o["case_id"]: o for o in run["outputs"]}
         self.assertEqual(set(outputs), set(QUESTIONS))
         self.assertEqual(outputs["SAMPLE-01"]["course"], "PEID")
@@ -85,6 +86,7 @@ class EvaluationCommandTest(unittest.TestCase):
         self.assertIn("Recall (macro average)", report)
         self.assertIn("End-to-end Success", report)
         self.assertIn("fake/app-model", report)
+        self.assertIn("Thinking: off", report)
         self.assertIn(TUTOR_PROMPT_VERSION, report)
 
     def test_a_model_failure_is_recorded_as_an_error_for_that_case_and_the_run_completes(self):

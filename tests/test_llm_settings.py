@@ -1,8 +1,9 @@
+import importlib.util
 import unittest
 
 from types import SimpleNamespace
 
-from llm import OpenAIChatModel, load_settings
+from llm import OpenAIChatModel, get_chat_model, load_settings
 
 
 class FakeOpenAIClient:
@@ -26,6 +27,29 @@ class OpenAIChatModelTest(unittest.TestCase):
         self.assertEqual(
             client.requests, [{"model": "some/app-model", "messages": messages, "temperature": 0}]
         )
+
+    def test_thinking_off_or_on_is_sent_as_a_chat_template_switch(self):
+        for thinking in (False, True):
+            with self.subTest(thinking=thinking):
+                client = FakeOpenAIClient("hello")
+                model = OpenAIChatModel(client, "some/app-model", thinking=thinking)
+                model.complete([{"role": "user", "content": "hi"}])
+                self.assertEqual(
+                    client.requests[0]["extra_body"], {"chat_template_kwargs": {"enable_thinking": thinking}}
+                )
+                self.assertIs(model.thinking, thinking)
+
+
+@unittest.skipUnless(importlib.util.find_spec("openai"), "openai is not installed")
+class GetChatModelTest(unittest.TestCase):
+    def test_the_client_has_a_bounded_timeout_and_at_most_one_retry(self):
+        model = get_chat_model(env={"LLM_API_KEY": "test-key"})
+        self.assertEqual(model._client.max_retries, 1)
+        self.assertEqual(model._client.timeout, 60.0)
+
+    def test_the_thinking_setting_reaches_the_chat_model(self):
+        self.assertIs(get_chat_model(env={"LLM_API_KEY": "k"}).thinking, False)
+        self.assertIs(get_chat_model(env={"LLM_API_KEY": "k", "LLM_THINKING": "on"}).thinking, True)
 
 
 class LlmSettingsTest(unittest.TestCase):
@@ -52,6 +76,18 @@ class LlmSettingsTest(unittest.TestCase):
         settings = load_settings({"LLM_API_KEY": "k", "LLM_BASE_URL": "", "LLM_MODEL": ""})
         self.assertEqual(settings.base_url, "https://integrate.api.nvidia.com/v1")
         self.assertEqual(settings.app_model, "nvidia/nemotron-3.5-lightning-30b-a3b")
+
+    def test_thinking_is_off_unless_switched_on(self):
+        self.assertFalse(load_settings({"LLM_API_KEY": "k"}).thinking)
+        self.assertFalse(load_settings({"LLM_API_KEY": "k", "LLM_THINKING": ""}).thinking)
+        for value in ("off", "OFF", "Off"):
+            self.assertFalse(load_settings({"LLM_API_KEY": "k", "LLM_THINKING": value}).thinking)
+        for value in ("on", "ON", " on "):
+            self.assertTrue(load_settings({"LLM_API_KEY": "k", "LLM_THINKING": value}).thinking)
+
+    def test_an_unknown_thinking_value_is_reported_clearly(self):
+        with self.assertRaisesRegex(RuntimeError, "LLM_THINKING"):
+            load_settings({"LLM_API_KEY": "k", "LLM_THINKING": "maybe"})
 
     def test_missing_api_key_is_reported_clearly(self):
         with self.assertRaisesRegex(RuntimeError, "LLM_API_KEY"):

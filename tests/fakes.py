@@ -4,7 +4,8 @@ class FakeChatModel:
     A reply that is an exception instance is raised instead of returned, to simulate a failing model service.
     """
 
-    def __init__(self, replies, name="fake-model"):
+    def __init__(self, replies, name="fake-model", thinking=None):
+        self.thinking = thinking
         self.name = name
         self._replies = list(replies)
         self.calls = []
@@ -27,7 +28,8 @@ class QuestionScriptedModel:
     The replies cycle, so a question asked again in the next run gets the next replies in its list.
     """
 
-    def __init__(self, script, name="fake-model"):
+    def __init__(self, script, name="fake-model", thinking=None):
+        self.thinking = thinking
         self.name = name
         self._script = script
         self._calls_per_question = {}

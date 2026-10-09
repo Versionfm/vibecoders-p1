@@ -18,6 +18,7 @@ TUTOR_TEMPERATURE = 0.0
 
 class ChatModel(Protocol):
     name: str
+    thinking: bool | None  # the model's reasoning mode switch; None when not set
 
     def complete(self, messages: list[dict], temperature: float = 0.0) -> str: ...
 
@@ -35,6 +36,7 @@ class TutorResult:
     router_prompt_version: str = ROUTER_PROMPT_VERSION
     tutor_prompt_version: str = TUTOR_PROMPT_VERSION
     model: str = ""
+    thinking: bool | None = None
 
 
 def answer_question(
@@ -43,7 +45,7 @@ def answer_question(
     materials: dict[str, CourseMaterial] | None = None,
 ) -> TutorResult:
     materials = materials or load_all_course_materials()
-    result = TutorResult(question=question, model=model.name)
+    result = TutorResult(question=question, model=model.name, thinking=getattr(model, "thinking", None))
 
     try:
         reply = model.complete(_messages(load_prompt(ROUTER_PROMPT_VERSION), question), ROUTER_TEMPERATURE)
