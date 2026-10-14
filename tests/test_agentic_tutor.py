@@ -2,6 +2,7 @@
 import unittest
 
 from course_material import COURSES, load_course_material
+from llm import ModelReply, ToolCall
 from tests.fakes import FakeChatModel, reads
 from tutor import answer_question
 
@@ -52,6 +53,113 @@ class CitationValidityTest(unittest.TestCase):
         result = answer_question(QUESTION, model, tutor="agentic")
         self.assertEqual(result.citations, ["PEID-2.3", "AITB-2.2"])
         self.assertEqual(result.invalid_citations, ["AITB-2.2"])
+
+
+def tool_results(model, call_index):
+    return [m["content"] for m in model.calls[call_index]["messages"] if m["role"] == "tool"]
+
+
+class ToolCallTest(unittest.TestCase):
+    def test_an_argument_that_is_not_a_course_returns_unknown_course_and_is_recorded(self):
+        model = FakeChatModel([reads("../.env"), reads("PEID"), ANSWER])
+        result = answer_question(QUESTION, model, tutor="agentic")
+        self.assertEqual(tool_results(model, 1), ["Unknown Course."])
+        self.assertEqual(result.tool_arguments, ["../.env", "PEID"])
+        self.assertEqual(result.materials_read, ["PEID"])
+        self.assertEqual(result.read_count, 2)
+        self.assertEqual(result.answer, ANSWER)
+
+    def test_malformed_arguments_are_unknown_course_and_never_raise(self):
+        bad = ModelReply("", [ToolCall("a", "read_file", "not json"), ToolCall("b", "read_file", None),
+                              ToolCall("c", "read_file", '{"course": ["PEID"]}'), ToolCall("d", "read_file", "[1]")])
+        model = FakeChatModel([bad, ANSWER])
+        result = answer_question(QUESTION, model, tutor="agentic")
+        self.assertEqual(tool_results(model, 1), ["Unknown Course."] * 4)
+        self.assertEqual(result.read_count, 4)
+        self.assertEqual(len(result.tool_arguments), 4)
+        self.assertEqual(result.materials_read, [])
+
+    def test_a_repeated_read_is_recorded_each_time(self):
+        model = FakeChatModel([reads("PEID"), reads("PEID"), ANSWER])
+        result = answer_question(QUESTION, model, tutor="agentic")
+        self.assertEqual(result.materials_read, ["PEID", "PEID"])
+        self.assertEqual(result.read_count, 2)
+        self.assertEqual(result.answer, ANSWER)
+
+    def test_two_tool_calls_in_one_reply_are_both_handled_and_counted(self):
+        model = FakeChatModel([reads("PEID", "AITB"), ANSWER])
+        result = answer_question(QUESTION, model, tutor="agentic")
+        self.assertEqual(len(tool_results(model, 1)), 2)
+        self.assertEqual(result.materials_read, ["PEID", "AITB"])
+        self.assertEqual(result.read_count, 2)
+
+    def test_two_reads_for_an_overlap_case_allow_citations_from_both(self):
+        model = FakeChatModel([reads("PEID"), reads("AITB"), "Task [PEID-2.3] and agent [AITB-2.2]."])
+        result = answer_question(QUESTION, model, tutor="agentic")
+        self.assertEqual(result.materials_read, ["PEID", "AITB"])
+        self.assertEqual(result.invalid_citations, [])
+        self.assertFalse(result.read_limit_hit)
+
+
+OUT_OF_SCOPE_SENTENCE = "This question is outside the four Courses."
+
+
+class FixedSentenceTest(unittest.TestCase):
+    def test_the_out_of_scope_sentence_with_no_read_is_out_of_scope(self):
+        result = answer_question("How do I bake bread?", FakeChatModel([OUT_OF_SCOPE_SENTENCE]), tutor="agentic")
+        self.assertEqual(result.course, "OUT_OF_SCOPE")
+        self.assertEqual(result.materials_read, [])
+        self.assertFalse(result.is_refusal)
+        self.assertIsNone(result.error)
+
+    def test_the_refusal_after_a_read_names_the_course_read(self):
+        model = FakeChatModel([reads("DTGS"), "This is not covered in the DTGS material."])
+        result = answer_question(QUESTION, model, tutor="agentic")
+        self.assertTrue(result.is_refusal)
+        self.assertEqual(result.course, "DTGS")
+
+    def test_a_refusal_naming_a_course_not_read_is_not_the_refusal(self):
+        model = FakeChatModel([reads("DTGS"), "This is not covered in the PEID material."])
+        self.assertFalse(answer_question(QUESTION, model, tutor="agentic").is_refusal)
+
+    def test_the_refusal_may_name_either_course_read(self):
+        model = FakeChatModel([reads("PEID", "AITB"), "This is not covered in the AITB material."])
+        self.assertTrue(answer_question(QUESTION, model, tutor="agentic").is_refusal)
+
+    def test_the_out_of_scope_sentence_after_a_read_is_not_out_of_scope(self):
+        model = FakeChatModel([reads("GAIF"), OUT_OF_SCOPE_SENTENCE])
+        result = answer_question(QUESTION, model, tutor="agentic")
+        self.assertEqual(result.course, "GAIF")
+        self.assertFalse(result.is_refusal)
+        self.assertEqual(result.answer, OUT_OF_SCOPE_SENTENCE)
+
+
+class FailedModelCallTest(unittest.TestCase):
+    def test_a_failed_call_mid_loop_gives_an_error_result_with_the_trace_so_far(self):
+        model = FakeChatModel([reads("PEID"), TimeoutError("service did not answer")])
+        result = answer_question(QUESTION, model, tutor="agentic")
+        self.assertIn("service did not answer", result.error)
+        self.assertEqual(result.materials_read, ["PEID"])
+        self.assertEqual(result.answer, "")
+
+
+class ReadLimitTest(unittest.TestCase):
+    def test_after_the_fourth_read_one_final_call_with_tools_off_forces_the_answer(self):
+        model = FakeChatModel([reads("PEID"), reads("AITB"), reads("GAIF"), reads("DTGS"), "Forced [PEID-2.3]."])
+        result = answer_question(QUESTION, model, tutor="agentic")
+        self.assertEqual(len(model.calls), 5)
+        self.assertIsNone(model.calls[-1]["tools"])
+        self.assertEqual(result.answer, "Forced [PEID-2.3].")
+        self.assertEqual(result.read_count, 4)
+        self.assertTrue(result.read_limit_hit)
+        self.assertIsNone(result.error)
+
+    def test_tool_calls_in_the_forced_reply_are_not_followed(self):
+        model = FakeChatModel([reads("PEID", "AITB", "GAIF", "DTGS"), reads("PEID"), "never asked"])
+        result = answer_question(QUESTION, model, tutor="agentic")
+        self.assertEqual(len(model.calls), 2)
+        self.assertEqual(result.read_count, 4)
+        self.assertTrue(result.read_limit_hit)
 
 
 if __name__ == "__main__":

@@ -25,6 +25,27 @@ class AskWithTheAgenticTutorTest(unittest.TestCase):
         self.assertEqual(result.materials_read, ["PEID"])
         self.assertEqual(result.citations, ["PEID-2.3"])
 
+    # The screen shows the retry message on an error, the Out of scope message when the course is OUT_OF_SCOPE,
+    # and the Refusal box when is_refusal is set, for either tutor.
+    def test_the_refusal_comes_back_as_a_refusal(self):
+        model = FakeChatModel([reads("DTGS"), "This is not covered in the DTGS material."])
+        result = ask("When is the exam?", lambda: model, tutor="agentic")
+        self.assertTrue(result.is_refusal)
+        self.assertIsNone(result.error)
+
+    def test_the_out_of_scope_sentence_comes_back_as_out_of_scope(self):
+        model = FakeChatModel(["This question is outside the four Courses."])
+        result = ask("How do I bake bread?", lambda: model, tutor="agentic")
+        self.assertEqual(result.course, "OUT_OF_SCOPE")
+
+    def test_a_failed_model_call_mid_loop_comes_back_as_an_error_and_is_logged(self):
+        model = FakeChatModel([reads("PEID"), TimeoutError("service did not answer")])
+        console = io.StringIO()
+        with contextlib.redirect_stderr(console):
+            result = ask("What is a prompt?", lambda: model, tutor="agentic")
+        self.assertIsNotNone(result.error)
+        self.assertIn("service did not answer", console.getvalue())
+
     def test_an_unknown_tutor_setting_gives_no_result_and_logs_the_reason(self):
         console = io.StringIO()
         with contextlib.redirect_stderr(console):

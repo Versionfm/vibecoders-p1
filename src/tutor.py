@@ -13,6 +13,7 @@ from llm import ModelReply, ToolCall
 from prompts import AGENTIC_TUTOR_PROMPT_VERSION, ROUTER_PROMPT_VERSION, TUTOR_PROMPT_VERSION, fill, load_prompt
 
 OUT_OF_SCOPE = "OUT_OF_SCOPE"
+OUT_OF_SCOPE_SENTENCE = "This question is outside the four Courses."  # the Agentic Tutor's, given with no Read
 # A bracket holds one Section identifier or several separated by "," or ";". Any ID-shaped token in a bracket
 # (upper-case code, hyphen, numbers) counts as a citation, so malformed or unknown ones can be reported as invalid.
 BRACKET = re.compile(r"\[([^\[\]\n]{1,200})\]")
@@ -23,6 +24,7 @@ ROUTED_TUTOR = "routed"
 AGENTIC_TUTOR = "agentic"
 TUTORS = (ROUTED_TUTOR, AGENTIC_TUTOR)
 UNKNOWN_COURSE = "Unknown Course."
+READ_LIMIT = 4  # Reads per question, valid or not, before the Agentic Tutor is forced to answer (ADR 0001)
 # The Agentic Tutor's one tool. Its only accepted arguments are the four Course codes, so it can read nothing else.
 READ_FILE_TOOL = {
     "type": "function",
@@ -119,24 +121,31 @@ def answer_question(
 def _answer_agentic(
     question: str, model: ChatModel, materials: dict[str, CourseMaterial], result: TutorResult
 ) -> TutorResult:
-    """The Agentic Tutor loop: offer `read_file`, feed each Read back, stop at the first reply with no tool calls."""
+    """The Agentic Tutor loop: offer `read_file`, feed each Read back, stop at the first reply with no tool calls
+    or at the Read limit. Never raises on a bad Trace: a failed model call becomes `error`."""
     result.tutor = AGENTIC_TUTOR
     result.router_prompt_version, result.tutor_prompt_version = None, AGENTIC_TUTOR_PROMPT_VERSION
     messages = _messages(load_prompt(AGENTIC_TUTOR_PROMPT_VERSION), question)
     while True:
+        # At the Read limit, one last call with tools switched off forces an answer; its tool calls are not followed.
+        result.read_limit_hit = result.read_count >= READ_LIMIT
         try:
-            reply = model.chat(messages, TUTOR_TEMPERATURE, tools=[READ_FILE_TOOL])
+            reply = model.chat(messages, TUTOR_TEMPERATURE, tools=None if result.read_limit_hit else [READ_FILE_TOOL])
         except Exception as error:
             result.error = _model_failure("Agentic Tutor", error)
             return result
-        if not reply.tool_calls:
+        if result.read_limit_hit or not reply.tool_calls:
             break
         messages.append(_assistant_message(reply))
         for call in reply.tool_calls:
             messages.append({"role": "tool", "tool_call_id": call.id, "content": _read(call, materials, result)})
 
     result.answer = reply.content
-    result.course = result.materials_read[0] if result.materials_read else None
+    if result.materials_read:
+        result.course = result.materials_read[0]
+        result.is_refusal = any(is_refusal(result.answer, code) for code in result.materials_read)
+    elif result.answer.strip() == OUT_OF_SCOPE_SENTENCE:  # after a Read it is a failed answer, not Out of scope
+        result.course = OUT_OF_SCOPE
     result.citations = extract_citations(result.answer)
     read_sections = {s for code in result.materials_read for s in materials[code].sections}
     result.invalid_citations = [c for c in result.citations if c not in read_sections]
@@ -147,11 +156,11 @@ def _read(call: ToolCall, materials: dict[str, CourseMaterial], result: TutorRes
     """Handle one `read_file` call and record it in the Trace. Returns the tool result for the model."""
     try:
         course = json.loads(call.arguments).get("course")
-    except (json.JSONDecodeError, AttributeError):
+    except (TypeError, json.JSONDecodeError, AttributeError):
         course = None
-    result.tool_arguments.append(course if isinstance(course, str) else call.arguments)
+    result.tool_arguments.append(course if isinstance(course, str) else str(call.arguments))
     result.read_count += 1
-    if course not in materials:
+    if not isinstance(course, str) or course not in materials:
         return UNKNOWN_COURSE
     result.materials_read.append(course)
     return materials[course].text.strip()
