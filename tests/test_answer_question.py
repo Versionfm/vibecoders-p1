@@ -92,7 +92,7 @@ class RoutedTutorTraceTest(unittest.TestCase):
         result = answer_question(QUESTION, FakeChatModel([router_reply("PEID", "prompt"), TUTOR_REPLY]))
         self.assertEqual(result.tutor, "routed")
         self.assertEqual(result.materials_read, ["PEID"])
-        self.assertEqual(result.tool_arguments, [])
+        self.assertEqual(result.read_arguments, [])
         self.assertEqual(result.read_count, 1)
         self.assertFalse(result.read_limit_hit)
 

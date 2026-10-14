@@ -72,7 +72,7 @@ class PathStepTest(unittest.TestCase):
             "failed model call": trace(["PEID"], error="Course Tutor model call failed: TimeoutError: slow"),
             "invalid Router reply": trace(error="Router reply is not valid JSON: 'x'"),
             "repeated Read": trace(["PEID", "PEID"], answer="A [PEID-2.3]."),
-            "invalid tool argument": trace(["PEID"], tool_arguments=["PEID", "../.env"], answer="A [PEID-2.3]."),
+            "invalid tool argument": trace(["PEID"], read_arguments=["PEID", "../.env"], answer="A [PEID-2.3]."),
             "answer without a Read": trace(answer="A from memory."),
             "Refusal without a Read": trace(answer="This is not covered in the PEID material.", is_refusal=True),
             "Read limit reached": trace(["PEID"], read_limit_hit=True, answer="A [PEID-2.3]."),
@@ -84,7 +84,7 @@ class PathStepTest(unittest.TestCase):
                 self.assertTrue(verdict.reason)
 
     def test_the_reason_names_the_failure(self):
-        self.assertIn("../.env", path_step(self.in_scope, trace(["PEID"], tool_arguments=["../.env"])).reason)
+        self.assertIn("../.env", path_step(self.in_scope, trace(["PEID"], read_arguments=["../.env"])).reason)
         self.assertIn("PEID", path_step(self.in_scope, trace(["PEID", "PEID"])).reason)
         self.assertIn("Router reply", path_step(self.in_scope, trace(error="Router reply is not valid JSON")).reason)
 
@@ -96,7 +96,7 @@ class AgenticTutorPathStepTest(unittest.TestCase):
     def agentic(self, read=(), arguments=None, **fields):
         arguments = list(read) if arguments is None else arguments
         return TutorResult(
-            question="q", tutor="agentic", materials_read=list(read), tool_arguments=arguments,
+            question="q", tutor="agentic", materials_read=list(read), read_arguments=arguments,
             read_count=len(arguments), router_prompt_version=None, **fields,
         )
 
@@ -211,6 +211,19 @@ class EndToEndSuccessTest(unittest.TestCase):
     def test_search_is_named_before_path_and_answer_when_all_fail(self):
         result = trace(["GAIF", "GAIF"], course="GAIF", answer="A [GAIF-1.1].", citations=["GAIF-1.1"])
         self.assertEqual(score_trace(self.case, result).earliest_failure[0], "Search")
+
+    def test_a_failed_model_call_or_invalid_router_reply_is_filed_under_the_path_step(self):
+        errors = {
+            "Router error": trace(error="Router model call failed: TimeoutError: slow"),
+            "invalid Router reply": trace(error="Router returned an unknown Course: 'MATH'"),
+            "Agentic Tutor error before any Read": trace(error="Agentic Tutor model call failed: TimeoutError: slow"),
+            "Agentic Tutor error after a wrong Read": trace(["AITB"], error="Agentic Tutor model call failed: x"),
+        }
+        for name, result in errors.items():
+            with self.subTest(name):
+                score = score_trace(self.case, result)
+                self.assertFalse(score.success)
+                self.assertEqual(score.earliest_failure, ("Path", result.error))
 
     def test_a_run_reports_each_step_pass_rate_and_end_to_end_success(self):
         cases = [self.case, self.case, case("x1", ["OUT_OF_SCOPE"], "out_of_scope")]

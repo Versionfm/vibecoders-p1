@@ -24,7 +24,7 @@ class OneReadThenCitedAnswerTest(unittest.TestCase):
     def test_the_trace_lists_the_course_read(self):
         self.assertEqual(self.result.tutor, "agentic")
         self.assertEqual(self.result.materials_read, ["PEID"])
-        self.assertEqual(self.result.tool_arguments, ["PEID"])
+        self.assertEqual(self.result.read_arguments, ["PEID"])
         self.assertEqual(self.result.read_count, 1)
         self.assertFalse(self.result.read_limit_hit)
         self.assertEqual(self.result.course, "PEID")
@@ -64,7 +64,7 @@ class ToolCallTest(unittest.TestCase):
         model = FakeChatModel([reads("../.env"), reads("PEID"), ANSWER])
         result = answer_question(QUESTION, model, tutor="agentic")
         self.assertEqual(tool_results(model, 1), ["Unknown Course."])
-        self.assertEqual(result.tool_arguments, ["../.env", "PEID"])
+        self.assertEqual(result.read_arguments, ["../.env", "PEID"])
         self.assertEqual(result.materials_read, ["PEID"])
         self.assertEqual(result.read_count, 2)
         self.assertEqual(result.answer, ANSWER)
@@ -76,7 +76,7 @@ class ToolCallTest(unittest.TestCase):
         result = answer_question(QUESTION, model, tutor="agentic")
         self.assertEqual(tool_results(model, 1), ["Unknown Course."] * 4)
         self.assertEqual(result.read_count, 4)
-        self.assertEqual(len(result.tool_arguments), 4)
+        self.assertEqual(len(result.read_arguments), 4)
         self.assertEqual(result.materials_read, [])
 
     def test_a_repeated_read_is_recorded_each_time(self):
@@ -160,6 +160,20 @@ class ReadLimitTest(unittest.TestCase):
         self.assertEqual(len(model.calls), 2)
         self.assertEqual(result.read_count, 4)
         self.assertTrue(result.read_limit_hit)
+
+    def test_tool_calls_past_the_fourth_read_in_one_reply_are_not_read(self):
+        model = FakeChatModel(
+            [reads("PEID"), reads("AITB"), reads("GAIF"), reads("DTGS", "PEID", "AITB"), "Forced [PEID-2.3]."]
+        )
+        result = answer_question(QUESTION, model, tutor="agentic")
+        self.assertEqual(result.read_count, 4)
+        self.assertEqual(result.materials_read, ["PEID", "AITB", "GAIF", "DTGS"])
+        self.assertTrue(result.read_limit_hit)
+        self.assertEqual(len(model.calls), 5)
+        self.assertIsNone(model.calls[-1]["tools"])
+        tool_results = [m["content"] for m in model.calls[-1]["messages"] if m["role"] == "tool"]
+        self.assertEqual(tool_results[-2:], ["Read limit reached.", "Read limit reached."])
+        self.assertEqual(result.answer, "Forced [PEID-2.3].")
 
 
 if __name__ == "__main__":

@@ -28,6 +28,7 @@ PROMPT_VERSIONS = {
     ROUTED_TUTOR: {"router": ROUTER_PROMPT_VERSION, "tutor": TUTOR_PROMPT_VERSION},
     AGENTIC_TUTOR: {"agentic_tutor": AGENTIC_TUTOR_PROMPT_VERSION},
 }
+APP_MODEL_ROLES = {ROUTED_TUTOR: "Router and Course Tutor", AGENTIC_TUTOR: "Agentic Tutor"}
 DEFAULT_RUNS = 3
 DEFAULT_WORKERS = 1
 DEFAULT_OUT_DIR = Path(__file__).resolve().parent.parent / "evaluation" / "runs"
@@ -128,11 +129,13 @@ def write_run(run: Run, cases: list[EvaluationCase], run_dir: Path) -> None:
 
 
 def write_report(runs: list[Run], cases: list[EvaluationCase], run_dir: Path) -> None:
-    (run_dir / "report.md").write_text(render_report(runs, cases), encoding="utf-8")
-    (run_dir / "report.html").write_text(render_html_report(load_runs(run_dir), cases), encoding="utf-8")
+    stored = load_runs(run_dir)
+    (run_dir / "report.md").write_text(render_report(runs, cases, stored), encoding="utf-8")
+    (run_dir / "report.html").write_text(render_html_report(stored, cases), encoding="utf-8")
 
 
-def render_report(runs: list[Run], cases: list[EvaluationCase]) -> str:
+def render_report(runs: list[Run], cases: list[EvaluationCase], stored: list[dict]) -> str:
+    """`stored`: the same Runs as stored by `write_run`, whose Step verdicts are read rather than scored again."""
     first = runs[0]
     type_counts = ", ".join(f"{n} {t}" for t, n in Counter(c.type for c in cases).items())
     run_headers = " | ".join(f"Run {r.number}" for r in runs)
@@ -141,7 +144,7 @@ def render_report(runs: list[Run], cases: list[EvaluationCase]) -> str:
         "",
         f"- Case file: `{first.case_file}` ({len(cases)} cases: {type_counts})",
         f"- Runs: {len(runs)} (every case answered once per run)",
-        f"- App model (Router and Course Tutor): `{first.app_model}`. Thinking: {_on_off(first.app_thinking)}",
+        f"- App model ({APP_MODEL_ROLES[first.tutor]}): `{first.app_model}`. Thinking: {_on_off(first.app_thinking)}",
         "- Prompt versions: " + ", ".join(f"{k} `{v}`" for k, v in PROMPT_VERSIONS[first.tutor].items()),
         f"- Judge model: {f'`{first.judge_model}`' if first.judge_model else 'none yet (LLM judge comes in ticket #7)'}",
         f"- Tutor: `{first.tutor}`",
@@ -166,7 +169,7 @@ def render_report(runs: list[Run], cases: list[EvaluationCase]) -> str:
         "",
         f"| Case | Type | {' | '.join(STEPS)} | {END_TO_END} | Earliest failing Step |",
         "|---|---|---|---|---|---|---|",
-        *(_step_row(case, [r.results[index] for r in runs]) for index, case in enumerate(cases)),
+        *(_step_row(case, [r["outputs"][index]["steps"] for r in stored]) for index, case in enumerate(cases)),
         "",
         "## Metrics",
         "",
@@ -274,11 +277,13 @@ def _metric_row(runs: list[Run], name: str, bold: bool = False) -> str:
     return f"| {label} | {mean} | {spread} | " + " | ".join(_pct(v) for v in values) + " |"
 
 
-def _step_row(case: EvaluationCase, results: list[TutorResult]) -> str:
-    scores = [score_trace(case, r) for r in results]
-    passed = [sum(getattr(s, step.lower()).passed for s in scores) for step in STEPS]
-    successes = sum(s.success for s in scores)
-    failures = Counter(f"{step}: {reason}" for step, reason in (s.earliest_failure for s in scores if not s.success))
+def _step_row(case: EvaluationCase, scores: list[dict]) -> str:
+    """One case's stored Step verdicts (the "steps" of each Run's output) as a report row."""
+    passed = [sum(s[step.lower()]["passed"] for s in scores) for step in STEPS]
+    successes = sum(s["end_to_end_success"] for s in scores)
+    failures = Counter(
+        f"{f['step']}: {f['reason']}" for f in (s["earliest_failing_step"] for s in scores) if f is not None
+    )
     earliest = "; ".join(f"{failure} ({n}/{len(scores)})" for failure, n in failures.items()) or "-"
     counts = " | ".join(f"{n}/{len(scores)}" for n in (*passed, successes))
     return f"| {case.id} | {case.type} | {counts} | {earliest.replace('|', '/')} |"

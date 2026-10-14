@@ -85,7 +85,7 @@ class EvaluationCommandTest(unittest.TestCase):
         self.assertIn("| Recall GAIF | 66.7% | 0.0% to 100.0% | 100.0% | 0.0% | 100.0% |", report)
         self.assertIn("Recall (macro average)", report)
         self.assertIn("End-to-end Success", report)
-        self.assertIn("fake/app-model", report)
+        self.assertIn("App model (Router and Course Tutor): `fake/app-model`", report)
         self.assertIn("Thinking: off", report)
         self.assertIn(TUTOR_PROMPT_VERSION, report)
 
@@ -97,7 +97,7 @@ class EvaluationCommandTest(unittest.TestCase):
         outputs = {o["case_id"]: o for o in run["outputs"]}
         answered, out_of_scope = outputs["SAMPLE-01"], outputs["SAMPLE-05"]
         self.assertEqual(answered["materials_read"], ["PEID"])
-        self.assertEqual(answered["tool_arguments"], [])
+        self.assertEqual(answered["read_arguments"], [])
         self.assertEqual(answered["read_count"], 1)
         self.assertIs(answered["read_limit_hit"], False)
         self.assertEqual(out_of_scope["materials_read"], [])
@@ -209,13 +209,16 @@ class EvaluationCommandTest(unittest.TestCase):
         self.assertEqual(self.model.calls_for(QUESTIONS["SAMPLE-01"]), 6)  # a Read and an answer, in each of 3 runs
         outputs = {o["case_id"]: o for o in run["outputs"]}
         self.assertEqual(outputs["SAMPLE-01"]["materials_read"], ["PEID"])
-        self.assertEqual(outputs["SAMPLE-01"]["tool_arguments"], ["PEID"])
+        self.assertEqual(outputs["SAMPLE-01"]["read_arguments"], ["PEID"])
         self.assertIs(outputs["SAMPLE-01"]["steps"]["end_to_end_success"], True)
         self.assertEqual(
             outputs["SAMPLE-03"]["steps"]["earliest_failing_step"],
             {"step": "Search", "reason": "read PEID, not an Accepted Course"},
         )
-        self.assertIn("Tutor: `agentic`", (run_dir / "report.md").read_text(encoding="utf-8"))
+        report = (run_dir / "report.md").read_text(encoding="utf-8")
+        self.assertIn("Tutor: `agentic`", report)
+        self.assertIn("App model (Agentic Tutor): `fake/app-model`", report)
+        self.assertNotIn("Router", report.split("## Steps")[0])
 
 
 if __name__ == "__main__":
