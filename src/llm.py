@@ -59,7 +59,8 @@ class ModelReply:
 class OpenAIChatModel:
     """Adapter from an OpenAI-compatible client to the ChatModel interface used by the tutor.
 
-    `thinking` True/False is sent as the chat template switch `enable_thinking`; None sends nothing.
+    `thinking` True/False is sent both as the chat template switch `enable_thinking` (Nemotron) and as DeepSeek's
+    `thinking` type; None sends nothing.
     """
 
     def __init__(self, client, name: str, thinking: bool | None = None):
@@ -76,7 +77,11 @@ class OpenAIChatModel:
         if tools:
             request["tools"] = tools
         if self.thinking is not None:
-            request["extra_body"] = {"chat_template_kwargs": {"enable_thinking": self.thinking}}
+            # Nemotron reads the chat template switch, DeepSeek reads `thinking` and silently ignores the other.
+            request["extra_body"] = {
+                "chat_template_kwargs": {"enable_thinking": self.thinking},
+                "thinking": {"type": "enabled" if self.thinking else "disabled"},
+            }
         message = self._client.chat.completions.create(**request).choices[0].message
         calls = getattr(message, "tool_calls", None) or []
         return ModelReply(message.content or "", [ToolCall(c.id, c.function.name, c.function.arguments) for c in calls])

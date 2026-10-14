@@ -55,14 +55,15 @@ class OpenAIChatModelTest(unittest.TestCase):
             client.requests, [{"model": "some/app-model", "messages": messages, "temperature": 0}]
         )
 
-    def test_thinking_off_or_on_is_sent_as_a_chat_template_switch(self):
-        for thinking in (False, True):
+    def test_thinking_off_or_on_is_sent_as_both_the_chat_template_and_the_deepseek_switch(self):
+        for thinking, deepseek_type in ((False, "disabled"), (True, "enabled")):
             with self.subTest(thinking=thinking):
                 client = FakeOpenAIClient("hello")
                 model = OpenAIChatModel(client, "some/app-model", thinking=thinking)
                 model.complete([{"role": "user", "content": "hi"}])
                 self.assertEqual(
-                    client.requests[0]["extra_body"], {"chat_template_kwargs": {"enable_thinking": thinking}}
+                    client.requests[0]["extra_body"],
+                    {"chat_template_kwargs": {"enable_thinking": thinking}, "thinking": {"type": deepseek_type}},
                 )
                 self.assertIs(model.thinking, thinking)
 
