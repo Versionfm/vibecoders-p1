@@ -27,5 +27,6 @@ Your final message is the report the main session receives, so it carries everyt
 - Numbers as mean (range) across the three runs, before → after.
 - Every number comes from the stored run files. A missing, interrupted or failed run is reported as such.
 - Each result names what it does not cover.
-- Use the Course Tutor vocabulary from `CONTEXT.md`: Course, Router, Course Tutor, Refusal, Golden Set, Accepted
-  Courses.
+- Name the tutor measured: the Routed Tutor (`--tutor routed`, the default) or the Agentic Tutor (`--tutor agentic`).
+- Use the Course Tutor vocabulary from `CONTEXT.md`: Course, Router, Course Tutor, Routed Tutor, Agentic Tutor,
+  Refusal, Golden Set, Accepted Courses, Step, Trace.
