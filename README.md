@@ -51,10 +51,17 @@ keeps the runs already completed (the report is written at the end).
 
 Each evaluation writes a folder `evaluation/runs/<date>_<time>[_<label>]/` with:
 
-- `run_1.json`, `run_2.json`, `run_3.json`: timestamp, case file, prompt versions, model names, the metrics of that run and every case's output (routed Course, evidence, answer, citations, Refusal, invalid citations, error);
-- `report.md`: each metric as mean and range across the runs, plus a per-case table, ready to paste into the report.
+- `run_1.json`, `run_2.json`, `run_3.json`: timestamp, tutor (`routed`), case file, prompt versions, model names, the metrics of that run and every case's output (routed Course, evidence, answer, citations, Refusal, invalid citations, error), its Trace (`materials_read` in order, `tool_arguments`, `read_count`, `read_limit_hit`) and its `steps` (Search, Path and Answer verdicts with reasons, End-to-end Success, earliest failing Step);
+- `report.md`: the Step matrix (pass rate per Step and End-to-end Success as mean and range across the runs; per case each Step as e.g. `3/3` with the earliest failing Step), each metric as mean and range, plus a per-case table, ready to paste into the report.
 
-Metrics: routing accuracy (choice within Accepted Courses), recall per class over GAIF, PEID, AITB, DTGS and OUT_OF_SCOPE with its macro average (labelled "macro"), citation correctness, Refusal correctness and Out of scope correctness. End-to-end Success and the Supported and Responsive rates need the LLM judge and are shown as pending until it exists.
+Every Trace is scored by three Steps, checked in this order (see [ADR 0002](docs/adr/0002-trace-steps-and-html-report.md)):
+
+- **Search Step:** at least one Accepted Course and no other Course chosen or read; none for an Out of scope case. For the Routed Tutor the routed Course is the Course Material read. Recall and extra Reads are recorded.
+- **Path Step:** fails on a failed model call or an invalid Router reply, a `read_file` argument that is not a Course, a Course Material read twice, the Read limit reached, or an in-scope answer or Refusal with no Read.
+- **Answer Step:** cites an expected Section and only valid Sections, or gives the expected Refusal or Out of scope. Code checks only until the LLM judge adds Supported and Responsive.
+- **End-to-end Success:** the Trace passes all three Steps. It is the headline number.
+
+Metrics kept from before: routing accuracy (choice within Accepted Courses), recall per class over GAIF, PEID, AITB, DTGS and OUT_OF_SCOPE with its macro average (labelled "macro"), citation correctness, Refusal correctness and Out of scope correctness. The Supported and Responsive rates need the LLM judge and are shown as pending until it exists.
 
 Case file fields: `id`, `type` (`in_material`, `near_miss`, `overlap`, `out_of_scope`, `refusal`), `question`, `accepted_courses` (`["OUT_OF_SCOPE"]` for Out of scope cases), `expected_sections`, `expect_refusal`, `key_facts`. `evaluation/sample_cases.json` is a small synthetic SAMPLE for trying the command; it is not the Golden Set.
 

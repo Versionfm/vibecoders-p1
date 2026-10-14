@@ -85,5 +85,32 @@ class CitationPatternTest(unittest.TestCase):
         self.assertEqual(result.invalid_citations, [])
 
 
+class RoutedTutorTraceTest(unittest.TestCase):
+    """The Routed Tutor fills the Trace: the routed Course counts as the Course Material read."""
+
+    def test_an_answered_question_records_the_routed_course_as_the_one_course_material_read(self):
+        result = answer_question(QUESTION, FakeChatModel([router_reply("PEID", "prompt"), TUTOR_REPLY]))
+        self.assertEqual(result.tutor, "routed")
+        self.assertEqual(result.materials_read, ["PEID"])
+        self.assertEqual(result.tool_arguments, [])
+        self.assertEqual(result.read_count, 1)
+        self.assertFalse(result.read_limit_hit)
+
+    def test_out_of_scope_reads_no_course_material(self):
+        result = answer_question("Best pizza in Lisbon?", FakeChatModel([router_reply("OUT_OF_SCOPE", "pizza")]))
+        self.assertEqual(result.materials_read, [])
+        self.assertEqual(result.read_count, 0)
+
+    def test_an_invalid_router_reply_reads_nothing(self):
+        result = answer_question(QUESTION, FakeChatModel(["not json"]))
+        self.assertEqual(result.materials_read, [])
+        self.assertIsNotNone(result.error)
+
+    def test_a_failed_course_tutor_call_still_records_the_course_chosen(self):
+        result = answer_question(QUESTION, FakeChatModel([router_reply("PEID", "prompt"), TimeoutError("slow")]))
+        self.assertEqual(result.materials_read, ["PEID"])
+        self.assertIn("TimeoutError", result.error)
+
+
 if __name__ == "__main__":
     unittest.main()

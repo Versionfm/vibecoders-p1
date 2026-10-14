@@ -19,15 +19,15 @@ from pathlib import Path
 from cases import EvaluationCase, load_cases
 from course_material import CourseMaterial, default_course_materials
 from prompts import ROUTER_PROMPT_VERSION, TUTOR_PROMPT_VERSION
-from scoring import CLASSES, MACRO_RECALL, score_run, summarise
-from tutor import ChatModel, TutorResult, answer_question
+from scoring import CLASSES, END_TO_END, MACRO_RECALL, STEP_METRICS, STEPS, score_run, score_trace, summarise
+from tutor import ROUTED_TUTOR, ChatModel, TutorResult, answer_question
 
 DEFAULT_RUNS = 3
 DEFAULT_WORKERS = 1
 DEFAULT_OUT_DIR = Path(__file__).resolve().parent.parent / "evaluation" / "runs"
 
 # Metrics that need the LLM judge (ticket #7). Shown as pending until the judge exists.
-JUDGE_METRICS = ("End-to-end Success", "Supported rate", "Responsive rate")
+JUDGE_METRICS = ("Supported rate", "Responsive rate")
 
 
 @dataclass
@@ -40,6 +40,7 @@ class Run:
     judge_model: str | None
     results: list[TutorResult]
     metrics: dict[str, float | None]
+    tutor: str = ROUTED_TUTOR
 
 
 def run_evaluation(
@@ -81,13 +82,20 @@ def run_record(run: Run, cases: list[EvaluationCase]) -> dict:
     return {
         "run": run.number,
         "timestamp": run.timestamp,
+        "tutor": run.tutor,
         "case_file": run.case_file,
         "prompt_versions": {"router": ROUTER_PROMPT_VERSION, "tutor": TUTOR_PROMPT_VERSION},
         "models": {"app": run.app_model, "judge": run.judge_model},
         "thinking": run.app_thinking,
         "metrics": run.metrics,
         "outputs": [
-            {"case_id": case.id, "type": case.type, "accepted_courses": case.accepted_courses, **_output(result)}
+            {
+                "case_id": case.id,
+                "type": case.type,
+                "accepted_courses": case.accepted_courses,
+                **_output(result),
+                "steps": _steps(case, result),
+            }
             for case, result in zip(cases, run.results, strict=True)
         ],
     }
@@ -127,6 +135,29 @@ def render_report(runs: list[Run], cases: list[EvaluationCase]) -> str:
         f"- App model (Router and Course Tutor): `{first.app_model}`. Thinking: {_on_off(first.app_thinking)}",
         f"- Prompt versions: Router `{ROUTER_PROMPT_VERSION}`, Course Tutor `{TUTOR_PROMPT_VERSION}`",
         f"- Judge model: {f'`{first.judge_model}`' if first.judge_model else 'none yet (LLM judge comes in ticket #7)'}",
+        f"- Tutor: `{first.tutor}`",
+        "",
+        "## Steps",
+        "",
+        f"Share of Traces passing each Step, as mean and range (lowest to highest) across the {len(runs)} runs.",
+        "",
+        f"| Step | Mean | Range | {run_headers} |",
+        "|---|---|---|" + "---|" * len(runs),
+        *(_metric_row(runs, name, bold=name == END_TO_END) for name in STEP_METRICS),
+        "",
+        "- Search Step: at least one Accepted Course and no other Course chosen or read; none for an Out of scope "
+        "case. For the Routed Tutor the routed Course is the Course Material read.",
+        "- Path Step: no failed model call or invalid Router reply, no `read_file` argument that is not a Course, "
+        "no Course Material read twice, within the Read limit, and no in-scope answer or Refusal without a Read.",
+        "- Answer Step: cites an expected Section and only valid Sections, or gives the expected Refusal or Out of "
+        "scope. Code checks only: claims are not checked until the LLM judge exists (ticket #7).",
+        f"- {END_TO_END}: the Trace passes all three Steps.",
+        "",
+        "Per case: Traces passing each Step out of the runs, and the earliest failing Step with its reason.",
+        "",
+        f"| Case | Type | {' | '.join(STEPS)} | {END_TO_END} | Earliest failing Step |",
+        "|---|---|---|---|---|---|---|",
+        *(_step_row(case, [r.results[index] for r in runs]) for index, case in enumerate(cases)),
         "",
         "## Metrics",
         "",
@@ -136,14 +167,7 @@ def render_report(runs: list[Run], cases: list[EvaluationCase]) -> str:
         f"| Metric | Mean | Range | {run_headers} |",
         "|---|---|---|" + "---|" * len(runs),
     ]
-    for name in first.metrics:
-        values = [r.metrics[name] for r in runs]
-        summary = summarise(values)
-        mean, spread = (
-            (_pct(summary.mean), f"{_pct(summary.low)} to {_pct(summary.high)}") if summary else ("n/a", "n/a")
-        )
-        label = f"**{name}**" if name == MACRO_RECALL else name
-        lines.append(f"| {label} | {mean} | {spread} | " + " | ".join(_pct(v) for v in values) + " |")
+    lines += [_metric_row(runs, name, bold=name == MACRO_RECALL) for name in first.metrics if name not in STEP_METRICS]
     for name in JUDGE_METRICS:
         lines.append(f"| {name} | pending | needs the LLM judge (ticket #7) |" + " |" * len(runs))
     lines += [
@@ -221,9 +245,37 @@ def main(argv: list[str] | None = None, model: ChatModel | None = None, clock=No
 
 def _output(result: TutorResult) -> dict:
     fields = asdict(result)
-    for key in ("question", "router_prompt_version", "tutor_prompt_version", "model", "thinking"):
+    for key in ("question", "router_prompt_version", "tutor_prompt_version", "model", "thinking", "tutor"):
         fields.pop(key)
     return fields
+
+
+def _metric_row(runs: list[Run], name: str, bold: bool = False) -> str:
+    values = [r.metrics[name] for r in runs]
+    summary = summarise(values)
+    mean, spread = (_pct(summary.mean), f"{_pct(summary.low)} to {_pct(summary.high)}") if summary else ("n/a", "n/a")
+    label = f"**{name}**" if bold else name
+    return f"| {label} | {mean} | {spread} | " + " | ".join(_pct(v) for v in values) + " |"
+
+
+def _step_row(case: EvaluationCase, results: list[TutorResult]) -> str:
+    scores = [score_trace(case, r) for r in results]
+    passed = [sum(getattr(s, step.lower()).passed for s in scores) for step in STEPS]
+    successes = sum(s.success for s in scores)
+    failures = Counter(f"{step}: {reason}" for step, reason in (s.earliest_failure for s in scores if not s.success))
+    earliest = "; ".join(f"{failure} ({n}/{len(scores)})" for failure, n in failures.items()) or "-"
+    counts = " | ".join(f"{n}/{len(scores)}" for n in (*passed, successes))
+    return f"| {case.id} | {case.type} | {counts} | {earliest.replace('|', '/')} |"
+
+
+def _steps(case: EvaluationCase, result: TutorResult) -> dict:
+    score = score_trace(case, result)
+    failure = score.earliest_failure
+    return {
+        **{step.lower(): asdict(getattr(score, step.lower())) for step in STEPS},
+        "end_to_end_success": score.success,
+        "earliest_failing_step": failure and {"step": failure[0], "reason": failure[1]},
+    }
 
 
 def _notes(results: list[TutorResult]) -> str:
