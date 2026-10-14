@@ -175,3 +175,26 @@ Copy this block for each entry:
 - **Reason:** 1.3 cases fewer per Run on average, mostly Refusal cases answered as Out of scope (GS-35, GS-36, two
   labels the group still has to decide) and one exercise refused without reading. On the candidates the Routed
   Tutor stays ahead; decide on the frozen Golden Set (#17).
+
+## 2026-10-14 Agentic Tutor: single-message screen -> built-in chat
+
+- **Change:** replaced the Agentic Tutor's question box and Ask button with Streamlit's built-in chat input and
+  message bubbles. The screen keeps questions and answers in session state and sends completed exchanges with each
+  follow-up; **New conversation** clears the history. The title now identifies the Agentic Tutor. The Routed Tutor
+  keeps its single-message screen.
+- **Configuration:** `TUTOR=agentic`, Agentic Tutor `agentic_tutor_v1`; no prompt, app model, thinking or judge setting
+  changed. Prior questions and answers provide conversational context; each answer still reads its own Course
+  Material and has its own four-Read limit. Single-message evaluation calls continue with empty history. Branch
+  `agent-tutor-chat`, implementation commit `2a0cb5d`; no case file run for this change.
+- **Run folder:** none. Checked with `PYTHONPATH=src .venv/bin/python -m unittest discover -s tests` and the local
+  app's health endpoint, not with a Golden Set run or a live multi-turn LLM evaluation.
+- **Result:** all 147 deterministic tests passed. A two-turn test through the actual Streamlit screen with a fake
+  model confirmed that both exchanges remain visible, the follow-up request contains the previous question and
+  answer, and New conversation clears the chat. The first running-app attempt failed with
+  `ask() got an unexpected keyword argument 'history'`: Streamlit loaded the updated screen while retaining the old
+  imported helper. Restarting the server cleared the stale import; the chat regression test passed again and the
+  health endpoint returned `ok`. Live multi-turn answer quality and End-to-end Success were not measured.
+- **Decision:** kept for the conversation interface; live multi-turn quality evaluation pending.
+- **Reason:** selecting the Agentic Tutor had changed the answer path but still allowed only isolated questions.
+  The built-in chat makes follow-up questions possible and supplies the context needed to interpret them. Existing
+  single-message pilot scores do not establish conversation quality.
