@@ -1,7 +1,7 @@
 """The one place where model access is configured. Settings come only from environment variables (or .env)."""
 import os
 from collections.abc import Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 DEFAULT_BASE_URL = "https://integrate.api.nvidia.com/v1"
 DEFAULT_APP_MODEL = "nvidia/nemotron-3-super-120b-a12b"
@@ -43,6 +43,19 @@ def load_settings(env: Mapping[str, str] | None = None) -> LlmSettings:
     )
 
 
+@dataclass(frozen=True)
+class ToolCall:
+    id: str
+    name: str
+    arguments: str  # the raw JSON text the model gave
+
+
+@dataclass(frozen=True)
+class ModelReply:
+    content: str
+    tool_calls: list[ToolCall] = field(default_factory=list)
+
+
 class OpenAIChatModel:
     """Adapter from an OpenAI-compatible client to the ChatModel interface used by the tutor.
 
@@ -55,11 +68,18 @@ class OpenAIChatModel:
         self.thinking = thinking
 
     def complete(self, messages: list[dict], temperature: float = 0.0) -> str:
+        return self.chat(messages, temperature).content
+
+    def chat(self, messages: list[dict], temperature: float = 0.0, tools: list[dict] | None = None) -> "ModelReply":
+        """One call that may offer tools; the reply carries the text and any tool calls. No tools: none are sent."""
         request = {"model": self.name, "messages": messages, "temperature": temperature}
+        if tools:
+            request["tools"] = tools
         if self.thinking is not None:
             request["extra_body"] = {"chat_template_kwargs": {"enable_thinking": self.thinking}}
-        response = self._client.chat.completions.create(**request)
-        return response.choices[0].message.content or ""
+        message = self._client.chat.completions.create(**request).choices[0].message
+        calls = getattr(message, "tool_calls", None) or []
+        return ModelReply(message.content or "", [ToolCall(c.id, c.function.name, c.function.arguments) for c in calls])
 
 
 def get_chat_model(model: str | None = None, env: Mapping[str, str] | None = None) -> OpenAIChatModel:
