@@ -24,6 +24,7 @@ ROUTED_TUTOR = "routed"
 AGENTIC_TUTOR = "agentic"
 TUTORS = (ROUTED_TUTOR, AGENTIC_TUTOR)
 UNKNOWN_COURSE = "Unknown Course."
+READ_LIMIT_REACHED = "Read limit reached."
 READ_LIMIT = 4  # Reads per question, valid or not, before the Agentic Tutor is forced to answer (ADR 0001)
 # The Agentic Tutor's one tool. Its only accepted arguments are the four Course codes, so it can read nothing else.
 READ_FILE_TOOL = {
@@ -67,7 +68,7 @@ class TutorResult:
     # Material read; it makes no tool calls and has no Read limit.
     tutor: str = ROUTED_TUTOR
     materials_read: list[str] = field(default_factory=list)  # Courses whose Course Material was chosen or read, in order
-    tool_arguments: list[str] = field(default_factory=list)  # every `read_file` argument as given, valid or not
+    read_arguments: list[str] = field(default_factory=list)  # every `read_file` argument as given, valid or not
     read_count: int = 0
     read_limit_hit: bool = False
 
@@ -153,12 +154,16 @@ def _answer_agentic(
 
 
 def _read(call: ToolCall, materials: dict[str, CourseMaterial], result: TutorResult) -> str:
-    """Handle one `read_file` call and record it in the Trace. Returns the tool result for the model."""
+    """Handle one `read_file` call and record it in the Trace. Returns the tool result for the model.
+
+    Past the Read limit a call is answered but not read or recorded, so the conversation stays valid."""
+    if result.read_count >= READ_LIMIT:
+        return READ_LIMIT_REACHED
     try:
         course = json.loads(call.arguments).get("course")
     except (TypeError, json.JSONDecodeError, AttributeError):
         course = None
-    result.tool_arguments.append(course if isinstance(course, str) else str(call.arguments))
+    result.read_arguments.append(course if isinstance(course, str) else str(call.arguments))
     result.read_count += 1
     if not isinstance(course, str) or course not in materials:
         return UNKNOWN_COURSE

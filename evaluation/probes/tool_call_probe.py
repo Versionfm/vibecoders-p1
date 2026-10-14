@@ -27,7 +27,7 @@ MODELS = {
     "nvidia/nemotron-3-super-120b-a12b": {"chat_template_kwargs": {"enable_thinking": False, "thinking": False}},
     "openai/gpt-oss-120b": {"reasoning_effort": "low"},
 }
-SYSTEM = ("You are a Course Tutor for four Courses: GAIF (Generative AI Foundations), PEID (Prompt Engineering and "
+SYSTEM = ("You are a tutor for four Courses: GAIF (Generative AI Foundations), PEID (Prompt Engineering and "
           "Interaction Design), AITB (AI Tools for Business Professionals) and DTGS (Digital Transformation and "
           "Generative AI Strategy). Read the Course Material you need with the read_file tool before answering.")
 QUESTION = "What does few-shot prompting mean, and when is it worth adding examples to a prompt?"

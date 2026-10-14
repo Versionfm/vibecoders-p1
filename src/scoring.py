@@ -55,7 +55,7 @@ def path_step(case: EvaluationCase, result: TutorResult) -> StepVerdict:
     Fails on a failed model call or an invalid Router reply, a `read_file` argument that is not a Course, a Course
     Material read twice, the Read limit reached, or an in-scope answer or Refusal given without any Read.
     """
-    invalid = [a for a in result.tool_arguments if a not in COURSES]
+    invalid = [a for a in result.read_arguments if a not in COURSES]
     repeated = sorted({c for c in result.materials_read if result.materials_read.count(c) > 1})
     if result.error:
         return StepVerdict(False, result.error)
@@ -98,6 +98,7 @@ class TraceScore:
     search: SearchVerdict
     path: StepVerdict
     answer: StepVerdict
+    errored: bool = False  # a failed model call or invalid Router reply, filed under the Path Step
 
     @property
     def success(self) -> bool:
@@ -106,7 +107,11 @@ class TraceScore:
 
     @property
     def earliest_failure(self) -> tuple[str, str] | None:
-        """(Step, reason) of the first failing Step in the order Search, Path, Answer; None when all pass."""
+        """(Step, reason) of the first failing Step in the order Search, Path, Answer; None when all pass.
+
+        A Trace with an error fails at the Path Step, even when nothing was read (which also fails Search)."""
+        if self.errored:
+            return "Path", self.path.reason
         for step, verdict in zip(STEPS, (self.search, self.path, self.answer)):
             if not verdict.passed:
                 return step, verdict.reason
@@ -114,7 +119,9 @@ class TraceScore:
 
 
 def score_trace(case: EvaluationCase, result: TutorResult) -> TraceScore:
-    return TraceScore(search_step(case, result), path_step(case, result), answer_step(case, result))
+    return TraceScore(
+        search_step(case, result), path_step(case, result), answer_step(case, result), result.error is not None
+    )
 
 
 def gave_out_of_scope(result: TutorResult) -> bool:
