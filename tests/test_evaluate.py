@@ -89,6 +89,49 @@ class EvaluationCommandTest(unittest.TestCase):
         self.assertIn("Thinking: off", report)
         self.assertIn(TUTOR_PROMPT_VERSION, report)
 
+    def test_a_stored_run_records_the_tutor_and_each_trace_with_its_step_verdicts(self):
+        run_dir = self.run_command(well_behaved_script(), ["--runs", "1"])
+        run = json.loads((run_dir / "run_1.json").read_text(encoding="utf-8"))
+
+        self.assertEqual(run["tutor"], "routed")
+        outputs = {o["case_id"]: o for o in run["outputs"]}
+        answered, out_of_scope = outputs["SAMPLE-01"], outputs["SAMPLE-05"]
+        self.assertEqual(answered["materials_read"], ["PEID"])
+        self.assertEqual(answered["tool_arguments"], [])
+        self.assertEqual(answered["read_count"], 1)
+        self.assertIs(answered["read_limit_hit"], False)
+        self.assertEqual(out_of_scope["materials_read"], [])
+        self.assertEqual(
+            answered["steps"]["search"], {"passed": True, "reason": "", "recall": 1.0, "extra_reads": []}
+        )
+        self.assertEqual(answered["steps"]["path"], {"passed": True, "reason": ""})
+        self.assertEqual(answered["steps"]["answer"], {"passed": True, "reason": ""})
+        self.assertIs(answered["steps"]["end_to_end_success"], True)
+        self.assertIsNone(answered["steps"]["earliest_failing_step"])
+        self.assertEqual(run["metrics"]["End-to-end Success"], 1.0)
+
+    def test_the_report_shows_the_step_matrix_and_per_case_step_counts_with_the_earliest_failing_step(self):
+        script = well_behaved_script()
+        # SAMPLE-03 is routed to PEID and refused in the second run only: it fails Search (and Answer) once
+        script[QUESTIONS["SAMPLE-03"]] = [
+            route("GAIF"), "It updates weights on errors [GAIF-2.9].",
+            route("PEID"), "This is not covered in the PEID material.",
+            route("GAIF"), "It updates weights on errors [GAIF-2.9].",
+        ]
+        run_dir = self.run_command(script)
+        report = (run_dir / "report.md").read_text(encoding="utf-8")
+
+        self.assertIn("## Steps", report)
+        self.assertIn("| Search Step | 94.4% | 83.3% to 100.0% | 100.0% | 83.3% | 100.0% |", report)
+        self.assertIn("| Path Step | 100.0% | 100.0% to 100.0% | 100.0% | 100.0% | 100.0% |", report)
+        self.assertIn("| **End-to-end Success** | 94.4% | 83.3% to 100.0% | 100.0% | 83.3% | 100.0% |", report)
+        self.assertIn(
+            "| SAMPLE-03 | near_miss | 2/3 | 3/3 | 2/3 | 2/3 | Search: read PEID, not an Accepted Course (1/3) |",
+            report,
+        )
+        self.assertIn("| SAMPLE-01 | in_material | 3/3 | 3/3 | 3/3 | 3/3 | - |", report)
+        self.assertNotIn("End-to-end Success | pending", report)
+
     def test_a_model_failure_is_recorded_as_an_error_for_that_case_and_the_run_completes(self):
         script = well_behaved_script()
         script[QUESTIONS["SAMPLE-01"]] = [TimeoutError("service did not answer")]

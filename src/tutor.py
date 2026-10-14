@@ -14,6 +14,7 @@ BRACKET = re.compile(r"\[([^\[\]\n]{1,200})\]")
 CITATION_LIKE = re.compile(r"[A-Z]{2,}-\d+(?:\.\d+)*")
 ROUTER_TEMPERATURE = 0.0
 TUTOR_TEMPERATURE = 0.0
+ROUTED_TUTOR = "routed"
 
 
 class ChatModel(Protocol):
@@ -37,6 +38,13 @@ class TutorResult:
     tutor_prompt_version: str = TUTOR_PROMPT_VERSION
     model: str = ""
     thinking: bool | None = None
+    # The Trace, filled the same way by every tutor. For the Routed Tutor the routed Course is the one Course
+    # Material read; it makes no tool calls and has no Read limit.
+    tutor: str = ROUTED_TUTOR
+    materials_read: list[str] = field(default_factory=list)  # Courses whose Course Material was chosen or read, in order
+    tool_arguments: list[str] = field(default_factory=list)  # every `read_file` argument as given, valid or not
+    read_count: int = 0
+    read_limit_hit: bool = False
 
 
 def answer_question(
@@ -61,6 +69,7 @@ def answer_question(
         return result
 
     material = materials[result.course]
+    result.materials_read, result.read_count = [material.code], 1
     system = fill(
         load_prompt(TUTOR_PROMPT_VERSION),
         COURSE_CODE=material.code,
