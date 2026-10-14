@@ -89,6 +89,57 @@ class PathStepTest(unittest.TestCase):
         self.assertIn("Router reply", path_step(self.in_scope, trace(error="Router reply is not valid JSON")).reason)
 
 
+class AgenticTutorPathStepTest(unittest.TestCase):
+    def setUp(self):
+        self.in_scope = case("p1", ["PEID"], expected_sections=["PEID-2.3"])
+
+    def agentic(self, read=(), arguments=None, **fields):
+        arguments = list(read) if arguments is None else arguments
+        return TutorResult(
+            question="q", tutor="agentic", materials_read=list(read), tool_arguments=arguments,
+            read_count=len(arguments), router_prompt_version=None, **fields,
+        )
+
+    def test_a_clean_trace_passes(self):
+        clean = self.agentic(["PEID"], course="PEID", answer="A [PEID-2.3].", citations=["PEID-2.3"])
+        self.assertTrue(path_step(self.in_scope, clean).passed)
+        self.assertTrue(score_trace(self.in_scope, clean).success)
+
+    def test_two_reads_for_an_overlap_case_pass(self):
+        overlap = case("o1", ["PEID", "AITB"], "overlap", expected_sections=["PEID-2.3"])
+        self.assertTrue(path_step(overlap, self.agentic(["PEID", "AITB"], course="PEID", answer="A.")).passed)
+
+    def test_the_out_of_scope_sentence_with_no_read_passes(self):
+        out_of_scope = case("x1", ["OUT_OF_SCOPE"], "out_of_scope")
+        result = self.agentic(course="OUT_OF_SCOPE", answer="This question is outside the four Courses.")
+        self.assertTrue(score_trace(out_of_scope, result).success)
+
+    def test_each_agentic_path_rule_fails_on_its_own(self):
+        answer = {"course": "PEID", "answer": "A [PEID-2.3].", "citations": ["PEID-2.3"]}
+        failures = {
+            "repeated Read": self.agentic(["PEID", "PEID"], **answer),
+            "invalid argument": self.agentic(["PEID"], ["GAIF2", "PEID"], **answer),
+            "answer with no Read": self.agentic(answer="A from memory."),
+            "Refusal with no Read": self.agentic(answer="This is not covered in the PEID material."),
+            "Read limit reached": self.agentic(["PEID"], ["PEID", "x", "y", "z"], read_limit_hit=True, **answer),
+            "failed model call": self.agentic(["PEID"], error="Agentic Tutor model call failed: TimeoutError: slow"),
+        }
+        for rule, result in failures.items():
+            with self.subTest(rule=rule):
+                verdict = path_step(self.in_scope, result)
+                self.assertFalse(verdict.passed)
+                self.assertTrue(verdict.reason)
+
+    def test_the_read_limit_alone_fails_path_with_its_reason(self):
+        verdict = path_step(self.in_scope, self.agentic(["PEID"], read_limit_hit=True, answer="A [PEID-2.3]."))
+        self.assertEqual(verdict.reason, "Read limit reached")
+
+    def test_the_out_of_scope_sentence_after_a_read_fails_the_answer_not_counted_as_out_of_scope(self):
+        after_read = self.agentic(["GAIF"], course="GAIF", answer="This question is outside the four Courses.")
+        self.assertFalse(answer_step(case("x1", ["OUT_OF_SCOPE"], "out_of_scope"), after_read).passed)
+        self.assertFalse(answer_step(self.in_scope, after_read).passed)
+
+
 REFUSAL = "This is not covered in the PEID material."
 
 
