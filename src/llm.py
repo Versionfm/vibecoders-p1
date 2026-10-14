@@ -3,9 +3,9 @@ import os
 from collections.abc import Mapping
 from dataclasses import dataclass, field
 
-DEFAULT_BASE_URL = "https://api.deepseek.com"
-DEFAULT_APP_MODEL = "deepseek-flash"
-DEFAULT_JUDGE_MODEL = ""  # chosen later by a probe; must not be a DeepSeek model
+# No default endpoint or model: .env names the provider (see .env.example), so a missing line fails loudly instead
+# of silently calling another provider's model.
+REQUIRED_SETTINGS = ("LLM_API_KEY", "LLM_BASE_URL", "LLM_MODEL")
 
 # A hung service raises a timeout, which the tutor turns into an error result. With one retry the worst case for
 # one model call is about 2 x 60 s (plus a short backoff), so about 4 minutes for a question (Router + Course Tutor).
@@ -28,17 +28,17 @@ class LlmSettings:
 
 def load_settings(env: Mapping[str, str] | None = None) -> LlmSettings:
     env = os.environ if env is None else env
-    api_key = env.get("LLM_API_KEY")
-    if not api_key:
-        raise RuntimeError("LLM_API_KEY not set. Check your .env file.")
+    for name in REQUIRED_SETTINGS:
+        if not env.get(name):
+            raise RuntimeError(f"{name} not set. Check your .env file (see .env.example).")
     thinking = (env.get("LLM_THINKING") or "off").strip().lower()
     if thinking not in THINKING_VALUES:
         raise RuntimeError(f"LLM_THINKING must be 'on' or 'off', not {thinking!r}. Check your .env file.")
     return LlmSettings(
-        api_key=api_key,
-        base_url=env.get("LLM_BASE_URL") or DEFAULT_BASE_URL,
-        app_model=env.get("LLM_MODEL") or DEFAULT_APP_MODEL,
-        judge_model=env.get("LLM_JUDGE_MODEL") or DEFAULT_JUDGE_MODEL,
+        api_key=env["LLM_API_KEY"],
+        base_url=env["LLM_BASE_URL"],
+        app_model=env["LLM_MODEL"],
+        judge_model=env.get("LLM_JUDGE_MODEL") or "",  # chosen later by a probe; not the app model's family
         thinking=THINKING_VALUES[thinking],
     )
 

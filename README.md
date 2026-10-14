@@ -14,18 +14,19 @@ python -m venv .venv
 The key goes in a local `.env` file, which Git ignores.
 
 1. Copy the example file: `cp .env.example .env`
-2. Open `.env` and paste your DeepSeek API key after `LLM_API_KEY=`. The base URL (`https://api.deepseek.com`) and app model (`deepseek-flash`) are already the defaults.
+2. Open `.env` and paste your DeepSeek API key after `LLM_API_KEY=`. The example file already selects DeepSeek (`LLM_BASE_URL=https://api.deepseek.com`, `LLM_MODEL=deepseek-flash`); it also lists the NVIDIA and course endpoints, commented out.
 3. Do not rename the file and do not put the key anywhere else (code, notes, chat, issues).
 4. `git status` must **not** list `.env`.
 
 Never commit `.env` or paste the key into any committed file.
 
-Other settings in `.env` (all optional):
+Other settings in `.env` (optional unless marked required):
 
 - `LLM_THINKING`: `on` or `off` (default `off`). Switches the app model's reasoning ("thinking") mode, sent both as
   `chat_template_kwargs.enable_thinking` (Nemotron) and as DeepSeek's `thinking` type. Off is much faster (on Nemotron a
   Router call took about 2 s instead of about 22 s). Every answer and every stored evaluation run records the setting, so both can be compared.
-- `LLM_BASE_URL`, `LLM_MODEL`: endpoint and app model (defaults above). `LLM_JUDGE_MODEL`: the LLM judge (later).
+- `LLM_BASE_URL`, `LLM_MODEL`: endpoint and app model. Required, with no defaults in the code: switch provider by
+  changing these two lines. `LLM_JUDGE_MODEL`: the LLM judge (later).
 - `TUTOR`: `routed` (default) or `agentic`. Chooses the tutor on the screen. With the Agentic Tutor the screen shows
   the Course Materials read where the Router's evidence was; it is still one box and one button. Keep `routed` for
   the demo until the Agentic Tutor wins on the Golden Set.

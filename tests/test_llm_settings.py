@@ -5,6 +5,7 @@ from types import SimpleNamespace
 
 from llm import OpenAIChatModel, ToolCall, get_chat_model, load_settings
 
+ENV = {"LLM_API_KEY": "k", "LLM_BASE_URL": "https://example.test/v1", "LLM_MODEL": "some/app-model"}
 READ_FILE_TOOL = {"type": "function", "function": {"name": "read_file", "parameters": {"type": "object"}}}
 
 
@@ -71,21 +72,21 @@ class OpenAIChatModelTest(unittest.TestCase):
 @unittest.skipUnless(importlib.util.find_spec("openai"), "openai is not installed")
 class GetChatModelTest(unittest.TestCase):
     def test_the_client_has_a_bounded_timeout_and_at_most_one_retry(self):
-        model = get_chat_model(env={"LLM_API_KEY": "test-key"})
+        model = get_chat_model(env=ENV)
         self.assertEqual(model._client.max_retries, 1)
         self.assertEqual(model._client.timeout, 60.0)
 
     def test_the_thinking_setting_reaches_the_chat_model(self):
-        self.assertIs(get_chat_model(env={"LLM_API_KEY": "k"}).thinking, False)
-        self.assertIs(get_chat_model(env={"LLM_API_KEY": "k", "LLM_THINKING": "on"}).thinking, True)
+        self.assertIs(get_chat_model(env=ENV).thinking, False)
+        self.assertIs(get_chat_model(env={**ENV, "LLM_THINKING": "on"}).thinking, True)
 
 
 class LlmSettingsTest(unittest.TestCase):
-    def test_defaults_point_to_the_deepseek_endpoint_and_app_model(self):
-        settings = load_settings({"LLM_API_KEY": "test-key"})
-        self.assertEqual(settings.base_url, "https://api.deepseek.com")
-        self.assertEqual(settings.app_model, "deepseek-flash")
-        self.assertEqual(settings.api_key, "test-key")
+    def test_endpoint_and_app_model_have_no_default_and_are_reported_clearly_when_missing(self):
+        for name in ("LLM_BASE_URL", "LLM_MODEL"):
+            for missing in ({k: v for k, v in ENV.items() if k != name}, {**ENV, name: ""}):
+                with self.subTest(name=name, env=missing), self.assertRaisesRegex(RuntimeError, name):
+                    load_settings(missing)
 
     def test_every_setting_comes_from_the_environment(self):
         settings = load_settings(
@@ -100,22 +101,17 @@ class LlmSettingsTest(unittest.TestCase):
         self.assertEqual(settings.app_model, "some/app-model")
         self.assertEqual(settings.judge_model, "other/judge-model")
 
-    def test_empty_values_fall_back_to_defaults(self):
-        settings = load_settings({"LLM_API_KEY": "k", "LLM_BASE_URL": "", "LLM_MODEL": ""})
-        self.assertEqual(settings.base_url, "https://api.deepseek.com")
-        self.assertEqual(settings.app_model, "deepseek-flash")
-
     def test_thinking_is_off_unless_switched_on(self):
-        self.assertFalse(load_settings({"LLM_API_KEY": "k"}).thinking)
-        self.assertFalse(load_settings({"LLM_API_KEY": "k", "LLM_THINKING": ""}).thinking)
+        self.assertFalse(load_settings(ENV).thinking)
+        self.assertFalse(load_settings({**ENV, "LLM_THINKING": ""}).thinking)
         for value in ("off", "OFF", "Off"):
-            self.assertFalse(load_settings({"LLM_API_KEY": "k", "LLM_THINKING": value}).thinking)
+            self.assertFalse(load_settings({**ENV, "LLM_THINKING": value}).thinking)
         for value in ("on", "ON", " on "):
-            self.assertTrue(load_settings({"LLM_API_KEY": "k", "LLM_THINKING": value}).thinking)
+            self.assertTrue(load_settings({**ENV, "LLM_THINKING": value}).thinking)
 
     def test_an_unknown_thinking_value_is_reported_clearly(self):
         with self.assertRaisesRegex(RuntimeError, "LLM_THINKING"):
-            load_settings({"LLM_API_KEY": "k", "LLM_THINKING": "maybe"})
+            load_settings({**ENV, "LLM_THINKING": "maybe"})
 
     def test_missing_api_key_is_reported_clearly(self):
         with self.assertRaisesRegex(RuntimeError, "LLM_API_KEY"):
