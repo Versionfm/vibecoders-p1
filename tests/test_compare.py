@@ -44,6 +44,13 @@ class RenderCompareTest(unittest.TestCase):
         self.assertIn("83.3% <small>50.0% to 100.0%</small>", html)  # B: Path and End-to-end Success
         self.assertIn("100.0% <small>100.0% to 100.0%</small>", html)  # both: Answer
 
+    def test_bars_carry_a_short_label_with_the_tutor_and_the_run_folders_are_named_once_above(self):
+        name_a, name_b = "2026-10-14_120039_pilot_deepseek_routed", "2026-10-14_120227_pilot_deepseek_routed"
+        html = render_compare(before(), after(), name_a, name_b)
+        self.assertIn('class="label">A routed<', html)
+        self.assertIn('class="label">B routed<', html)
+        self.assertNotIn(f'class="label">A {name_a}', html)
+
     def test_only_cases_whose_end_to_end_success_changed_are_listed_with_each_sides_earliest_failing_step(self):
         html = render_compare(before(), after(), "A", "B")
         self.assertEqual(html.count('class="changed"'), 1)

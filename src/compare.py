@@ -39,7 +39,7 @@ def render_compare(runs_a: list[dict], runs_b: list[dict], name_a: str, name_b: 
 {"".join(f'<p class="warning"><b class="fail">Warning:</b> {escape(w)}</p>' for w in warnings)}
 
 <h2>Pass rate per Step</h2>
-{"".join(_metric_panel(name, runs_a, runs_b, name_a, name_b) for name in STEP_METRICS)}
+{"".join(_metric_panel(name, runs_a, runs_b) for name in STEP_METRICS)}
 <small>Bar: mean over the Runs. Marks: lowest to highest Run.</small>
 
 <h2>Cases whose {END_TO_END} changed</h2>
@@ -51,12 +51,13 @@ def render_compare(runs_a: list[dict], runs_b: list[dict], name_a: str, name_b: 
     return page(f"Compare {name_a} and {name_b}", body)
 
 
-def _metric_panel(name: str, runs_a: list[dict], runs_b: list[dict], name_a: str, name_b: str) -> str:
+def _metric_panel(name: str, runs_a: list[dict], runs_b: list[dict]) -> str:
+    """Bars are labelled with A or B and the tutor only: the run folder names are too long for the label column."""
     strong = name == END_TO_END
     return (
         f'<div class="panel" style="margin-bottom:8px"><b>{name}</b>'
-        + bar(f"A {name_a}", [r["metrics"][name] for r in runs_a], strong)
-        + bar(f"B {name_b}", [r["metrics"][name] for r in runs_b], strong)
+        + bar(f"A {runs_a[0]['tutor']}", [r["metrics"][name] for r in runs_a], strong)
+        + bar(f"B {runs_b[0]['tutor']}", [r["metrics"][name] for r in runs_b], strong)
         + "</div>"
     )
 
