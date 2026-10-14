@@ -3,19 +3,46 @@ import unittest
 
 from types import SimpleNamespace
 
-from llm import OpenAIChatModel, get_chat_model, load_settings
+from llm import OpenAIChatModel, ToolCall, get_chat_model, load_settings
+
+READ_FILE_TOOL = {"type": "function", "function": {"name": "read_file", "parameters": {"type": "object"}}}
 
 
 class FakeOpenAIClient:
-    def __init__(self, content):
+    def __init__(self, content, tool_calls=None):
         self.requests = []
         self.chat = SimpleNamespace(completions=SimpleNamespace(create=self._create))
         self._content = content
+        self._tool_calls = tool_calls
 
     def _create(self, **kwargs):
         self.requests.append(kwargs)
-        message = SimpleNamespace(content=self._content)
+        message = SimpleNamespace(content=self._content, tool_calls=self._tool_calls)
         return SimpleNamespace(choices=[SimpleNamespace(message=message)])
+
+
+def openai_tool_call(call_id, name, arguments):
+    return SimpleNamespace(id=call_id, type="function", function=SimpleNamespace(name=name, arguments=arguments))
+
+
+class ToolOfferTest(unittest.TestCase):
+    def test_tools_are_sent_when_offered(self):
+        client = FakeOpenAIClient("hello")
+        OpenAIChatModel(client, "some/app-model").chat([{"role": "user", "content": "hi"}], tools=[READ_FILE_TOOL])
+        self.assertEqual(client.requests[0]["tools"], [READ_FILE_TOOL])
+
+    def test_tools_are_not_sent_when_not_offered(self):
+        client = FakeOpenAIClient("hello")
+        reply = OpenAIChatModel(client, "some/app-model").chat([{"role": "user", "content": "hi"}])
+        self.assertNotIn("tools", client.requests[0])
+        self.assertEqual((reply.content, reply.tool_calls), ("hello", []))
+
+    def test_tool_calls_in_a_response_become_tool_calls_in_the_reply(self):
+        client = FakeOpenAIClient(None, [openai_tool_call("call-1", "read_file", '{"course": "PEID"}')])
+        model = OpenAIChatModel(client, "some/app-model")
+        reply = model.chat([{"role": "user", "content": "hi"}], tools=[READ_FILE_TOOL])
+        self.assertEqual(reply.content, "")
+        self.assertEqual(reply.tool_calls, [ToolCall("call-1", "read_file", '{"course": "PEID"}')])
 
 
 class OpenAIChatModelTest(unittest.TestCase):

@@ -1,6 +1,6 @@
 # Course Tutor
 
-A single-screen tutor for four Courses (GAIF, PEID, AITB, DTGS). A Router picks the Course for your question, and the Course Tutor answers only from that Course's Course Material, citing the Section behind every claim (e.g. `[PEID-2.3]`). Vocabulary: [CONTEXT.md](CONTEXT.md).
+A single-screen tutor for four Courses (GAIF, PEID, AITB, DTGS). A Router picks the Course for your question, and the Course Tutor answers only from that Course's Course Material, citing the Section behind every claim (e.g. `[PEID-2.3]`). This is the Routed Tutor. An experimental Agentic Tutor has no Router: one model reads the Course Materials it needs through a `read_file(course)` tool and answers from them ([ADR 0001](docs/adr/0001-agentic-tutor-without-router.md), prompt `prompts/agentic_tutor_v1.md`). Vocabulary: [CONTEXT.md](CONTEXT.md).
 
 ## Setup
 
@@ -26,6 +26,9 @@ Other settings in `.env` (all optional):
   `chat_template_kwargs.enable_thinking`. Off is much faster on Nemotron (a Router call took about 2 s instead of
   about 22 s). Every answer and every stored evaluation run records the setting, so both can be compared.
 - `LLM_BASE_URL`, `LLM_MODEL`: endpoint and app model (defaults above). `LLM_JUDGE_MODEL`: the LLM judge (later).
+- `TUTOR`: `routed` (default) or `agentic`. Chooses the tutor on the screen. With the Agentic Tutor the screen shows
+  the Course Materials read where the Router's evidence was; it is still one box and one button. Keep `routed` for
+  the demo until the Agentic Tutor wins on the Golden Set.
 
 Each model call times out after 60 s and is retried at most once, so one call fails after about 2 minutes at worst
 and the screen then asks you to try again.
@@ -45,13 +48,15 @@ python src/evaluate.py evaluation/sample_cases.json
 ```
 
 Options: `--runs 3` (default), `--out evaluation/runs` (default), `--label tutor_v3` (added to the run folder name),
-`--workers 4` (cases answered in parallel within a run; default 1, keep it small because of the endpoint's rate limit).
+`--workers 4` (cases answered in parallel within a run; default 1, keep it small because of the endpoint's rate limit),
+`--tutor agentic` (run the Agentic Tutor instead of the Routed Tutor; the tutor is added to the run folder name and
+stored in every run).
 It needs the API key in `.env`, like the app. Each run is stored as soon as it finishes, so stopping the command
 keeps the runs already completed (the report is written at the end).
 
 Each evaluation writes a folder `evaluation/runs/<date>_<time>[_<label>]/` with:
 
-- `run_1.json`, `run_2.json`, `run_3.json`: timestamp, tutor (`routed`), case file, prompt versions, model names, the metrics of that run and every case's output (routed Course, evidence, answer, citations, Refusal, invalid citations, error), its Trace (`materials_read` in order, `tool_arguments`, `read_count`, `read_limit_hit`) and its `steps` (Search, Path and Answer verdicts with reasons, End-to-end Success, earliest failing Step);
+- `run_1.json`, `run_2.json`, `run_3.json`: timestamp, tutor (`routed` or `agentic`), case file, prompt versions (`router` and `tutor`, or `agentic_tutor`), model names, the metrics of that run and every case's output (routed Course, evidence, answer, citations, Refusal, invalid citations, error), its Trace (`materials_read` in order, `tool_arguments`, `read_count`, `read_limit_hit`) and its `steps` (Search, Path and Answer verdicts with reasons, End-to-end Success, earliest failing Step);
 - `report.md`: the Step matrix (pass rate per Step and End-to-end Success as mean and range across the runs; per case each Step as e.g. `3/3` with the earliest failing Step), each metric as mean and range, plus a per-case table, ready to paste into the report.
 
 Every Trace is scored by three Steps, checked in this order (see [ADR 0002](docs/adr/0002-trace-steps-and-html-report.md)):

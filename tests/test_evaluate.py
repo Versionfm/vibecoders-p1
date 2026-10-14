@@ -9,8 +9,8 @@ from pathlib import Path
 
 from cases import SAMPLE_CASE_FILE, load_cases
 from evaluate import main
-from prompts import ROUTER_PROMPT_VERSION, TUTOR_PROMPT_VERSION
-from tests.fakes import QuestionScriptedModel
+from prompts import AGENTIC_TUTOR_PROMPT_VERSION, ROUTER_PROMPT_VERSION, TUTOR_PROMPT_VERSION
+from tests.fakes import QuestionScriptedModel, reads
 
 QUESTIONS = {case.id: case.question for case in load_cases(SAMPLE_CASE_FILE)}
 FIXED_CLOCK = lambda: datetime(2026, 10, 9, 14, 30, 0, tzinfo=timezone.utc)  # noqa: E731
@@ -178,6 +178,32 @@ class EvaluationCommandTest(unittest.TestCase):
         self.assertEqual([o["case_id"] for o in parallel["outputs"]], list(QUESTIONS))
         self.assertEqual(parallel["outputs"], sequential["outputs"])
         self.assertEqual(parallel["metrics"], sequential["metrics"])
+
+    def test_tutor_agentic_stores_runs_labelled_with_the_tutor_and_scored_by_the_steps(self):
+        script = {
+            QUESTIONS["SAMPLE-01"]: [reads("PEID"), "Models predict plausible tokens [PEID-1.9]."],
+            QUESTIONS["SAMPLE-02"]: [reads("DTGS"), "There are five rungs [DTGS-3.7]."],
+            QUESTIONS["SAMPLE-03"]: [reads("PEID"), "Not in what I read [GAIF-2.9]."],
+            QUESTIONS["SAMPLE-04"]: [reads("AITB"), "Name the task and give context [AITB-2.2]."],
+            QUESTIONS["SAMPLE-05"]: ["This question is outside the four Courses."],
+            QUESTIONS["SAMPLE-06"]: [reads("AITB"), "This is not covered in the AITB material."],
+        }
+        run_dir = self.run_command(script, ["--tutor", "agentic"])
+        run = json.loads((run_dir / "run_3.json").read_text(encoding="utf-8"))
+
+        self.assertTrue(run_dir.name.endswith("_agentic"))
+        self.assertEqual(run["tutor"], "agentic")
+        self.assertEqual(run["prompt_versions"], {"agentic_tutor": AGENTIC_TUTOR_PROMPT_VERSION})
+        self.assertEqual(self.model.calls_for(QUESTIONS["SAMPLE-01"]), 6)  # a Read and an answer, in each of 3 runs
+        outputs = {o["case_id"]: o for o in run["outputs"]}
+        self.assertEqual(outputs["SAMPLE-01"]["materials_read"], ["PEID"])
+        self.assertEqual(outputs["SAMPLE-01"]["tool_arguments"], ["PEID"])
+        self.assertIs(outputs["SAMPLE-01"]["steps"]["end_to_end_success"], True)
+        self.assertEqual(
+            outputs["SAMPLE-03"]["steps"]["earliest_failing_step"],
+            {"step": "Search", "reason": "read PEID, not an Accepted Course"},
+        )
+        self.assertIn("Tutor: `agentic`", (run_dir / "report.md").read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":

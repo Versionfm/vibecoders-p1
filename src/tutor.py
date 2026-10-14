@@ -1,11 +1,16 @@
-"""Seam A: answer one question. Router call, then one Course Tutor call, with the chat model injected."""
+"""Seam A: answer one question, with the chat model injected.
+
+Routed Tutor: a Router call, then one Course Tutor call. Agentic Tutor: one model Reads Course Material through the
+`read_file` tool in a plain loop (ADR 0001), then answers.
+"""
 import json
 import re
 from dataclasses import dataclass, field
 from typing import Protocol
 
-from course_material import CourseMaterial, default_course_materials
-from prompts import ROUTER_PROMPT_VERSION, TUTOR_PROMPT_VERSION, fill, load_prompt
+from course_material import COURSES, CourseMaterial, default_course_materials
+from llm import ModelReply, ToolCall
+from prompts import AGENTIC_TUTOR_PROMPT_VERSION, ROUTER_PROMPT_VERSION, TUTOR_PROMPT_VERSION, fill, load_prompt
 
 OUT_OF_SCOPE = "OUT_OF_SCOPE"
 # A bracket holds one Section identifier or several separated by "," or ";". Any ID-shaped token in a bracket
@@ -15,6 +20,22 @@ CITATION_LIKE = re.compile(r"[A-Z]{2,}-\d+(?:\.\d+)*")
 ROUTER_TEMPERATURE = 0.0
 TUTOR_TEMPERATURE = 0.0
 ROUTED_TUTOR = "routed"
+AGENTIC_TUTOR = "agentic"
+TUTORS = (ROUTED_TUTOR, AGENTIC_TUTOR)
+UNKNOWN_COURSE = "Unknown Course."
+# The Agentic Tutor's one tool. Its only accepted arguments are the four Course codes, so it can read nothing else.
+READ_FILE_TOOL = {
+    "type": "function",
+    "function": {
+        "name": "read_file",
+        "description": "Return the whole Course Material of one Course.",
+        "parameters": {
+            "type": "object",
+            "properties": {"course": {"type": "string", "enum": list(COURSES)}},
+            "required": ["course"],
+        },
+    },
+}
 
 
 class ChatModel(Protocol):
@@ -22,6 +43,8 @@ class ChatModel(Protocol):
     thinking: bool | None  # the model's reasoning mode switch; None when not set
 
     def complete(self, messages: list[dict], temperature: float = 0.0) -> str: ...
+
+    def chat(self, messages: list[dict], temperature: float = 0.0, tools: list[dict] | None = None) -> ModelReply: ...
 
 
 @dataclass
@@ -34,7 +57,7 @@ class TutorResult:
     is_refusal: bool = False
     invalid_citations: list[str] = field(default_factory=list)
     error: str | None = None
-    router_prompt_version: str = ROUTER_PROMPT_VERSION
+    router_prompt_version: str | None = ROUTER_PROMPT_VERSION  # None for the Agentic Tutor, which has no Router
     tutor_prompt_version: str = TUTOR_PROMPT_VERSION
     model: str = ""
     thinking: bool | None = None
@@ -51,9 +74,15 @@ def answer_question(
     question: str,
     model: ChatModel,
     materials: dict[str, CourseMaterial] | None = None,
+    tutor: str = ROUTED_TUTOR,
 ) -> TutorResult:
+    """Answer with the Routed Tutor (default) or the Agentic Tutor (`tutor="agentic"`). Both fill the same Trace."""
+    if tutor not in TUTORS:
+        raise ValueError(f"Unknown tutor {tutor!r}; choose one of {', '.join(TUTORS)}")
     materials = default_course_materials() if materials is None else materials
     result = TutorResult(question=question, model=model.name, thinking=getattr(model, "thinking", None))
+    if tutor == AGENTIC_TUTOR:
+        return _answer_agentic(question, model, materials, result)
 
     try:
         reply = model.complete(_messages(load_prompt(ROUTER_PROMPT_VERSION), question), ROUTER_TEMPERATURE)
@@ -85,6 +114,56 @@ def answer_question(
     result.invalid_citations = [c for c in result.citations if c not in material.sections]
     result.is_refusal = is_refusal(result.answer, material.code)
     return result
+
+
+def _answer_agentic(
+    question: str, model: ChatModel, materials: dict[str, CourseMaterial], result: TutorResult
+) -> TutorResult:
+    """The Agentic Tutor loop: offer `read_file`, feed each Read back, stop at the first reply with no tool calls."""
+    result.tutor = AGENTIC_TUTOR
+    result.router_prompt_version, result.tutor_prompt_version = None, AGENTIC_TUTOR_PROMPT_VERSION
+    messages = _messages(load_prompt(AGENTIC_TUTOR_PROMPT_VERSION), question)
+    while True:
+        try:
+            reply = model.chat(messages, TUTOR_TEMPERATURE, tools=[READ_FILE_TOOL])
+        except Exception as error:
+            result.error = _model_failure("Agentic Tutor", error)
+            return result
+        if not reply.tool_calls:
+            break
+        messages.append(_assistant_message(reply))
+        for call in reply.tool_calls:
+            messages.append({"role": "tool", "tool_call_id": call.id, "content": _read(call, materials, result)})
+
+    result.answer = reply.content
+    result.course = result.materials_read[0] if result.materials_read else None
+    result.citations = extract_citations(result.answer)
+    read_sections = {s for code in result.materials_read for s in materials[code].sections}
+    result.invalid_citations = [c for c in result.citations if c not in read_sections]
+    return result
+
+
+def _read(call: ToolCall, materials: dict[str, CourseMaterial], result: TutorResult) -> str:
+    """Handle one `read_file` call and record it in the Trace. Returns the tool result for the model."""
+    try:
+        course = json.loads(call.arguments).get("course")
+    except (json.JSONDecodeError, AttributeError):
+        course = None
+    result.tool_arguments.append(course if isinstance(course, str) else call.arguments)
+    result.read_count += 1
+    if course not in materials:
+        return UNKNOWN_COURSE
+    result.materials_read.append(course)
+    return materials[course].text.strip()
+
+
+def _assistant_message(reply: ModelReply) -> dict:
+    """The model's tool-calling reply, in the OpenAI chat format, so the next call sees what it asked for."""
+    calls = [
+        {"id": c.id, "type": "function", "function": {"name": c.name, "arguments": c.arguments}}
+        for c in reply.tool_calls
+    ]
+    return {"role": "assistant", "content": reply.content, "tool_calls": calls}
 
 
 class RouterReplyError(ValueError):

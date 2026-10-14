@@ -4,8 +4,33 @@ import io
 import json
 import unittest
 
-from screen import ask, markdown_safe
-from tests.fakes import FakeChatModel
+from screen import ask, markdown_safe, tutor_setting
+from tests.fakes import FakeChatModel, reads
+
+
+class TutorSettingTest(unittest.TestCase):
+    def test_the_routed_tutor_is_the_default(self):
+        self.assertEqual(tutor_setting({}), "routed")
+        self.assertEqual(tutor_setting({"TUTOR": ""}), "routed")
+
+    def test_the_setting_can_choose_the_agentic_tutor(self):
+        self.assertEqual(tutor_setting({"TUTOR": " Agentic "}), "agentic")
+
+
+class AskWithTheAgenticTutorTest(unittest.TestCase):
+    def test_the_agentic_tutor_runs_when_chosen_and_reports_the_course_materials_read(self):
+        model = FakeChatModel([reads("PEID"), "Parts [PEID-2.3]."])
+        result = ask("What is a prompt?", lambda: model, tutor="agentic")
+        self.assertEqual(result.tutor, "agentic")
+        self.assertEqual(result.materials_read, ["PEID"])
+        self.assertEqual(result.citations, ["PEID-2.3"])
+
+    def test_an_unknown_tutor_setting_gives_no_result_and_logs_the_reason(self):
+        console = io.StringIO()
+        with contextlib.redirect_stderr(console):
+            result = ask("What is a prompt?", lambda: FakeChatModel([]), tutor="hybrid")
+        self.assertIsNone(result)
+        self.assertIn("hybrid", console.getvalue())
 
 
 class MarkdownSafeTest(unittest.TestCase):

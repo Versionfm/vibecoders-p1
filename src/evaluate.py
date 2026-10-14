@@ -2,6 +2,7 @@
 
     python src/evaluate.py evaluation/sample_cases.json            # 3 runs, results under evaluation/runs/
     python src/evaluate.py <case file> --runs 3 --out evaluation/runs --label tutor_v3 --workers 4
+    python src/evaluate.py <case file> --tutor agentic            # the Agentic Tutor instead of the Routed Tutor
 
 Each run is stored as soon as it finishes, so an interrupted evaluation keeps the runs that completed.
 """
@@ -18,10 +19,14 @@ from pathlib import Path
 
 from cases import EvaluationCase, load_cases
 from course_material import CourseMaterial, default_course_materials
-from prompts import ROUTER_PROMPT_VERSION, TUTOR_PROMPT_VERSION
+from prompts import AGENTIC_TUTOR_PROMPT_VERSION, ROUTER_PROMPT_VERSION, TUTOR_PROMPT_VERSION
 from scoring import CLASSES, END_TO_END, MACRO_RECALL, STEP_METRICS, STEPS, score_run, score_trace, summarise
-from tutor import ROUTED_TUTOR, ChatModel, TutorResult, answer_question
+from tutor import AGENTIC_TUTOR, ROUTED_TUTOR, TUTORS, ChatModel, TutorResult, answer_question
 
+PROMPT_VERSIONS = {
+    ROUTED_TUTOR: {"router": ROUTER_PROMPT_VERSION, "tutor": TUTOR_PROMPT_VERSION},
+    AGENTIC_TUTOR: {"agentic_tutor": AGENTIC_TUTOR_PROMPT_VERSION},
+}
 DEFAULT_RUNS = 3
 DEFAULT_WORKERS = 1
 DEFAULT_OUT_DIR = Path(__file__).resolve().parent.parent / "evaluation" / "runs"
@@ -52,6 +57,7 @@ def run_evaluation(
     materials: dict[str, CourseMaterial] | None = None,
     on_run: Callable[[Run], None] = lambda run: None,
     workers: int = DEFAULT_WORKERS,
+    tutor: str = ROUTED_TUTOR,
 ) -> list[Run]:
     """Answer every case once per run. `on_run` gets each run as soon as it finishes (e.g. to store it).
 
@@ -62,7 +68,7 @@ def run_evaluation(
     with ThreadPoolExecutor(max_workers=max(1, workers)) as pool:
         for number in range(1, runs + 1):
             timestamp = clock().isoformat(timespec="seconds")
-            results = list(pool.map(lambda case: answer_question(case.question, model, materials), cases))
+            results = list(pool.map(lambda case: answer_question(case.question, model, materials, tutor), cases))
             run = Run(
                 number,
                 timestamp,
@@ -72,6 +78,7 @@ def run_evaluation(
                 None,
                 results,
                 score_run(cases, results),
+                tutor,
             )
             on_run(run)
             stored.append(run)
@@ -84,7 +91,7 @@ def run_record(run: Run, cases: list[EvaluationCase]) -> dict:
         "timestamp": run.timestamp,
         "tutor": run.tutor,
         "case_file": run.case_file,
-        "prompt_versions": {"router": ROUTER_PROMPT_VERSION, "tutor": TUTOR_PROMPT_VERSION},
+        "prompt_versions": PROMPT_VERSIONS[run.tutor],
         "models": {"app": run.app_model, "judge": run.judge_model},
         "thinking": run.app_thinking,
         "metrics": run.metrics,
@@ -133,7 +140,7 @@ def render_report(runs: list[Run], cases: list[EvaluationCase]) -> str:
         f"- Case file: `{first.case_file}` ({len(cases)} cases: {type_counts})",
         f"- Runs: {len(runs)} (every case answered once per run)",
         f"- App model (Router and Course Tutor): `{first.app_model}`. Thinking: {_on_off(first.app_thinking)}",
-        f"- Prompt versions: Router `{ROUTER_PROMPT_VERSION}`, Course Tutor `{TUTOR_PROMPT_VERSION}`",
+        "- Prompt versions: " + ", ".join(f"{k} `{v}`" for k, v in PROMPT_VERSIONS[first.tutor].items()),
         f"- Judge model: {f'`{first.judge_model}`' if first.judge_model else 'none yet (LLM judge comes in ticket #7)'}",
         f"- Tutor: `{first.tutor}`",
         "",
@@ -214,6 +221,11 @@ def main(argv: list[str] | None = None, model: ChatModel | None = None, clock=No
         default=DEFAULT_WORKERS,
         help=f"cases answered in parallel within a run (default {DEFAULT_WORKERS}; mind the endpoint's rate limit)",
     )
+    parser.add_argument(
+        "--tutor",
+        choices=TUTORS,
+        help=f"which tutor answers (default {ROUTED_TUTOR}); when given, it is added to the run folder name",
+    )
     args = parser.parse_args(argv)
 
     cases = load_cases(args.case_file)
@@ -222,7 +234,7 @@ def main(argv: list[str] | None = None, model: ChatModel | None = None, clock=No
 
         model = get_chat_model()
     clock = clock or (lambda: datetime.now(timezone.utc))
-    run_dir = create_run_folder(args.out, clock(), args.label)
+    run_dir = create_run_folder(args.out, clock(), "_".join(p for p in (args.label, args.tutor) if p))
 
     def store(run: Run) -> None:
         write_run(run, cases, run_dir)
@@ -236,6 +248,7 @@ def main(argv: list[str] | None = None, model: ChatModel | None = None, clock=No
         clock=clock,
         on_run=store,
         workers=args.workers,
+        tutor=args.tutor or ROUTED_TUTOR,
     )
     write_report(runs, cases, run_dir)
     print(f"Stored {len(runs)} runs of {len(cases)} cases in {run_dir}")
