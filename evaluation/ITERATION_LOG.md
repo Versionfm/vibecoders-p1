@@ -175,3 +175,20 @@ Copy this block for each entry:
 - **Reason:** 1.3 cases fewer per Run on average, mostly Refusal cases answered as Out of scope (GS-35, GS-36, two
   labels the group still has to decide) and one exercise refused without reading. On the candidates the Routed
   Tutor stays ahead; decide on the frozen Golden Set (#17).
+
+## 2026-10-14 Golden Set v1 frozen (#5)
+
+- **Change:** the 36 candidates in `evaluation/golden_set_candidates.json` were reviewed against the Course Material
+  and frozen as `evaluation/golden_set.json` (version 1). Six cases differ from the candidates: GS-01 (one key fact
+  removed), GS-02 (new GAIF/PEID Near-miss question), GS-04 (near_miss to in_material), GS-08 (reworded, PEID-4.2
+  removed), GS-15 (new DTGS question on cost, time to value and risk), GS-36 (Lewin's change model replaces Porter's
+  five forces). Reasons per case: `evaluation/golden_set_review.md`.
+- **Configuration:** reviewer 1 Gonçalo Augusto (all 36 cases); second review by Rodrigo, not blind (comments on
+  GS-01, GS-08, GS-15). Automatic checks: `tests/test_golden_set.py`.
+- **Run folder:** none. No score has been computed on `evaluation/golden_set.json`.
+- **Result:** no score. The pilot runs above used the candidates, where four questions differ (GS-02, GS-08, GS-15,
+  GS-36), so their numbers are not comparable with runs on the frozen file.
+- **Decision:** kept.
+- **Reason:** the Golden Set had to be agreed and frozen before the baseline (#7). Labels were decided from the
+  Course Material, not from the pilot outputs; the pilots having been seen before the freeze is reported as a
+  limitation.
