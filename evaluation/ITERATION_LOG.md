@@ -78,3 +78,19 @@ Copy this block for each entry:
 - **Reason:** an answer without citations fails End-to-end Success by definition, and Super is as fast as Lightning
   with thinking off. Tiny probe, not a score: confirm on the Golden Set baseline. Note for ticket #7: `z-ai/glm-5.3`
   answered reliably and is not a Nemotron model, so it is a judge candidate.
+
+## 2026-10-14 Agentic Tutor model: native tool calling on nemotron-3-super-120b-a12b (tool-calling probe, ticket #11)
+
+- **Change:** none to the app. Checked, before the Agentic Tutor depends on it, whether the endpoint returns real
+  `tool_calls` for the `read_file(course)` tool (ADR 0001).
+- **Configuration:** probe script `evaluation/probes/tool_call_probe.py`: one throwaway question (not the Golden Set)
+  with the `read_file` tool, temperature 0; `nvidia/nemotron-3-super-120b-a12b` with thinking off and
+  `openai/gpt-oss-120b` with low reasoning effort.
+- **Run folder:** `evaluation/probes/tool_call_probe.json`.
+- **Result:** Super: tool calls filled in (`finish_reason` `tool_calls`), one call `read_file({"course":"PEID"})`,
+  the right Course for the question, in 0.8 s. gpt-oss-120b: HTTP 410, the model reached its end of life on the
+  NVIDIA endpoint on 2026-09-03 and is no longer available.
+- **Decision:** kept: the Agentic Tutor uses native tool calling on `nvidia/nemotron-3-super-120b-a12b`, thinking off.
+- **Reason:** Super returns real tool calls although NVIDIA's request schema omits `tools`, and it is already the
+  Routed Tutor's model, so the comparison in #17 changes only the tutor. One question, not a score: the Path Step on
+  the Golden Set is the real check.
