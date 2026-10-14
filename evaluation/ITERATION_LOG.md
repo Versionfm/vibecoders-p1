@@ -142,3 +142,36 @@ Copy this block for each entry:
   names its model; the cost is small (about $0.30 per million input tokens on a cache miss, $1.20 per million output
   tokens at peak). Both tutors are measured on it, so the comparison changes only the tutor. The judge (#7) must now
   come from a family other than DeepSeek.
+
+## 2026-10-14 Pilot: Routed Tutor on the Golden Set candidates, deepseek-flash
+
+- **Change:** none; pilot of the Routed Tutor on the new app model. Labels of `evaluation/golden_set_candidates.json`
+  are not yet agreed by the group, so this is not the Golden Set baseline.
+- **Configuration:** Routed Tutor, Router `router_v2`, Course Tutor `tutor_v2`, app model `deepseek-flash`, thinking
+  off, no judge (Answer Step uses code checks only), `--workers 3`, commit `c92da4e`.
+- **Run folder:** `evaluation/runs/2026-10-14_120039_pilot_deepseek_routed` (with `failures.md`).
+- **Result:** End-to-end Success 89.8% (88.9% to 91.7%); Search Step 91.7% (91.7% to 91.7%); Path Step 100.0%;
+  Answer Step 89.8% (88.9% to 91.7%). Routing accuracy 91.7%, Refusal correctness 75.0%, Out of scope correctness
+  100.0%, citation correctness 96.2%. Failing cases: GS-05 3/3 (routed AITB), GS-15 3/3 (routed PEID), GS-36 3/3
+  (Out of scope), GS-27 2/3 (DTGS Refusal).
+- **Decision:** pending.
+- **Reason:** first usable numbers for the Routed Tutor; three of the four failing cases have labels the group still
+  has to decide. Repeat on the frozen Golden Set as the baseline for #17.
+
+## 2026-10-14 Pilot: Agentic Tutor on the Golden Set candidates, deepseek-flash
+
+- **Change:** Routed Tutor -> Agentic Tutor (`agentic_tutor_v1`), same case file, model and thinking setting as the
+  entry above.
+- **Configuration:** Agentic Tutor `agentic_tutor_v1`, app model `deepseek-flash`, thinking off, no judge,
+  `--workers 3`, commit `c92da4e`.
+- **Run folder:** `evaluation/runs/2026-10-14_120227_pilot_deepseek_agentic` (with `failures.md` and `compare.html`
+  against the Routed Tutor pilot).
+- **Result:** End-to-end Success 89.8% -> 86.1% (86.1% to 86.1%); Search Step 91.7% -> 86.1%; Path Step 100.0% ->
+  98.1% (97.2% to 100.0%); Answer Step 89.8% -> 87.0% (86.1% to 88.9%). Refusal correctness 75.0% -> 33.3%; Out of
+  scope correctness 100.0% in both. Failing cases: GS-05 3/3 (read AITB), GS-15 3/3 (read PEID), GS-35 3/3 and
+  GS-36 3/3 (Out of scope Sentence), GS-33 2/3 (refused the exercise in its own words without a Read), GS-13 1/3
+  (an extra Read of AITB). No Trace reached the Read limit; no model call failed.
+- **Decision:** pending.
+- **Reason:** 1.3 cases fewer per Run on average, mostly Refusal cases answered as Out of scope (GS-35, GS-36, two
+  labels the group still has to decide) and one exercise refused without reading. On the candidates the Routed
+  Tutor stays ahead; decide on the frozen Golden Set (#17).
