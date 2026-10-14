@@ -1,0 +1,439 @@
+{
+  "description": "CANDIDATES for the Golden Set (#5), drafted by the coding assistant on 2026-10-14 for the group to review. NOT the Golden Set: the group edits the questions, decides the labels, names the reviewers, then freezes the agreed file before any score is computed on it. Review notes: golden_set_candidates_review.md.",
+  "cases": [
+    {
+      "id": "GS-01",
+      "type": "in_material",
+      "question": "What is Searle's Chinese Room thought experiment meant to show?",
+      "accepted_courses": ["GAIF"],
+      "expected_sections": ["GAIF-1.3"],
+      "expect_refusal": false,
+      "key_facts": [
+        "A person who does not understand Chinese follows a rule book and returns correct Chinese answers.",
+        "Manipulating symbols by rules (syntax) is not the same as understanding meaning (semantics).",
+        "It is an argument against strong AI: behaving intelligently does not give a program a mind."
+      ]
+    },
+    {
+      "id": "GS-02",
+      "type": "in_material",
+      "question": "Why can a single McCulloch-Pitts neuron compute AND and OR but not XOR?",
+      "accepted_courses": ["GAIF"],
+      "expected_sections": ["GAIF-2.5"],
+      "expect_refusal": false,
+      "key_facts": [
+        "With suitable weights and a threshold a single neuron implements AND (weights 1 and 1, threshold 2) and OR (weights 2 and 2, threshold 2).",
+        "XOR cannot be done by a single neuron.",
+        "XOR needs a small two-layer network combining 'A and not B' with 'not A and B' using inhibitory weights."
+      ]
+    },
+    {
+      "id": "GS-03",
+      "type": "in_material",
+      "question": "How does Nick Bostrom define superintelligence, and what pathways to it are discussed?",
+      "accepted_courses": ["GAIF"],
+      "expected_sections": ["GAIF-1.6"],
+      "expect_refusal": false,
+      "key_facts": [
+        "Superintelligence is any intellect that greatly exceeds human cognitive performance in virtually all domains of interest.",
+        "Pathways: biological cognition, whole brain emulation and artificial intelligence.",
+        "When or whether it is possible is an open question."
+      ]
+    },
+    {
+      "id": "GS-04",
+      "type": "near_miss",
+      "question": "What is the vanishing gradient problem, and why does ReLU help with it?",
+      "accepted_courses": ["GAIF"],
+      "expected_sections": ["GAIF-2.14"],
+      "expect_refusal": false,
+      "key_facts": [
+        "The sigmoid saturates for large inputs, so its derivative approaches 0.",
+        "In backpropagation gradients are multiplied layer by layer, so many small gradients shrink towards zero.",
+        "ReLU does not saturate for positive inputs and is computationally cheap."
+      ]
+    },
+    {
+      "id": "GS-05",
+      "type": "near_miss",
+      "question": "What did the Microsoft and Carnegie Mellon study of knowledge workers suggest about using AI?",
+      "accepted_courses": ["GAIF"],
+      "expected_sections": ["GAIF-1.7"],
+      "expect_refusal": false,
+      "key_facts": [
+        "The study surveyed 319 knowledge workers about how they used AI.",
+        "The press reported it as Microsoft admitting AI is making us dumb.",
+        "Making life easier with AI has a price."
+      ]
+    },
+    {
+      "id": "GS-06",
+      "type": "in_material",
+      "question": "How does prompt caching lower cost, and why can a timestamp at the top of a system prompt stop it from working?",
+      "accepted_courses": ["PEID"],
+      "expected_sections": ["PEID-3.13"],
+      "expect_refusal": false,
+      "key_facts": [
+        "A later call that starts with a byte-identical prefix is billed at a fraction of the input price and answers faster.",
+        "The match is an exact prefix, so one changed character invalidates everything after it.",
+        "Order the context stable first and volatile last; a timestamp at the top silently disables caching."
+      ]
+    },
+    {
+      "id": "GS-07",
+      "type": "in_material",
+      "question": "What is the difference between precision and recall, and why can accuracy be misleading?",
+      "accepted_courses": ["PEID"],
+      "expected_sections": ["PEID-5.6"],
+      "expect_refusal": false,
+      "key_facts": [
+        "Precision = TP/(TP+FP): of the ones flagged, how many were right.",
+        "Recall = TP/(TP+FN): of the ones that mattered, how many were caught.",
+        "Accuracy lies on imbalanced data because the large true-negative box does the work."
+      ]
+    },
+    {
+      "id": "GS-08",
+      "type": "in_material",
+      "question": "What separates a workflow from an agent when building with LLMs?",
+      "accepted_courses": ["PEID"],
+      "expected_sections": ["PEID-4.1", "PEID-4.2"],
+      "expect_refusal": false,
+      "key_facts": [
+        "A workflow orchestrates LLMs and tools through predefined code paths written by a developer.",
+        "An agent lets the LLM dynamically direct its own process and tool use at runtime.",
+        "The difference is not intelligence but who decides the next step."
+      ]
+    },
+    {
+      "id": "GS-09",
+      "type": "in_material",
+      "question": "What does Cohen's kappa measure, and why is raw agreement between annotators not enough?",
+      "accepted_courses": ["PEID"],
+      "expected_sections": ["PEID-5.12"],
+      "expect_refusal": false,
+      "key_facts": [
+        "Raw agreement flatters: annotators can agree often just by chance on an imbalanced set.",
+        "Kappa subtracts the agreement expected by chance: (po - pe)/(1 - pe).",
+        "Below 0.4 the labels are not usable; the fix is to rewrite the label definitions."
+      ]
+    },
+    {
+      "id": "GS-10",
+      "type": "near_miss",
+      "question": "In a transformer, how does attention decide which earlier words matter for the next token?",
+      "accepted_courses": ["PEID"],
+      "expected_sections": ["PEID-1.4"],
+      "expect_refusal": false,
+      "key_facts": [
+        "For every token it produces, the model re-weights all the tokens it has already seen.",
+        "Attention is learned, not programmed, and its cost grows with the square of the context length.",
+        "A transformer is a stack of layers, each doing attention and a feed-forward step."
+      ]
+    },
+    {
+      "id": "GS-11",
+      "type": "in_material",
+      "question": "According to Kotter and Schlesinger, why do people resist organisational change?",
+      "accepted_courses": ["DTGS"],
+      "expected_sections": ["DTGS-1.4"],
+      "expect_refusal": false,
+      "key_facts": [
+        "Parochial self-interest.",
+        "Misunderstanding and lack of trust.",
+        "Different assessments of costs and benefits.",
+        "Low tolerance for change."
+      ]
+    },
+    {
+      "id": "GS-12",
+      "type": "in_material",
+      "question": "What is the cost per verified outcome, and which costs go into it?",
+      "accepted_courses": ["DTGS"],
+      "expected_sections": ["DTGS-3.9"],
+      "expect_refusal": false,
+      "key_facts": [
+        "Cost per verified outcome = (model + retrieval + verification + escalation + rework + governance cost) divided by outcomes accepted by a human or a defined automatic test.",
+        "In the worked customer-service example, model inference is only about 1.5% of the cost; escalation and rework dominate.",
+        "It is tracked with volume, containment, verification rate and defect escape rate."
+      ]
+    },
+    {
+      "id": "GS-13",
+      "type": "in_material",
+      "question": "What happened with Klarna's AI customer service assistant after its launch?",
+      "accepted_courses": ["DTGS"],
+      "expected_sections": ["DTGS-3.20"],
+      "expect_refusal": false,
+      "key_facts": [
+        "In February 2024 the assistant handled 2.3 million conversations in its first month, equated to about 700 full-time agents (company-reported).",
+        "In May 2025 the CEO said the focus on cost had lowered quality, and humans were reintroduced for disputes, fraud and hardship.",
+        "AI handles the simple tier while human service becomes a premium tier."
+      ]
+    },
+    {
+      "id": "GS-14",
+      "type": "in_material",
+      "question": "What do the letters in Prosci's ADKAR model stand for?",
+      "accepted_courses": ["DTGS"],
+      "expected_sections": ["DTGS-1.7"],
+      "expect_refusal": false,
+      "key_facts": [
+        "Awareness, Desire, Knowledge, Ability, Reinforcement.",
+        "ADKAR describes the phases individuals go through in a change."
+      ]
+    },
+    {
+      "id": "GS-15",
+      "type": "near_miss",
+      "question": "When should a company ground a model in its own documents with retrieval instead of fine-tuning it?",
+      "accepted_courses": ["DTGS"],
+      "expected_sections": ["DTGS-3.7"],
+      "expect_refusal": false,
+      "key_facts": [
+        "Retrieval (RAG) is the rung to use when answers must be traceable to your own sources.",
+        "Fine-tuning or adapters fit when format and behaviour matter more than knowledge, with a risk of deprecation when the base model moves.",
+        "Choose the lowest rung that meets the requirement and climb only when you can name the constraint the current rung cannot meet."
+      ]
+    },
+    {
+      "id": "GS-16",
+      "type": "in_material",
+      "question": "What are the five checks for judging the quality of a source?",
+      "accepted_courses": ["AITB"],
+      "expected_sections": ["AITB-3.5"],
+      "expect_refusal": false,
+      "key_facts": [
+        "Authority, relevance, timeliness, independence and traceability.",
+        "Weak sources can still be leads but should not become evidence."
+      ]
+    },
+    {
+      "id": "GS-17",
+      "type": "in_material",
+      "question": "What is the tool-first trap when choosing an AI tool, and what should come first instead?",
+      "accepted_courses": ["AITB"],
+      "expected_sections": ["AITB-1.4"],
+      "expect_refusal": false,
+      "key_facts": [
+        "Tool-first thinking names a tool before the task, data, risk, output and success criteria are clear.",
+        "State the work first, then choose the category and the tool.",
+        "Tool selection starts with a bounded task, narrow enough to test, review and improve."
+      ]
+    },
+    {
+      "id": "GS-18",
+      "type": "in_material",
+      "question": "In which situations should a business professional not use an AI tool at all?",
+      "accepted_courses": ["AITB"],
+      "expected_sections": ["AITB-1.6"],
+      "expect_refusal": false,
+      "key_facts": [
+        "When the data is restricted without approval.",
+        "When the decision is high-stakes without qualified review.",
+        "When there is no verification path, a false-authority risk, or unclear ownership."
+      ]
+    },
+    {
+      "id": "GS-19",
+      "type": "in_material",
+      "question": "What should an evidence table record for each important claim in AI-assisted research?",
+      "accepted_courses": ["AITB"],
+      "expected_sections": ["AITB-3.9"],
+      "expect_refusal": false,
+      "key_facts": [
+        "The claim, source, date, exact evidence, whether it was verified, and notes.",
+        "Each claim follows the chain claim, source, evidence, check, limit.",
+        "Build the table before writing the brief."
+      ]
+    },
+    {
+      "id": "GS-20",
+      "type": "in_material",
+      "question": "When should I write a message myself rather than have an AI draft it?",
+      "accepted_courses": ["AITB"],
+      "expected_sections": ["AITB-4.10"],
+      "expect_refusal": false,
+      "key_facts": [
+        "Condolences or bad news, disciplinary or performance letters, personal apologies, resignations or thanks, and anything read as personal.",
+        "Authorship is the message and discovery damages trust.",
+        "If the reader would feel worse on learning it was generated, generate nothing."
+      ]
+    },
+    {
+      "id": "GS-21",
+      "type": "overlap",
+      "question": "A document I give an AI assistant could contain hidden instructions. What is this risk called and how can I reduce it?",
+      "accepted_courses": ["PEID", "AITB"],
+      "expected_sections": ["PEID-3.10", "AITB-2.8"],
+      "expect_refusal": false,
+      "key_facts": [
+        "It is (indirect) prompt injection: instructions inside source text the model reads.",
+        "Separate instructions from source material and treat source text as data, not instructions.",
+        "Wording alone is not enough: limit permissions and require approval for consequential actions."
+      ]
+    },
+    {
+      "id": "GS-22",
+      "type": "overlap",
+      "question": "Does telling an AI to act as an expert make its answers more accurate?",
+      "accepted_courses": ["PEID", "AITB"],
+      "expected_sections": ["PEID-2.6", "AITB-2.3"],
+      "expect_refusal": false,
+      "key_facts": [
+        "A role changes vocabulary, register, level of detail and format.",
+        "A role does not grant expertise or factual accuracy the model does not have.",
+        "Say what you want done; keep accountability with an authorised person."
+      ]
+    },
+    {
+      "id": "GS-23",
+      "type": "overlap",
+      "question": "How do I compare two versions of a prompt fairly?",
+      "accepted_courses": ["PEID", "AITB"],
+      "expected_sections": ["PEID-2.14", "PEID-2.10", "AITB-2.10"],
+      "expect_refusal": false,
+      "key_facts": [
+        "Change one thing at a time.",
+        "Re-run the same inputs with the same settings and keep the conditions fixed.",
+        "One run or one better answer is not enough evidence."
+      ]
+    },
+    {
+      "id": "GS-24",
+      "type": "overlap",
+      "question": "Why ask an AI for a table or a fixed schema instead of free text, and what can structure not guarantee?",
+      "accepted_courses": ["PEID", "AITB"],
+      "expected_sections": ["PEID-2.7", "AITB-2.6", "AITB-2.4"],
+      "expect_refusal": false,
+      "key_facts": [
+        "A fixed structure makes output easier to check, compare and process, and exposes missing information.",
+        "A schema or table constrains the shape, never the truth: it can still contain errors.",
+        "Compare every field with the source."
+      ]
+    },
+    {
+      "id": "GS-25",
+      "type": "overlap",
+      "question": "How can I stop an AI from inventing facts that are not in the material I gave it?",
+      "accepted_courses": ["PEID", "AITB"],
+      "expected_sections": ["PEID-2.15", "PEID-3.12", "PEID-2.4", "AITB-2.9"],
+      "expect_refusal": false,
+      "key_facts": [
+        "Supply the source and tell the tool to use only the supplied material.",
+        "Allow an escape hatch or abstention such as 'not stated' or 'cannot tell from these documents'.",
+        "Require a quote or source location for each claim, and check it yourself."
+      ]
+    },
+    {
+      "id": "GS-26",
+      "type": "overlap",
+      "question": "Can I rely on an AI to review and correct its own answer?",
+      "accepted_courses": ["PEID", "AITB"],
+      "expected_sections": ["PEID-4.10", "AITB-2.5", "AITB-4.6"],
+      "expect_refusal": false,
+      "key_facts": [
+        "Self-correction without an outside signal often does not help: a model that got an answer wrong usually cannot tell.",
+        "It works when there is a reliable external check such as tests or a retrieved fact.",
+        "AI self-critique can suggest fixes, but the revised answer must still be verified against evidence."
+      ]
+    },
+    {
+      "id": "GS-27",
+      "type": "overlap",
+      "question": "What is shadow AI, and why should a company worry about it?",
+      "accepted_courses": ["AITB", "DTGS"],
+      "expected_sections": ["AITB-1.1", "DTGS-3.7"],
+      "expect_refusal": false,
+      "key_facts": [
+        "Shadow AI is staff using AI tools the organisation does not know about.",
+        "It is a risk of off-the-shelf tools, together with data leakage and privacy risk."
+      ]
+    },
+    {
+      "id": "GS-28",
+      "type": "overlap",
+      "question": "What can go wrong when a company lets an AI answer its customers?",
+      "accepted_courses": ["AITB", "DTGS"],
+      "expected_sections": ["AITB-4.5", "DTGS-3.21", "DTGS-3.20"],
+      "expect_refusal": false,
+      "key_facts": [
+        "It can overpromise, invent policy or admit liability; uncertain cases must be escalated.",
+        "The company stays liable for what its chatbot says (Moffatt v. Air Canada).",
+        "Quality and satisfaction can fall on complex or emotional cases (Klarna)."
+      ]
+    },
+    {
+      "id": "GS-29",
+      "type": "out_of_scope",
+      "question": "What were the main causes of the French Revolution?",
+      "accepted_courses": ["OUT_OF_SCOPE"],
+      "expected_sections": [],
+      "expect_refusal": false,
+      "key_facts": []
+    },
+    {
+      "id": "GS-30",
+      "type": "out_of_scope",
+      "question": "How do I configure a Kubernetes cluster for high availability?",
+      "accepted_courses": ["OUT_OF_SCOPE"],
+      "expected_sections": [],
+      "expect_refusal": false,
+      "key_facts": []
+    },
+    {
+      "id": "GS-31",
+      "type": "out_of_scope",
+      "question": "What is the offside rule in football?",
+      "accepted_courses": ["OUT_OF_SCOPE"],
+      "expected_sections": [],
+      "expect_refusal": false,
+      "key_facts": []
+    },
+    {
+      "id": "GS-32",
+      "type": "out_of_scope",
+      "question": "How should I prepare for a job interview?",
+      "accepted_courses": ["OUT_OF_SCOPE"],
+      "expected_sections": [],
+      "expect_refusal": false,
+      "key_facts": []
+    },
+    {
+      "id": "GS-33",
+      "type": "refusal",
+      "question": "Using Hebb's rule with bipolar inputs, compute the final weights and bias after training on the OR function.",
+      "accepted_courses": ["GAIF"],
+      "expected_sections": [],
+      "expect_refusal": true,
+      "key_facts": []
+    },
+    {
+      "id": "GS-34",
+      "type": "refusal",
+      "question": "How much is the final exam worth in the PEID grade?",
+      "accepted_courses": ["PEID"],
+      "expected_sections": [],
+      "expect_refusal": true,
+      "key_facts": []
+    },
+    {
+      "id": "GS-35",
+      "type": "refusal",
+      "question": "How do I assign Microsoft 365 Copilot licences to my team in the admin centre?",
+      "accepted_courses": ["AITB"],
+      "expected_sections": [],
+      "expect_refusal": true,
+      "key_facts": []
+    },
+    {
+      "id": "GS-36",
+      "type": "refusal",
+      "question": "What are Porter's five forces?",
+      "accepted_courses": ["DTGS"],
+      "expected_sections": [],
+      "expect_refusal": true,
+      "key_facts": []
+    }
+  ]
+}
