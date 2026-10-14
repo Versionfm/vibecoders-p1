@@ -192,3 +192,28 @@ Copy this block for each entry:
 - **Reason:** the Golden Set had to be agreed and frozen before the baseline (#7). Labels were decided from the
   Course Material, not from the pilot outputs; the pilots having been seen before the freeze is reported as a
   limitation.
+
+## 2026-10-14 Baseline: Routed Tutor on Golden Set v1, deepseek-flash (code checks only)
+
+- **Change:** none to the app; first run of the Routed Tutor on the frozen `evaluation/golden_set.json` (version 1).
+  Compared with the pilot on the candidates (`2026-10-14_120039_pilot_deepseek_routed`), which used a different case
+  file: four questions changed (GS-02, GS-08, GS-15, GS-36) and labels changed on GS-01 and GS-04, so the overall
+  before -> after is not like for like.
+- **Configuration:** Routed Tutor, Router `router_v2`, Course Tutor `tutor_v2`, app model `deepseek-flash`, thinking
+  off, no judge (Answer Step and End-to-end Success are code checks only), `--workers 3`, commit `123d939`, case file
+  `evaluation/golden_set.json`. 3 of 3 Runs and 108 of 108 Traces finished, no model call failed.
+- **Run folder:** `evaluation/runs/2026-10-14_193513_golden_set_v1_routed` (with `failures.md`).
+- **Result:** pilot on candidates -> Golden Set v1, mean (range): End-to-end Success 89.8% (88.9% to 91.7%) -> 97.2%
+  (97.2% to 97.2%); Search Step 91.7% -> 97.2%; Path Step 100.0% -> 100.0%; Answer Step 89.8% (88.9% to 91.7%) ->
+  97.2%; Routing accuracy 91.7% -> 97.2%; Recall (macro average) 91.7% -> 96.7%; Recall DTGS 75.0% -> 100.0%; Recall
+  GAIF 83.3% -> 83.3%; Citation correctness 96.2% (96.2% to 96.3%) -> 100.0%; Refusal correctness 75.0% -> 100.0%; Out
+  of scope correctness 100.0% -> 100.0%. Ranges in the new run are 0 for every Step and metric. Supported rate and
+  Responsive rate: pending (#7). On the 30 cases whose question and labels are unchanged, End-to-end Success 94.4%
+  (93.3% to 96.7%) -> 96.7% (96.7% to 96.7%), the only change being GS-27 1/3 -> 3/3. The six changed cases (GS-01,
+  GS-02, GS-04, GS-08, GS-15, GS-36) all passed 3/3. Failing cases: GS-05 3/3 (Search: routed AITB, then the AITB
+  Refusal), as in the pilot.
+- **Decision:** pending.
+- **Reason:** code-check baseline only: the Routed Tutor baseline for #7 and #17 needs the judge's Supported and
+  Responsive rates. Most of the gain over the pilot comes from the changed case file (GS-15, GS-36) and from GS-27
+  passing 3/3 under the same configuration that gave the Refusal in 2/3 pilot runs, which shows run-to-run variation
+  at temperature 0.
