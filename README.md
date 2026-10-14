@@ -55,6 +55,20 @@ Each evaluation writes a folder `evaluation/runs/<date>_<time>[_<label>]/` with:
 - `report.md`: the Step matrix (pass rate per Step and End-to-end Success as mean and range across the runs; per case each Step as e.g. `3/3` with the earliest failing Step), each metric as mean and range, plus a per-case table, ready to paste into the report;
 - `report.html`: the same Runs as one self-contained page (no JavaScript, no external files; opens offline and follows the browser's light or dark theme). It shows End-to-end Success as the headline (mean and range, with tutor, model, prompt versions and case file), a pass-rate bar per Step, the Answer Step rate ("the number you would have reported") next to End-to-end Success ("the number that matters"), how many failing Traces first fail at each Step, one example Trace per failure pattern (earliest failing Step plus reason) with a "what went wrong" note, and every Trace in a collapsible section. Its rates are computed from the stored `run_N.json` files by `src/html_report.py`, never typed in.
 
+To compare two evaluations (for example a baseline and a change, kept or abandoned), point the compare command at their
+run folders:
+
+```bash
+python src/compare.py evaluation/runs/<run folder A> evaluation/runs/<run folder B>
+```
+
+It reads only the stored `run_N.json` files (no model calls, no API key) and writes `compare.html` into run folder B,
+printing its path. The page, in the same style as `report.html`, shows both evaluations' pass rate per Step and
+End-to-end Success side by side (mean and range over the Runs), and the cases whose End-to-end Success changed, with
+each side's success count (e.g. `0/3` to `2/3`) and earliest failing Step. When the two run folders used different
+case files, models or thinking settings, it warns on the page and in the console, so two changes are never compared
+as one.
+
 Every Trace is scored by three Steps, checked in this order (see [ADR 0002](docs/adr/0002-trace-steps-and-html-report.md)):
 
 - **Search Step:** at least one Accepted Course and no other Course chosen or read; none for an Out of scope case. For the Routed Tutor the routed Course is the Course Material read. Recall and extra Reads are recorded.
