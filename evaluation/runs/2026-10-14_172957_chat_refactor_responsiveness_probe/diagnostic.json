@@ -1,0 +1,10 @@
+{
+  "diagnostic": "short configured model request following failed tutor probe",
+  "model": "deepseek-flash",
+  "thinking": false,
+  "seconds": 0.4532329040011973,
+  "exception": "APIConnectionError",
+  "status_code": null,
+  "cause": "ConnectError",
+  "error": "Connection error."
+}

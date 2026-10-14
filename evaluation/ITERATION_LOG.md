@@ -216,3 +216,64 @@ Copy this block for each entry:
 - **Decision:** kept.
 - **Reason:** the previous implementation mixed the conversation loop and answer analysis in one function.
   A dedicated module makes the workflow easier to follow while preserving the evaluator and screen entry point.
+
+## 2026-10-14 Pilot: Routed Tutor after built-in chat and loop refactor, deepseek-flash
+
+- **Change:** re-evaluated Routed Tutor after the built-in chat and loop separation at commit `8f939a5`. Comparison is against the prior same-tutor pilot at `c92da4e`; prompts, candidate labels, app model and thinking are unchanged. Single-message calls use empty history.
+- **Configuration:** `routed`; prompts `router=router_v2`, `tutor=tutor_v2`; app model `deepseek-flash`; thinking off; no judge; case file `evaluation/golden_set_candidates.json` (36 candidates, not the frozen Golden Set); three Runs; `--workers 3`; branch `agent-tutor-chat`, commit `8f939a5`. All 149 deterministic tests passed. An initial probe failed because the configured hostname was `api.deepseek.comz`; the main session corrected the extra trailing z. The next timed Agentic Tutor request succeeded in 2.505 s, read PEID and cited PEID-1.3. Probe evidence is kept in the folders named in `evaluator_metadata.json`.
+- **Run folder:** `evaluation/runs/2026-10-14_173156_pilot_chat_refactor_deepseek_routed`; includes three stored Runs, Markdown/HTML reports, `failures.md` and pinned evaluator metadata. Previous same-tutor pilot: `evaluation/runs/2026-10-14_120039_pilot_deepseek_routed`.
+- **Result:** mean (range) across three Runs, previous same-tutor pilot -> current pilot:
+
+| Metric | Before | After |
+|---|---|---|
+| Search Step | 91.7% (91.7%–91.7%) | 91.7% (91.7%–91.7%) |
+| Path Step | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) |
+| Answer Step | 89.8% (88.9%–91.7%) | 91.7% (91.7%–91.7%) |
+| End-to-end Success | 89.8% (88.9%–91.7%) | 91.7% (91.7%–91.7%) |
+| Routing accuracy | 91.7% (91.7%–91.7%) | 91.7% (91.7%–91.7%) |
+| Recall GAIF | 83.3% (83.3%–83.3%) | 83.3% (83.3%–83.3%) |
+| Recall PEID | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) |
+| Recall AITB | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) |
+| Recall DTGS | 75.0% (75.0%–75.0%) | 75.0% (75.0%–75.0%) |
+| Recall OUT_OF_SCOPE | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) |
+| Recall (macro average) | 91.7% (91.7%–91.7%) | 91.7% (91.7%–91.7%) |
+| Citation correctness | 96.2% (96.2%–96.3%) | 96.3% (96.3%–96.3%) |
+| Refusal correctness | 75.0% (75.0%–75.0%) | 75.0% (75.0%–75.0%) |
+| Out of scope correctness | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) |
+| Supported rate | pending | pending |
+| Responsive rate | pending | pending |
+
+- **Failing cases:** 4 -> 3 unique cases; 11/108 -> 9/108 failed Traces. Current: GS-05 3/3 (Search 3); GS-15 3/3 (Search 3); GS-36 3/3 (Search 3). Model-call errors 0/108; Read limit reached 0/108. Every failing case is documented across all Runs in `failures.md`.
+- **Decision:** pending.
+- **Reason:** this pilot checks single-message behaviour after the refactor on unchanged candidate labels. Retain the preserved failure evidence for deciding whether to keep the tutor; group review of the labels and a frozen Golden Set comparison are still required. The Answer Step and End-to-end Success use code checks only; Supported and Responsive rates need the LLM judge. This does not evaluate multi-turn chat history quality.
+
+## 2026-10-14 Pilot: Agentic Tutor after built-in chat and loop refactor, deepseek-flash
+
+- **Change:** re-evaluated Agentic Tutor after the built-in chat and loop separation at commit `8f939a5`. Comparison is against the prior same-tutor pilot at `c92da4e`; prompts, candidate labels, app model and thinking are unchanged. Single-message calls use empty history.
+- **Configuration:** `agentic`; prompts `agentic_tutor=agentic_tutor_v1`; app model `deepseek-flash`; thinking off; no judge; case file `evaluation/golden_set_candidates.json` (36 candidates, not the frozen Golden Set); three Runs; `--workers 3`; branch `agent-tutor-chat`, commit `8f939a5`. All 149 deterministic tests passed. An initial probe failed because the configured hostname was `api.deepseek.comz`; the main session corrected the extra trailing z. The next timed Agentic Tutor request succeeded in 2.505 s, read PEID and cited PEID-1.3. Probe evidence is kept in the folders named in `evaluator_metadata.json`.
+- **Run folder:** `evaluation/runs/2026-10-14_173330_pilot_chat_refactor_deepseek_agentic`; includes three stored Runs, Markdown/HTML reports, `failures.md` and pinned evaluator metadata. Previous same-tutor pilot: `evaluation/runs/2026-10-14_120227_pilot_deepseek_agentic`.
+- **Result:** mean (range) across three Runs, previous same-tutor pilot -> current pilot:
+
+| Metric | Before | After |
+|---|---|---|
+| Search Step | 86.1% (86.1%–86.1%) | 86.1% (83.3%–88.9%) |
+| Path Step | 98.1% (97.2%–100.0%) | 98.1% (97.2%–100.0%) |
+| Answer Step | 87.0% (86.1%–88.9%) | 87.0% (86.1%–88.9%) |
+| End-to-end Success | 86.1% (86.1%–86.1%) | 86.1% (83.3%–88.9%) |
+| Routing accuracy | 87.0% (86.1%–88.9%) | 87.0% (86.1%–88.9%) |
+| Recall GAIF | 72.2% (66.7%–83.3%) | 72.2% (66.7%–83.3%) |
+| Recall PEID | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) |
+| Recall AITB | 85.7% (85.7%–85.7%) | 85.7% (85.7%–85.7%) |
+| Recall DTGS | 75.0% (75.0%–75.0%) | 75.0% (75.0%–75.0%) |
+| Recall OUT_OF_SCOPE | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) |
+| Recall (macro average) | 86.6% (85.5%–88.8%) | 86.6% (85.5%–88.8%) |
+| Citation correctness | 96.3% (96.3%–96.3%) | 96.3% (96.3%–96.3%) |
+| Refusal correctness | 33.3% (25.0%–50.0%) | 33.3% (25.0%–50.0%) |
+| Out of scope correctness | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) |
+| Supported rate | pending | pending |
+| Responsive rate | pending | pending |
+
+- **Failing cases:** 6 -> 6 unique cases; 15/108 -> 15/108 failed Traces. Current: GS-05 3/3 (Search 3); GS-13 1/3 (Search 1); GS-15 3/3 (Search 3); GS-33 2/3 (Search 2); GS-35 3/3 (Search 3); GS-36 3/3 (Search 3). Model-call errors 0/108; Read limit reached 0/108. Every failing case is documented across all Runs in `failures.md`.
+- **Decision:** pending.
+- **Reason:** this pilot checks single-message behaviour after the refactor on unchanged candidate labels. Retain the preserved failure evidence for deciding whether to keep the tutor; group review of the labels and a frozen Golden Set comparison are still required. The Answer Step and End-to-end Success use code checks only; Supported and Responsive rates need the LLM judge. This does not evaluate multi-turn chat history quality.
+- **Cross-tutor comparison:** `evaluation/runs/2026-10-14_173330_pilot_chat_refactor_deepseek_agentic/compare.html` compares the current Routed Tutor and Agentic Tutor runs on the same candidates, configured LLM and thinking setting. Routed -> Agentic: End-to-end Success 91.7% (91.7%–91.7%) -> 86.1% (83.3%–88.9%); Search Step 91.7% -> 86.1%; Path Step 100.0% -> 98.1%; Answer Step 91.7% -> 87.0%; Refusal correctness 75.0% -> 33.3%. These pilot results do not establish a causal change in quality from the refactor.

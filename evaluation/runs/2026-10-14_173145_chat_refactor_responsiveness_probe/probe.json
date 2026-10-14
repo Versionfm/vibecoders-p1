@@ -1,0 +1,23 @@
+{
+  "purpose": "timed responsiveness probe; not Golden Set quality evidence",
+  "commit": "8f939a5",
+  "model": "deepseek-flash",
+  "thinking": false,
+  "tutor": "agentic",
+  "prompt_versions": {
+    "agentic_tutor": "agentic_tutor_v1"
+  },
+  "seconds": 2.505028775998653,
+  "materials_read": [
+    "PEID"
+  ],
+  "citations": [
+    "PEID-1.3"
+  ],
+  "read_arguments": [
+    "PEID"
+  ],
+  "read_limit_hit": false,
+  "error_type": null,
+  "completed_answer": true
+}

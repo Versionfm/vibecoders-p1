@@ -1,0 +1,17 @@
+{
+  "purpose": "timed responsiveness probe; not Golden Set quality evidence",
+  "commit": "8f939a5",
+  "model": "deepseek-flash",
+  "thinking": false,
+  "tutor": "agentic",
+  "prompt_versions": {
+    "agentic_tutor": "agentic_tutor_v1"
+  },
+  "seconds": 0.5317298490008397,
+  "materials_read": [],
+  "citations": [],
+  "read_arguments": [],
+  "read_limit_hit": false,
+  "error_type": "Agentic Tutor model call failed",
+  "completed_answer": false
+}
