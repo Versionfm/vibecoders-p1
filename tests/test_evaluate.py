@@ -132,6 +132,18 @@ class EvaluationCommandTest(unittest.TestCase):
         self.assertIn("| SAMPLE-01 | in_material | 3/3 | 3/3 | 3/3 | 3/3 | - |", report)
         self.assertNotIn("End-to-end Success | pending", report)
 
+    def test_an_html_report_is_written_beside_the_markdown_report_and_its_path_printed(self):
+        model = QuestionScriptedModel(well_behaved_script(), name="fake/app-model")
+        with tempfile.TemporaryDirectory() as folder, contextlib.redirect_stdout(io.StringIO()) as output:
+            main([str(SAMPLE_CASE_FILE), "--out", folder], model=model, clock=FIXED_CLOCK)
+            [run_dir] = Path(folder).iterdir()
+            html = (run_dir / "report.html").read_text(encoding="utf-8")
+
+        self.assertIn(str(run_dir / "report.html"), output.getvalue())
+        self.assertIn("100.0%", html)
+        for case_id in QUESTIONS:
+            self.assertIn(f'id="trace-3-{case_id}"', html)
+
     def test_a_model_failure_is_recorded_as_an_error_for_that_case_and_the_run_completes(self):
         script = well_behaved_script()
         script[QUESTIONS["SAMPLE-01"]] = [TimeoutError("service did not answer")]

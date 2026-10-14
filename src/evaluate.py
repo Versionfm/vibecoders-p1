@@ -19,6 +19,7 @@ from pathlib import Path
 
 from cases import EvaluationCase, load_cases
 from course_material import CourseMaterial, default_course_materials
+from html_report import load_runs, render_html_report
 from prompts import AGENTIC_TUTOR_PROMPT_VERSION, ROUTER_PROMPT_VERSION, TUTOR_PROMPT_VERSION
 from scoring import CLASSES, END_TO_END, MACRO_RECALL, STEP_METRICS, STEPS, score_run, score_trace, summarise
 from tutor import AGENTIC_TUTOR, ROUTED_TUTOR, TUTORS, ChatModel, TutorResult, answer_question
@@ -128,6 +129,7 @@ def write_run(run: Run, cases: list[EvaluationCase], run_dir: Path) -> None:
 
 def write_report(runs: list[Run], cases: list[EvaluationCase], run_dir: Path) -> None:
     (run_dir / "report.md").write_text(render_report(runs, cases), encoding="utf-8")
+    (run_dir / "report.html").write_text(render_html_report(load_runs(run_dir), cases), encoding="utf-8")
 
 
 def render_report(runs: list[Run], cases: list[EvaluationCase]) -> str:
@@ -253,6 +255,7 @@ def main(argv: list[str] | None = None, model: ChatModel | None = None, clock=No
     write_report(runs, cases, run_dir)
     print(f"Stored {len(runs)} runs of {len(cases)} cases in {run_dir}")
     print(f"Report: {run_dir / 'report.md'}")
+    print(f"HTML report: {run_dir / 'report.html'}")
     return 0
 
 
