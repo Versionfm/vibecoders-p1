@@ -3,9 +3,9 @@ import os
 from collections.abc import Mapping
 from dataclasses import dataclass, field
 
-DEFAULT_BASE_URL = "https://integrate.api.nvidia.com/v1"
-DEFAULT_APP_MODEL = "nvidia/nemotron-3-super-120b-a12b"
-DEFAULT_JUDGE_MODEL = ""  # chosen later by a probe; must not be a Nemotron model
+DEFAULT_BASE_URL = "https://api.deepseek.com"
+DEFAULT_APP_MODEL = "deepseek-flash"
+DEFAULT_JUDGE_MODEL = ""  # chosen later by a probe; must not be a DeepSeek model
 
 # A hung service raises a timeout, which the tutor turns into an error result. With one retry the worst case for
 # one model call is about 2 x 60 s (plus a short backoff), so about 4 minutes for a question (Router + Course Tutor).
@@ -13,7 +13,7 @@ REQUEST_TIMEOUT_SECONDS = 60.0
 MAX_RETRIES = 1
 
 # LLM_THINKING=on|off switches the app model's reasoning ("thinking") mode. Off by default: on Nemotron it made a
-# Router call about ten times slower for the same label. Quality with thinking on is not compared yet.
+# Router call about ten times slower for the same label; on DeepSeek it is on unless switched off. Quality with thinking on is not compared yet.
 THINKING_VALUES = {"on": True, "off": False}
 
 

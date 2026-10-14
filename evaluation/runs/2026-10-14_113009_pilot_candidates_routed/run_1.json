@@ -1,0 +1,1473 @@
+{
+  "run": 1,
+  "timestamp": "2026-10-14T11:30:09+00:00",
+  "tutor": "routed",
+  "case_file": "evaluation/golden_set_candidates.json",
+  "prompt_versions": {
+    "router": "router_v2",
+    "tutor": "tutor_v2"
+  },
+  "models": {
+    "app": "nvidia/nemotron-3-super-120b-a12b",
+    "judge": null
+  },
+  "thinking": false,
+  "metrics": {
+    "Search Step": 0.6388888888888888,
+    "Path Step": 0.6111111111111112,
+    "Answer Step": 0.5277777777777778,
+    "End-to-end Success": 0.5277777777777778,
+    "Routing accuracy": 0.5555555555555556,
+    "Recall GAIF": 0.6666666666666666,
+    "Recall PEID": 0.6666666666666666,
+    "Recall AITB": 0.5,
+    "Recall DTGS": 0.5,
+    "Recall OUT_OF_SCOPE": 0.25,
+    "Recall (macro average)": 0.5166666666666666,
+    "Citation correctness": 0.9473684210526315,
+    "Refusal correctness": 0.0,
+    "Out of scope correctness": 0.25
+  },
+  "outputs": [
+    {
+      "case_id": "GS-01",
+      "type": "in_material",
+      "accepted_courses": [
+        "GAIF"
+      ],
+      "course": "GAIF",
+      "evidence": "Searle's Chinese Room thought experiment",
+      "answer": "Searle's Chinese Room thought experiment is meant to show that manipulating symbols according to rules (syntax) is not the same as understanding meaning (semantics), so a program that behaves intelligently does not thereby have a mind. [GAIF-1.3]",
+      "citations": [
+        "GAIF-1.3"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "GAIF"
+      ],
+      "read_arguments": [],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 1.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-02",
+      "type": "in_material",
+      "accepted_courses": [
+        "GAIF"
+      ],
+      "course": "GAIF",
+      "evidence": "McCulloch-Pitts neuron",
+      "answer": "A single McCulloch-Pitts neuron can compute AND and OR because these functions are linearly separable—there exists a set of weights and a threshold that can separate the input patterns producing output 1 from those producing output 0. For AND, weights of 1 and 1 with threshold 2 fire only when both inputs are 1; for OR, weights of 2 and 2 with threshold 2 fire when at least one input is 1. However, XOR is not linearly separable: no single threshold can separate the input pairs (0,1) and (1,0) (which should output 1) from (0,0) and (1,1) (which should output 0) using a linear decision boundary. This limitation was demonstrated in the lecture, showing that XOR requires a two-layer network combining \"A and not B\" with \"not A and B\" using inhibitory (negative) weights. [GAIF-2.5]",
+      "citations": [
+        "GAIF-2.5"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "GAIF"
+      ],
+      "read_arguments": [],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 1.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-03",
+      "type": "in_material",
+      "accepted_courses": [
+        "GAIF"
+      ],
+      "course": "GAIF",
+      "evidence": "superintelligence",
+      "answer": "Nick Bostrom defines superintelligence as any intellect that greatly exceeds human cognitive performance in virtually all domains of interest. The pathways discussed are biological cognition (enhancing human brains), whole brain emulation (copying a brain in a computer), and artificial intelligence. [GAIF-1.6]",
+      "citations": [
+        "GAIF-1.6"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "GAIF"
+      ],
+      "read_arguments": [],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 1.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-04",
+      "type": "near_miss",
+      "accepted_courses": [
+        "GAIF"
+      ],
+      "course": "GAIF",
+      "evidence": "vanishing gradient problem",
+      "answer": "The vanishing gradient problem occurs when gradients become very small during backpropagation, causing them to approach zero as they are multiplied across many layers, which hinders training of deep networks. ReLU helps because it does not saturate for positive inputs, allowing gradients to flow without diminishing, thus mitigating the vanishing gradient issue. [GAIF-2.14]",
+      "citations": [
+        "GAIF-2.14"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "GAIF"
+      ],
+      "read_arguments": [],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 1.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-05",
+      "type": "near_miss",
+      "accepted_courses": [
+        "GAIF"
+      ],
+      "course": "DTGS",
+      "evidence": "Microsoft and Carnegie Mellon study of knowledge workers",
+      "answer": "This is not covered in the DTGS material.",
+      "citations": [],
+      "is_refusal": true,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "DTGS"
+      ],
+      "read_arguments": [],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "read DTGS, not an Accepted Course",
+          "recall": 0.0,
+          "extra_reads": [
+            "DTGS"
+          ]
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": false,
+          "reason": "gave the Refusal where an answer was expected"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Search",
+          "reason": "read DTGS, not an Accepted Course"
+        }
+      }
+    },
+    {
+      "case_id": "GS-06",
+      "type": "in_material",
+      "accepted_courses": [
+        "PEID"
+      ],
+      "course": "PEID",
+      "evidence": "prompt caching",
+      "answer": "Prompt caching lowers cost by storing the processed front of a context; a later call with a byte-identical prefix is billed at a fraction of the normal input price and answers faster. A timestamp at the top of a system prompt silently disables caching because the match requires an exact prefix from the very start, so one changed character invalidates everything after it. [PEID-3.13]",
+      "citations": [
+        "PEID-3.13"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "PEID"
+      ],
+      "read_arguments": [],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 1.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-07",
+      "type": "in_material",
+      "accepted_courses": [
+        "PEID"
+      ],
+      "course": "PEID",
+      "evidence": "evaluation metrics",
+      "answer": "Precision measures how many of the flagged cases were correct (TP/(TP+FP)), while recall measures how many of the actual cases were caught (TP/(TP+FN)). Accuracy can be misleading on imbalanced data because a large number of true negatives can inflate the score even if the model misses many positive cases. [PEID-5.6]",
+      "citations": [
+        "PEID-5.6"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "PEID"
+      ],
+      "read_arguments": [],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 1.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-08",
+      "type": "in_material",
+      "accepted_courses": [
+        "PEID"
+      ],
+      "course": "PEID",
+      "evidence": "building with LLMs",
+      "answer": "The difference is who decides the next step: in a workflow, predefined code paths orchestrate the process, while in an agent, the LLM dynamically directs its own process and tool use at runtime. [PEID-4.1]",
+      "citations": [
+        "PEID-4.1"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "PEID"
+      ],
+      "read_arguments": [],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 1.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-09",
+      "type": "in_material",
+      "accepted_courses": [
+        "PEID"
+      ],
+      "course": "PEID",
+      "evidence": "evaluation metrics",
+      "answer": "Cohen's kappa measures agreement between annotators after subtracting the agreement expected by chance, while raw agreement can be high even when annotators are guessing, especially if one label dominates the dataset. [PEID-5.12]",
+      "citations": [
+        "PEID-5.12"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "PEID"
+      ],
+      "read_arguments": [],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 1.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-10",
+      "type": "near_miss",
+      "accepted_courses": [
+        "PEID"
+      ],
+      "course": "PEID",
+      "evidence": "how does attention decide which earlier words matter for the next token",
+      "answer": "For every token it produces, the model re-weights all the tokens it has already seen: in \"the ticket the customer opened yesterday is still unresolved\", the words \"ticket\" and \"customer\" get most of the weight and \"the\" almost none. This weighting is attention. It is learned, not programmed; word order and position matter; and its cost grows with the square of the context length. [PEID-1.4]",
+      "citations": [
+        "PEID-1.4"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "PEID"
+      ],
+      "read_arguments": [],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 1.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-11",
+      "type": "in_material",
+      "accepted_courses": [
+        "DTGS"
+      ],
+      "course": "DTGS",
+      "evidence": "organisational change",
+      "answer": "People resist organisational change due to parochial self-interest, misunderstanding and lack of trust, different assessments, and low tolerance for change. [DTGS-1.4]",
+      "citations": [
+        "DTGS-1.4"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "DTGS"
+      ],
+      "read_arguments": [],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 1.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-12",
+      "type": "in_material",
+      "accepted_courses": [
+        "DTGS"
+      ],
+      "course": "DTGS",
+      "evidence": "cost per verified outcome",
+      "answer": "The cost per verified outcome is calculated as (model + retrieval + verification + escalation + rework + governance cost) ÷ outcomes accepted by a human or a defined automatic test. [DTGS-3.9]",
+      "citations": [
+        "DTGS-3.9"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "DTGS"
+      ],
+      "read_arguments": [],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 1.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-13",
+      "type": "in_material",
+      "accepted_courses": [
+        "DTGS"
+      ],
+      "course": "DTGS",
+      "evidence": "Klarna's AI customer service assistant",
+      "answer": "Klarna launched an AI assistant in February 2024 that handled 2.3 million conversations in its first month, equating to about 700 full-time agents and cutting resolution time from 11 to under 2 minutes. However, in May 2025, its CEO admitted the focus on cost had led to lower quality, and humans were reintroduced for disputes, fraud, and hardship cases, with a commitment that customers can always reach a human. By 2026, the framing settled: AI handles the simple tier and human service became almost a \"VIP\" premium tier—a business-model decision, not a technology one. [DTGS-3.20]",
+      "citations": [
+        "DTGS-3.20"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "DTGS"
+      ],
+      "read_arguments": [],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 1.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-14",
+      "type": "in_material",
+      "accepted_courses": [
+        "DTGS"
+      ],
+      "course": "OUT_OF_SCOPE",
+      "evidence": "Prosci's ADKAR model",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": false,
+          "reason": "gave Out of scope where an answer was expected"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Search",
+          "reason": "no Course Material read"
+        }
+      }
+    },
+    {
+      "case_id": "GS-15",
+      "type": "near_miss",
+      "accepted_courses": [
+        "DTGS"
+      ],
+      "course": "PEID",
+      "evidence": "ground a model in its own documents with retrieval",
+      "answer": "A company should ground a model in its own documents with retrieval when the information is private, current, or changes frequently, as fine-tuning cannot incorporate private or up-to-date data and is costly to update. Retrieval allows the model to access the latest documents at query time without retraining, making it suitable for dynamic or proprietary knowledge. [PEID-3.7] [PEID-3.1]",
+      "citations": [
+        "PEID-3.7",
+        "PEID-3.1"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "PEID"
+      ],
+      "read_arguments": [],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "read PEID, not an Accepted Course",
+          "recall": 0.0,
+          "extra_reads": [
+            "PEID"
+          ]
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": false,
+          "reason": "cites no expected Section (DTGS-3.7)"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Search",
+          "reason": "read PEID, not an Accepted Course"
+        }
+      }
+    },
+    {
+      "case_id": "GS-16",
+      "type": "in_material",
+      "accepted_courses": [
+        "AITB"
+      ],
+      "course": "AITB",
+      "evidence": "AI-assisted research and source verification",
+      "answer": "The five source-quality checks are: authority, relevance, timeliness, independence, and traceability. [AITB-3.5]",
+      "citations": [
+        "AITB-3.5"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "AITB"
+      ],
+      "read_arguments": [],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 1.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-17",
+      "type": "in_material",
+      "accepted_courses": [
+        "AITB"
+      ],
+      "course": "AITB",
+      "evidence": "choosing an AI tool",
+      "answer": "The tool-first trap is naming a tool before the task, data, risk, output, and success criteria are clear. Instead, the work should be stated first—such as \"we need to produce X for user Y, from approved data Z, with quality checks A and B\"—and only then should the category and tool be chosen. [AITB-1.4]",
+      "citations": [
+        "AITB-1.4"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "AITB"
+      ],
+      "read_arguments": [],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 1.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-18",
+      "type": "in_material",
+      "accepted_courses": [
+        "AITB"
+      ],
+      "course": "AITB",
+      "evidence": "business professional",
+      "answer": "A business professional should not use an AI tool when: the data is restricted (personal, confidential or client data without approval); the decision is high-stakes (legal, medical, financial or employment) without qualified review; there is no verification path (outputs cannot be checked against sources, rules or calculations); there is a false-authority risk (the output will be consumed as official evidence without review); or ownership is unclear (nobody owns the prompt, data, output or consequences). [AITB-1.6]",
+      "citations": [
+        "AITB-1.6"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "AITB"
+      ],
+      "read_arguments": [],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 1.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-19",
+      "type": "in_material",
+      "accepted_courses": [
+        "AITB"
+      ],
+      "course": "AITB",
+      "evidence": "AI-assisted research and source verification",
+      "answer": "For each important claim, the evidence table should record the claim, source, date, exact evidence, whether it was verified, and notes (e.g. an official feature launch page is verified; a vendor blog claiming cost savings is promotional and needs independent evidence). [AITB-3.9]",
+      "citations": [
+        "AITB-3.9"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "AITB"
+      ],
+      "read_arguments": [],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 1.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-20",
+      "type": "in_material",
+      "accepted_courses": [
+        "AITB"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-21",
+      "type": "overlap",
+      "accepted_courses": [
+        "PEID",
+        "AITB"
+      ],
+      "course": "PEID",
+      "evidence": "hidden instructions",
+      "answer": "This risk is called indirect prompt injection. To reduce it, delimit retrieved text and state that it is reference material, not instructions; design as if the model will sometimes be fooled; limit what a fooled model can do (fewer tools, narrower permissions, read-only by default); put a human in front of anything irreversible; and trust the source, not the sentence. [PEID-3.10]",
+      "citations": [
+        "PEID-3.10"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "PEID"
+      ],
+      "read_arguments": [],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 0.5,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-22",
+      "type": "overlap",
+      "accepted_courses": [
+        "PEID",
+        "AITB"
+      ],
+      "course": "PEID",
+      "evidence": "telling an AI to act as an expert",
+      "answer": "No, role prompting does not improve factual accuracy or reasoning ability; it only changes style and register, as shown in a study of 162 roles across 2,410 questions where adding personas to system prompts did not improve performance. [PEID-2.6]",
+      "citations": [
+        "PEID-2.6"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "PEID"
+      ],
+      "read_arguments": [],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 0.5,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-23",
+      "type": "overlap",
+      "accepted_courses": [
+        "PEID",
+        "AITB"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-24",
+      "type": "overlap",
+      "accepted_courses": [
+        "PEID",
+        "AITB"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-25",
+      "type": "overlap",
+      "accepted_courses": [
+        "PEID",
+        "AITB"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-26",
+      "type": "overlap",
+      "accepted_courses": [
+        "PEID",
+        "AITB"
+      ],
+      "course": "PEID",
+      "evidence": "review and correct its own answer",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Course Tutor model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [
+        "PEID"
+      ],
+      "read_arguments": [],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 0.5,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Course Tutor model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Course Tutor model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-27",
+      "type": "overlap",
+      "accepted_courses": [
+        "AITB",
+        "DTGS"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-28",
+      "type": "overlap",
+      "accepted_courses": [
+        "AITB",
+        "DTGS"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-29",
+      "type": "out_of_scope",
+      "accepted_courses": [
+        "OUT_OF_SCOPE"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": null,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-30",
+      "type": "out_of_scope",
+      "accepted_courses": [
+        "OUT_OF_SCOPE"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": null,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-31",
+      "type": "out_of_scope",
+      "accepted_courses": [
+        "OUT_OF_SCOPE"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": null,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-32",
+      "type": "out_of_scope",
+      "accepted_courses": [
+        "OUT_OF_SCOPE"
+      ],
+      "course": "OUT_OF_SCOPE",
+      "evidence": "How should I prepare for a job interview?",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": null,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-33",
+      "type": "refusal",
+      "accepted_courses": [
+        "GAIF"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-34",
+      "type": "refusal",
+      "accepted_courses": [
+        "PEID"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-35",
+      "type": "refusal",
+      "accepted_courses": [
+        "AITB"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-36",
+      "type": "refusal",
+      "accepted_courses": [
+        "DTGS"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    }
+  ]
+}

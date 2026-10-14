@@ -94,3 +94,51 @@ Copy this block for each entry:
 - **Reason:** Super returns real tool calls although NVIDIA's request schema omits `tools`, and it is already the
   Routed Tutor's model, so the comparison in #17 changes only the tutor. One question, not a score: the Path Step on
   the Golden Set is the real check.
+
+## 2026-10-14 Pilot: Routed Tutor on the Golden Set candidates, Nemotron Super (invalid: rate limited)
+
+- **Change:** none. First run on `evaluation/golden_set_candidates.json`, the drafted candidates for #5, before the
+  group has agreed the labels. A pilot to see how the app behaves, not the Golden Set baseline.
+- **Configuration:** Routed Tutor, Router `router_v2`, Course Tutor `tutor_v2`, app model
+  `nvidia/nemotron-3-super-120b-a12b`, thinking off, no judge, `--workers 3`, commit `9ddb4a1`.
+- **Run folder:** `evaluation/runs/2026-10-14_113009_pilot_candidates_routed`.
+- **Result:** not a measurement. Run 1 sent about 50 calls in 18 s and then got HTTP 429 (Too Many Requests); Runs 2
+  and 3 failed almost entirely on 429 in 7 s each. About 22 of 108 Traces got an answer. End-to-end Success 17.6%
+  (0.0% to 52.8%) reflects the rate limit, not the tutor. Among the answered Traces of Run 1: GS-05 was routed to
+  DTGS and GS-15 to PEID (both Near-miss Cases), GS-14 (ADKAR) to OUT_OF_SCOPE.
+- **Decision:** abandoned.
+- **Reason:** the NVIDIA endpoint's rate limit (about 40 calls per minute, not confirmed) is below what a run needs,
+  and the client retries only once. Superseded by the move to DeepSeek below.
+
+## 2026-10-14 Professor's endpoint (`course-chat`) probed and not adopted
+
+- **Change:** none to the app. Probed the course endpoint the professor provided (a LiteLLM proxy in front of Azure
+  OpenAI) with its only model, `course-chat`.
+- **Configuration:** throwaway calls from the command line and the app's own answer function, temperature 0.
+- **Run folder:** none (single calls).
+- **Result:** plain answers work in 2 to 6 s, and the Routed Tutor answered four test questions correctly (PEID-1.3,
+  Out of scope, the GAIF Refusal, GAIF-2.5) when no thinking switch was sent. `chat_template_kwargs` returns HTTP 400,
+  so every app call fails with `LLM_THINKING` set. Native tool calls (`tools`) return 404 ("Azure OpenAI Responses
+  API is not enabled in this region"); only the legacy `functions` format works. One failed call put the deployment
+  in a 5 s cooldown (HTTP 429 for every call). The model behind `course-chat` is not disclosed.
+- **Decision:** abandoned.
+- **Reason:** the Agentic Tutor would need a rewrite to the legacy `functions` format, the endpoint is probably
+  shared with the whole class, and an undisclosed model cannot be named in the report.
+
+## 2026-10-14 App model: nemotron-3-super-120b-a12b -> deepseek-flash (DeepSeek API); thinking switch fixed
+
+- **Change:** default endpoint `https://api.deepseek.com` and app model `deepseek-flash` (DeepSeek-V4.1-Flash) for
+  both tutors, as ADR 0001 foresaw. `LLM_THINKING` is now also sent as DeepSeek's `thinking` type: DeepSeek ignores
+  `chat_template_kwargs`, so `LLM_THINKING=off` had left thinking on while runs recorded it as off.
+- **Configuration:** Router `router_v2`, Course Tutor `tutor_v2`, Agentic Tutor `agentic_tutor_v1`, thinking off,
+  no judge.
+- **Run folder:** none yet; single calls through the app's answer function and the screen.
+- **Result:** native tool calls work (`read_file({"course": "PEID"})` for a top-p question, 1.1 s). Both tutors
+  answered four test questions correctly (PEID-1.3; Out of scope, with no Read for the Agentic Tutor; the GAIF
+  Refusal; PEID-2.6 and PEID-2.11 for a PEID/AITB Overlap question) in 1 to 4 s. With both switches sent, a reply had
+  no reasoning and 36 output tokens instead of 163.
+- **Decision:** kept.
+- **Reason:** DeepSeek lists a concurrency limit rather than a per-minute cap, runs the Agentic Tutor unchanged and
+  names its model; the cost is small (about $0.30 per million input tokens on a cache miss, $1.20 per million output
+  tokens at peak). Both tutors are measured on it, so the comparison changes only the tutor. The judge (#7) must now
+  come from a family other than DeepSeek.
