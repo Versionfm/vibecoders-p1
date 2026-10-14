@@ -1,4 +1,4 @@
-"""The one screen: a question box and a button. Run with: streamlit run src/app.py
+"""Question screen for the Routed Tutor and conversation screen for the Agentic Tutor. Run with: streamlit run src/app.py
 
 `TUTOR` in .env chooses the tutor: `routed` (default) or `agentic`.
 """
@@ -19,21 +19,16 @@ RETRY_MESSAGE = "Something went wrong while preparing your answer. Please try ag
 load_dotenv()
 TUTOR = tutor_setting()
 
-st.set_page_config(page_title="Course Tutor")
-st.title("Course Tutor")
+title = "Agentic Tutor" if TUTOR == AGENTIC_TUTOR else "Course Tutor"
+st.set_page_config(page_title=title)
+st.title(title)
 st.caption("Ask a question about GAIF, PEID, AITB or DTGS. Answers come only from the Course Material and cite its Sections.")
-
-question = st.text_area("Your question")
-
 
 def course_label(code: str) -> str:
     return f"{code} ({COURSE_NAMES.get(code, code)})"
 
 
-if st.button("Ask") and question.strip():
-    with st.spinner("Thinking..."):
-        result = ask(question.strip(), get_chat_model, tutor=TUTOR)
-
+def render_result(result):
     if result is None or result.error:
         st.info(RETRY_MESSAGE, icon=":material/refresh:")
     elif result.course == OUT_OF_SCOPE:
@@ -61,3 +56,43 @@ if st.button("Ask") and question.strip():
                     + ", ".join(result.invalid_citations),
                     icon=":material/warning:",
                 )
+
+
+if TUTOR == AGENTIC_TUTOR:
+    if "conversation" not in st.session_state:
+        st.session_state.conversation = []
+    if st.button("New conversation"):
+        st.session_state.conversation = []
+    for turn in st.session_state.conversation:
+        with st.chat_message(turn["role"]):
+            if turn["role"] == "user":
+                st.markdown(markdown_safe(turn["content"]))
+            else:
+                render_result(turn["result"])
+    question = st.chat_input("Ask a question or follow up")
+    if question and question.strip():
+        question = question.strip()
+        # Only completed exchanges enter the next LLM request; UI error notices are not answers.
+        history = [
+            {"role": turn["role"], "content": turn["content"]}
+            for turn in st.session_state.conversation
+            if turn.get("include_in_history", True)
+        ]
+        with st.chat_message("user"):
+            st.markdown(markdown_safe(question))
+        with st.chat_message("assistant"):
+            with st.spinner("Thinking..."):
+                result = ask(question, get_chat_model, tutor=TUTOR, history=history)
+            render_result(result)
+        success = result is not None and not result.error
+        st.session_state.conversation.extend([
+            {"role": "user", "content": question, "include_in_history": success},
+            {"role": "assistant", "content": result.answer if success else "",
+             "result": result, "include_in_history": success},
+        ])
+else:
+    question = st.text_area("Your question")
+    if st.button("Ask") and question.strip():
+        with st.spinner("Thinking..."):
+            result = ask(question.strip(), get_chat_model, tutor=TUTOR)
+        render_result(result)

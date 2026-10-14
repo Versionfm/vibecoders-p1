@@ -40,6 +40,11 @@ and the screen then asks you to try again.
 streamlit run src/app.py
 ```
 
+For the Agentic Tutor conversation screen, run `TUTOR=agentic streamlit run src/app.py`
+(or set `TUTOR=agentic` in `.env`). The chat keeps prior questions and answers in the browser
+session and sends them with each follow-up. Each answer reads its own Course Material; prior
+answers are conversation context, not source material. **New conversation** clears the history.
+
 ## Evaluate
 
 One command runs a case file (JSON, in the Golden Set format) through the same answer function the screen uses, three times:

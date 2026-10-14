@@ -78,6 +78,7 @@ def answer_question(
     model: ChatModel,
     materials: dict[str, CourseMaterial] | None = None,
     tutor: str = ROUTED_TUTOR,
+    history: list[dict] | None = None,
 ) -> TutorResult:
     """Answer with the Routed Tutor (default) or the Agentic Tutor (`tutor="agentic"`). Both fill the same Trace."""
     if tutor not in TUTORS:
@@ -85,7 +86,7 @@ def answer_question(
     materials = default_course_materials() if materials is None else materials
     result = TutorResult(question=question, model=model.name, thinking=getattr(model, "thinking", None))
     if tutor == AGENTIC_TUTOR:
-        return _answer_agentic(question, model, materials, result)
+        return _answer_agentic(question, model, materials, result, history)
 
     try:
         reply = model.complete(_messages(load_prompt(ROUTER_PROMPT_VERSION), question), ROUTER_TEMPERATURE)
@@ -120,13 +121,16 @@ def answer_question(
 
 
 def _answer_agentic(
-    question: str, model: ChatModel, materials: dict[str, CourseMaterial], result: TutorResult
+    question: str, model: ChatModel, materials: dict[str, CourseMaterial], result: TutorResult,
+    history: list[dict] | None = None,
 ) -> TutorResult:
     """The Agentic Tutor loop: offer `read_file`, feed each Read back, stop at the first reply with no tool calls
     or at the Read limit. Never raises on a bad Trace: a failed model call becomes `error`."""
     result.tutor = AGENTIC_TUTOR
     result.router_prompt_version, result.tutor_prompt_version = None, AGENTIC_TUTOR_PROMPT_VERSION
     messages = _messages(load_prompt(AGENTIC_TUTOR_PROMPT_VERSION), question)
+    # Prior turns give conversational context; each answer still reads its own Course Material.
+    messages[1:1] = [dict(turn) for turn in (history or [])]
     while True:
         # At the Read limit, one last call with tools switched off forces an answer; its tool calls are not followed.
         result.read_limit_hit = result.read_count >= READ_LIMIT
