@@ -198,3 +198,21 @@ Copy this block for each entry:
 - **Reason:** selecting the Agentic Tutor had changed the answer path but still allowed only isolated questions.
   The built-in chat makes follow-up questions possible and supplies the context needed to interpret them. Existing
   single-message pilot scores do not establish conversation quality.
+
+## 2026-10-14 Agentic Tutor: isolate the tool loop from answer checks
+
+- **Change:** moved the Agentic Tutor loop, tool definition and Course Material reader into `src/agentic.py`.
+  `run_agentic()` returns final text and execution records; `src/tutor.py` converts them into the shared Trace and
+  checks citations and fixed sentences. The model interface now lives with the model adapter in `src/llm.py`.
+  Added a short workflow guide showing the usual path before limits and evaluation details.
+- **Configuration:** branch `agent-tutor-chat`, Agentic Tutor `agentic_tutor_v1`; no prompt, model, thinking,
+  chat-history policy, four-Read limit or evaluation result fields changed. No new agent framework.
+- **Run folder:** none. Deterministic tests only; no new Golden Set run or live multi-turn quality evaluation.
+- **Result:** all 149 tests passed with `PYTHONPATH=src .venv/bin/python -m unittest discover -s tests -t .`.
+  Existing tests cover the shared answer entry point, failure records, invalid and repeated Reads, multiple calls,
+  Read-limit handling and the chat screen. Two additional regressions verify matching tool-call/result IDs and that
+  a follow-up leaves supplied history untouched and validates citations only against material read in that turn.
+  These checks establish behaviour preservation for the tested cases, not an improvement in answer quality.
+- **Decision:** kept.
+- **Reason:** the previous implementation mixed the conversation loop and answer analysis in one function.
+  A dedicated module makes the workflow easier to follow while preserving the evaluator and screen entry point.

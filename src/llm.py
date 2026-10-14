@@ -2,6 +2,7 @@
 import os
 from collections.abc import Mapping
 from dataclasses import dataclass, field
+from typing import Protocol
 
 # No default endpoint or model: .env names the provider (see .env.example), so a missing line fails loudly instead
 # of silently calling another provider's model.
@@ -54,6 +55,15 @@ class ToolCall:
 class ModelReply:
     content: str
     tool_calls: list[ToolCall] = field(default_factory=list)
+
+
+class ChatModel(Protocol):
+    name: str
+    thinking: bool | None  # the model's reasoning mode switch; None when not set
+
+    def complete(self, messages: list[dict], temperature: float = 0.0) -> str: ...
+
+    def chat(self, messages: list[dict], temperature: float = 0.0, tools: list[dict] | None = None) -> ModelReply: ...
 
 
 class OpenAIChatModel:

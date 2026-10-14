@@ -28,7 +28,7 @@ Other settings in `.env` (optional unless marked required):
 - `LLM_BASE_URL`, `LLM_MODEL`: endpoint and app model. Required, with no defaults in the code: switch provider by
   changing these two lines. `LLM_JUDGE_MODEL`: the LLM judge (later).
 - `TUTOR`: `routed` (default) or `agentic`. Chooses the tutor on the screen. With the Agentic Tutor the screen shows
-  the Course Materials read where the Router's evidence was; it is still one box and one button. Keep `routed` for
+  a conversation with the Course Materials read alongside each answer. Keep `routed` for
   the demo until the Agentic Tutor wins on the Golden Set.
 
 Each model call times out after 60 s and is retried at most once, so one call fails after about 2 minutes at worst
@@ -44,6 +44,14 @@ For the Agentic Tutor conversation screen, run `TUTOR=agentic streamlit run src/
 (or set `TUTOR=agentic` in `.env`). The chat keeps prior questions and answers in the browser
 session and sends them with each follow-up. Each answer reads its own Course Material; prior
 answers are conversation context, not source material. **New conversation** clears the history.
+
+## How the Agentic Tutor works
+
+Student message → LLM requests Course Material → Python reads it → LLM answers.
+
+The repeatable tool loop lives in `src/agentic.py`. `src/tutor.py` prepares the shared result and checks citations;
+`src/app.py` keeps the chat history. See [the short workflow guide](docs/AGENTIC_TUTOR_WORKFLOW.md) for the main path,
+Read limits and evaluation details.
 
 ## Evaluate
 

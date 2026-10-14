@@ -6,10 +6,10 @@ Routed Tutor: a Router call, then one Course Tutor call. Agentic Tutor: one mode
 import json
 import re
 from dataclasses import dataclass, field
-from typing import Protocol
 
-from course_material import COURSES, CourseMaterial, default_course_materials
-from llm import ModelReply, ToolCall
+from agentic import run_agentic
+from course_material import CourseMaterial, default_course_materials
+from llm import ChatModel
 from prompts import AGENTIC_TUTOR_PROMPT_VERSION, ROUTER_PROMPT_VERSION, TUTOR_PROMPT_VERSION, fill, load_prompt
 
 OUT_OF_SCOPE = "OUT_OF_SCOPE"
@@ -23,31 +23,6 @@ TUTOR_TEMPERATURE = 0.0
 ROUTED_TUTOR = "routed"
 AGENTIC_TUTOR = "agentic"
 TUTORS = (ROUTED_TUTOR, AGENTIC_TUTOR)
-UNKNOWN_COURSE = "Unknown Course."
-READ_LIMIT_REACHED = "Read limit reached."
-READ_LIMIT = 4  # Reads per question, valid or not, before the Agentic Tutor is forced to answer (ADR 0001)
-# The Agentic Tutor's one tool. Its only accepted arguments are the four Course codes, so it can read nothing else.
-READ_FILE_TOOL = {
-    "type": "function",
-    "function": {
-        "name": "read_file",
-        "description": "Return the whole Course Material of one Course.",
-        "parameters": {
-            "type": "object",
-            "properties": {"course": {"type": "string", "enum": list(COURSES)}},
-            "required": ["course"],
-        },
-    },
-}
-
-
-class ChatModel(Protocol):
-    name: str
-    thinking: bool | None  # the model's reasoning mode switch; None when not set
-
-    def complete(self, messages: list[dict], temperature: float = 0.0) -> str: ...
-
-    def chat(self, messages: list[dict], temperature: float = 0.0, tools: list[dict] | None = None) -> ModelReply: ...
 
 
 @dataclass
@@ -124,28 +99,19 @@ def _answer_agentic(
     question: str, model: ChatModel, materials: dict[str, CourseMaterial], result: TutorResult,
     history: list[dict] | None = None,
 ) -> TutorResult:
-    """The Agentic Tutor loop: offer `read_file`, feed each Read back, stop at the first reply with no tool calls
-    or at the Read limit. Never raises on a bad Trace: a failed model call becomes `error`."""
+    """Convert the Agentic Tutor execution into the shared Trace and check its answer."""
     result.tutor = AGENTIC_TUTOR
     result.router_prompt_version, result.tutor_prompt_version = None, AGENTIC_TUTOR_PROMPT_VERSION
-    messages = _messages(load_prompt(AGENTIC_TUTOR_PROMPT_VERSION), question)
-    # Prior turns give conversational context; each answer still reads its own Course Material.
-    messages[1:1] = [dict(turn) for turn in (history or [])]
-    while True:
-        # At the Read limit, one last call with tools switched off forces an answer; its tool calls are not followed.
-        result.read_limit_hit = result.read_count >= READ_LIMIT
-        try:
-            reply = model.chat(messages, TUTOR_TEMPERATURE, tools=None if result.read_limit_hit else [READ_FILE_TOOL])
-        except Exception as error:
-            result.error = _model_failure("Agentic Tutor", error)
-            return result
-        if result.read_limit_hit or not reply.tool_calls:
-            break
-        messages.append(_assistant_message(reply))
-        for call in reply.tool_calls:
-            messages.append({"role": "tool", "tool_call_id": call.id, "content": _read(call, materials, result)})
+    run = run_agentic(question, model, materials, history)
+    result.read_arguments = run.read_arguments
+    result.materials_read = run.materials_read
+    result.read_count = len(run.read_arguments)
+    result.read_limit_hit = run.read_limit_hit
+    if run.error is not None:
+        result.error = _model_failure("Agentic Tutor", run.error)
+        return result
 
-    result.answer = reply.content
+    result.answer = run.answer
     if result.materials_read:
         result.course = result.materials_read[0]
         result.is_refusal = any(is_refusal(result.answer, code) for code in result.materials_read)
@@ -155,33 +121,6 @@ def _answer_agentic(
     read_sections = {s for code in result.materials_read for s in materials[code].sections}
     result.invalid_citations = [c for c in result.citations if c not in read_sections]
     return result
-
-
-def _read(call: ToolCall, materials: dict[str, CourseMaterial], result: TutorResult) -> str:
-    """Handle one `read_file` call and record it in the Trace. Returns the tool result for the model.
-
-    Past the Read limit a call is answered but not read or recorded, so the conversation stays valid."""
-    if result.read_count >= READ_LIMIT:
-        return READ_LIMIT_REACHED
-    try:
-        course = json.loads(call.arguments).get("course")
-    except (TypeError, json.JSONDecodeError, AttributeError):
-        course = None
-    result.read_arguments.append(course if isinstance(course, str) else str(call.arguments))
-    result.read_count += 1
-    if not isinstance(course, str) or course not in materials:
-        return UNKNOWN_COURSE
-    result.materials_read.append(course)
-    return materials[course].text.strip()
-
-
-def _assistant_message(reply: ModelReply) -> dict:
-    """The model's tool-calling reply, in the OpenAI chat format, so the next call sees what it asked for."""
-    calls = [
-        {"id": c.id, "type": "function", "function": {"name": c.name, "arguments": c.arguments}}
-        for c in reply.tool_calls
-    ]
-    return {"role": "assistant", "content": reply.content, "tool_calls": calls}
 
 
 class RouterReplyError(ValueError):

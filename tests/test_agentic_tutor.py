@@ -1,4 +1,5 @@
 """Seam A for the Agentic Tutor: scripted tool calls in, a Trace and a cited answer out."""
+import copy
 import unittest
 
 from course_material import COURSES, load_course_material
@@ -174,6 +175,33 @@ class ReadLimitTest(unittest.TestCase):
         tool_results = [m["content"] for m in model.calls[-1]["messages"] if m["role"] == "tool"]
         self.assertEqual(tool_results[-2:], ["Read limit reached.", "Read limit reached."])
         self.assertEqual(result.answer, "Forced [PEID-2.3].")
+
+
+class ConversationProtocolTest(unittest.TestCase):
+    def test_every_read_result_matches_the_assistant_tool_call_id(self):
+        model = FakeChatModel([reads("PEID", "AITB"), ANSWER])
+        answer_question(QUESTION, model, tutor="agentic")
+        messages = model.calls[1]["messages"]
+        assistant = messages[2]
+        self.assertEqual(assistant["role"], "assistant")
+        self.assertEqual(
+            [call["id"] for call in assistant["tool_calls"]],
+            [message["tool_call_id"] for message in messages[3:]],
+        )
+        self.assertEqual([message["role"] for message in messages[3:]], ["tool", "tool"])
+
+    def test_follow_up_preserves_history_and_checks_only_material_read_this_turn(self):
+        history = [
+            {"role": "user", "content": QUESTION},
+            {"role": "assistant", "content": ANSWER},
+        ]
+        original = copy.deepcopy(history)
+        model = FakeChatModel([reads("AITB"), "Compare [AITB-2.2] and [PEID-2.3]."])
+        result = answer_question("How does that compare to business tools?", model, tutor="agentic", history=history)
+        self.assertEqual(model.calls[0]["messages"][1:3], original)
+        self.assertEqual(history, original)
+        self.assertEqual(result.materials_read, ["AITB"])
+        self.assertEqual(result.invalid_citations, ["PEID-2.3"])
 
 
 if __name__ == "__main__":
