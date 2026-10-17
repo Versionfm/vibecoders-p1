@@ -6,6 +6,8 @@ PROMPT_DIR = Path(__file__).resolve().parent.parent / "prompts"
 ROUTER_PROMPT_VERSION = "router_v2"
 TUTOR_PROMPT_VERSION = "tutor_v2"
 AGENTIC_TUTOR_PROMPT_VERSION = "agentic_tutor_v1"
+JUDGE_SUPPORTED_PROMPT_VERSION = "judge_supported_v1"
+JUDGE_RESPONSIVE_PROMPT_VERSION = "judge_responsive_v1"
 
 
 def load_prompt(version: str, prompt_dir: Path = PROMPT_DIR) -> str:

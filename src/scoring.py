@@ -3,6 +3,7 @@ from dataclasses import dataclass
 
 from cases import EvaluationCase
 from course_material import COURSES
+from judge import ERROR, UNKNOWN, Judgement, JudgeVerdict
 from tutor import OUT_OF_SCOPE, TutorResult
 
 CLASSES = (*COURSES, OUT_OF_SCOPE)
@@ -11,6 +12,8 @@ MACRO_RECALL = "Recall (macro average)"
 STEPS = ("Search", "Path", "Answer")
 END_TO_END = "End-to-end Success"
 STEP_METRICS = (*(f"{step} Step" for step in STEPS), END_TO_END)
+SUPPORTED_RATE, RESPONSIVE_RATE, JUDGE_UNDECIDED = "Supported rate", "Responsive rate", "Judge undecided rate"
+JUDGE_METRICS = (SUPPORTED_RATE, RESPONSIVE_RATE, JUDGE_UNDECIDED)
 
 
 @dataclass(frozen=True)
@@ -71,10 +74,11 @@ def path_step(case: EvaluationCase, result: TutorResult) -> StepVerdict:
     return StepVerdict(True)
 
 
-def answer_step(case: EvaluationCase, result: TutorResult) -> StepVerdict:
+def answer_step(case: EvaluationCase, result: TutorResult, judgement: Judgement | None = None) -> StepVerdict:
     """Cites an expected Section and only valid Sections, or gives the expected Refusal or Out of scope.
 
-    Code checks only: once the LLM judge exists (#7) the answer must also be Supported and Responsive.
+    With a `judgement` (a judge model was set) an expected answer must also be judged Supported and Responsive.
+    Without one the Answer Step is code checks only. A Refusal or Out of scope never needs the judge.
     """
     if result.error:
         return StepVerdict(False, "no answer")
@@ -90,7 +94,25 @@ def answer_step(case: EvaluationCase, result: TutorResult) -> StepVerdict:
         return StepVerdict(False, f"cites invalid Sections: {', '.join(result.invalid_citations)}")
     if not set(result.citations) & set(case.expected_sections):
         return StepVerdict(False, f"cites no expected Section ({', '.join(case.expected_sections)})")
+    if judgement is not None:
+        for criterion, verdict in (("Supported", judgement.supported), ("Responsive", judgement.responsive)):
+            if not verdict.passed:
+                return StepVerdict(False, _judge_reason(criterion, verdict))
     return StepVerdict(True)
+
+
+def _judge_reason(criterion: str, verdict: JudgeVerdict) -> str:
+    if verdict.verdict == ERROR:
+        return f"judge error on {criterion}: {verdict.evidence}"
+    if verdict.verdict == UNKNOWN:
+        return f"judge could not decide {criterion}: {verdict.evidence}"
+    return f"judged not {criterion}: {verdict.evidence}"
+
+
+def needs_judge(case: EvaluationCase, result: TutorResult) -> bool:
+    """The judge is called only for an answer given where an answer was expected, never for a Refusal or Out of
+    scope outcome."""
+    return expects_answer(case) and gave_answer(result)
 
 
 @dataclass(frozen=True)
@@ -118,9 +140,12 @@ class TraceScore:
         return None
 
 
-def score_trace(case: EvaluationCase, result: TutorResult) -> TraceScore:
+def score_trace(case: EvaluationCase, result: TutorResult, judgement: Judgement | None = None) -> TraceScore:
     return TraceScore(
-        search_step(case, result), path_step(case, result), answer_step(case, result), result.error is not None
+        search_step(case, result),
+        path_step(case, result),
+        answer_step(case, result, judgement),
+        result.error is not None,
     )
 
 
@@ -129,14 +154,18 @@ def gave_out_of_scope(result: TutorResult) -> bool:
     return result.error is None and result.course == OUT_OF_SCOPE and not result.materials_read
 
 
-def score_run(cases: list[EvaluationCase], results: list[TutorResult]) -> dict[str, float | None]:
+def score_run(
+    cases: list[EvaluationCase], results: list[TutorResult], judgements: list[Judgement | None] | None = None
+) -> dict[str, float | None]:
     """Every metric of one run, by report name. None where a metric has no cases to score.
 
-    Supported rate and Responsive rate need the LLM judge's verdicts; they join here in ticket #7 (the report
-    lists them as pending until then).
+    `judgements`: one per case (None where the judge was not called), or None when no judge model was set; only
+    then are the judge rates left out and the Answer Step code checks only.
     """
     per_class = recall_per_class(cases, results)
-    traces = [score_trace(c, r) for c, r in zip(cases, results, strict=True)]
+    judged = judgements if judgements is not None else [None] * len(cases)
+    traces = [score_trace(c, r, j) for c, r, j in zip(cases, results, judged, strict=True)]
+    judge_rates = judge_metrics([j for j in judged if j is not None]) if judgements is not None else {}
     return {
         **{f"{step} Step": _rate([getattr(t, step.lower()).passed for t in traces]) for step in STEPS},
         END_TO_END: _rate([t.success for t in traces]),
@@ -146,6 +175,18 @@ def score_run(cases: list[EvaluationCase], results: list[TutorResult]) -> dict[s
         "Citation correctness": citation_correctness_rate(cases, results),
         "Refusal correctness": refusal_correctness(cases, results),
         "Out of scope correctness": out_of_scope_correctness(cases, results),
+        **judge_rates,
+    }
+
+
+def judge_metrics(judgements: list[Judgement]) -> dict[str, float | None]:
+    """Over the judged answers: share judged Supported, share judged Responsive, and share of all verdicts that
+    are UNKNOWN or a judge error (which count as neither)."""
+    verdicts = [v for j in judgements for v in (j.supported, j.responsive)]
+    return {
+        SUPPORTED_RATE: _rate([j.supported.passed for j in judgements]),
+        RESPONSIVE_RATE: _rate([j.responsive.passed for j in judgements]),
+        JUDGE_UNDECIDED: _rate([v.verdict in (UNKNOWN, ERROR) for v in verdicts]),
     }
 
 

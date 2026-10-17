@@ -10,7 +10,7 @@ from html import escape
 from pathlib import Path
 
 from cases import EvaluationCase
-from scoring import END_TO_END, STEP_METRICS, STEPS, summarise
+from scoring import END_TO_END, JUDGE_METRICS, STEP_METRICS, STEPS, summarise
 
 CSS = """
 :root { color-scheme: light dark; --bg: #faf9f6; --fg: #1d1d1b; --muted: #6b6a66; --line: #e2e0da;
@@ -98,11 +98,20 @@ def render_html_report(runs: list[dict], cases: list[EvaluationCase]) -> str:
         f = o["steps"]["earliest_failing_step"]
         patterns.setdefault((f["step"], f["reason"]), []).append((run, o))
     prompts = ", ".join(f"{name} {version}" for name, version in first["prompt_versions"].items())
+    judge = first["models"]["judge"]
+    judge_rates = {name: [r["metrics"].get(name) for r in runs] for name in JUDGE_METRICS if name in first["metrics"]}
+    answer_note = (
+        f"Answer Step includes the LLM judge ({escape(judge)}): an expected answer must be judged Supported and "
+        "Responsive."
+        if judge
+        else "Answer Step uses code checks only: no judge model was set, so claims are not checked."
+    )
 
     body = f"""
 <h1>{len(traces)} Traces, scored</h1>
 <p class="meta">Tutor <b>{escape(first["tutor"])}</b> · model <b>{escape(str(first["models"]["app"]))}</b> ·
-prompts {escape(prompts)} · case file <b>{escape(first["case_file"])}</b> · {len(runs)} Runs of {len(cases)} cases</p>
+prompts {escape(prompts)} · judge <b>{escape(judge or "none")}</b> · case file <b>{escape(first["case_file"])}</b> ·
+{len(runs)} Runs of {len(cases)} cases</p>
 <div class="headline">{pct(end_to_end and end_to_end.mean)}</div>
 <p>{END_TO_END}, mean over {len(runs)} Runs (range {_range(end_to_end)}): the Trace passes the Search, Path and Answer
 Steps.</p>
@@ -110,10 +119,9 @@ Steps.</p>
 <h2>Pass rate per Step</h2>
 <div class="panel">
 {"".join(bar(name, rates[name], strong=name == END_TO_END) for name in STEP_METRICS)}
-<small>Bar: mean over the Runs. Marks: lowest to highest Run. Answer Step uses code checks only; claims are not
-checked until the LLM judge exists.</small>
+<small>Bar: mean over the Runs. Marks: lowest to highest Run. {answer_note}</small>
 </div>
-
+{_judge_panel(judge_rates)}
 <div class="callout" style="margin-top:16px">
 <div class="panel"><div class="big">{pct(answer and answer.mean)}</div>Answer Step:
 the number you would have reported</div>
@@ -142,6 +150,17 @@ the number that matters</div>
 <code>src/html_report.py</code>, not typed in. First Run started {escape(first["timestamp"])}.</footer>
 """
     return page(f"Evaluation report {first['timestamp']}", body)
+
+
+def _judge_panel(rates: dict[str, list[float | None]]) -> str:
+    if not rates:
+        return ""
+    return (
+        '<h2>LLM judge</h2>\n<div class="panel">'
+        + "".join(bar(name, values) for name, values in rates.items())
+        + "<small>Over the answers the judge was called for (an answer given where an answer was expected). "
+        "Undecided: verdicts that were UNKNOWN or a judge error.</small></div>\n"
+    )
 
 
 def _patterns_table(patterns: dict[tuple[str, str], list]) -> str:

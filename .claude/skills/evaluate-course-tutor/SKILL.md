@@ -49,8 +49,10 @@ command stops early, the runs already stored remain: record how many finished an
 ### 3. Read the results
 
 - From `report.md`: the mean and range of every Step (Search, Path, Answer, End-to-end Success) and every metric,
-  set against the previous entry as before → after. The Answer Step and End-to-end Success are code checks only
-  until the LLM judge exists; say so. Supported rate and Responsive rate stay `pending`: report them as pending.
+  set against the previous entry as before → after. Check the report's "Judge model" line: with a judge, the
+  Answer Step includes the Supported and Responsive verdicts and the report gives Supported rate, Responsive rate and
+  Judge undecided rate; without one, the Answer Step and End-to-end Success are code checks only and the judge rates
+  are "not measured": say so. Never compare a run with the judge to one without it as if only the app had changed.
 - A case **fails** in a run when its Trace fails End-to-end Success. Its `steps` in `run_N.json` name the earliest
   failing Step and the reason. For every case that fails in at least one run, open its output in each `run_N.json`:
   Course Material read (`materials_read`, the routed Course for the Routed Tutor), `read_arguments` and
@@ -84,7 +86,8 @@ Done when the entry is appended and names the run folder.
 ### 6. Report back
 
 Reply with the configuration, the metrics as before → after, the number of failing cases, the run folder and the log
-entry, and one sentence on what the numbers do not cover (pending judge metrics, number of cases, three runs).
+entry, and one sentence on what the numbers do not cover (judge not calibrated against hand labels yet, or not used; number
+of cases; three runs).
 
 ## Boundaries
 

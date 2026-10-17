@@ -1,0 +1,721 @@
+{
+  "run_folder": "evaluation/runs/2026-10-14_193513_golden_set_v1_routed",
+  "items": 16,
+  "results": [
+    {
+      "model": "course-chat",
+      "calls": 32,
+      "judge errors": 2,
+      "UNKNOWN": 0,
+      "median s": 1.6,
+      "slowest s": 3.5,
+      "original Supported PASS": "8/8",
+      "original Responsive PASS": "8/8",
+      "wrong Section caught (Supported FAIL)": "4/4",
+      "wrong question caught (Responsive FAIL)": "3/4",
+      "first error": "judge model call failed: RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit exceeded for api_key: <redacted>. Limit type: requests. Current limit: 30, Remaining: 0. Limit resets at: 2026-10-17 21:32:26 UTC', 'type': 'throttling_error', 'param': None, 'code': '429'}}",
+      "rows": [
+        {
+          "kind": "original",
+          "case_id": "GS-01",
+          "supported": "PASS",
+          "responsive": "PASS",
+          "supported_evidence": "The answer’s claims are supported by [GAIF-1.3]: it describes the Chinese Room setup (non-Chinese speaker, rule book, correct answers, outside appearance vs inside lack of understanding) and Searle’s point about syntax vs semantics and the argument against strong AI. It also states that strong AI is the idea that a suitably programmed computer literally has a mind, which is explicitly in [GAIF-1.3].",
+          "responsive_evidence": "The question asks what Searle's Chinese Room thought experiment was meant to show. The answer states Searle’s point that symbol manipulation by rules (syntax) is not the same as understanding meaning (semantics), and that this is an argument against strong AI."
+        },
+        {
+          "kind": "original",
+          "case_id": "GS-04",
+          "supported": "PASS",
+          "responsive": "PASS",
+          "supported_evidence": "All claims in the answer are supported by [GAIF-2.14]: it states that sigmoid saturates and its derivative approaches 0, that multiplying gradients layer by layer leads to the vanishing gradient problem, and that ReLU does not saturate for positive inputs, is computationally cheap, introduces non-linearity, and that Glorot, Bordes and Bengio (2011) found rectifier networks could be trained effectively with advantages over sigmoid/tanh.",
+          "responsive_evidence": "The question asks for (1) what the vanishing gradient problem is and (2) why ReLU helps with it. The answer explains sigmoid saturation leading to derivatives near 0 and how backprop multiplies gradients across layers, and it states that ReLU helps because it does not saturate for positive inputs."
+        },
+        {
+          "kind": "original",
+          "case_id": "GS-08",
+          "supported": "PASS",
+          "responsive": "PASS",
+          "supported_evidence": "The answer’s claims are supported by [PEID-4.1]: it states that a workflow uses predefined code paths written by a developer, while an agent lets the LLM dynamically direct its process and tool use at runtime; it also explicitly says the difference is who decides the next step and gives examples like search/read a file/run tests.",
+          "responsive_evidence": "The question asks for the difference between an LLM workflow and an LLM agent. The answer directly compares them by stating that workflows use predefined developer code paths while agents dynamically choose next steps at runtime, explicitly addressing the requested difference."
+        },
+        {
+          "kind": "original",
+          "case_id": "GS-11",
+          "supported": "PASS",
+          "responsive": "PASS",
+          "supported_evidence": "All four bullet-point claims in the answer (parochial self-interest; misunderstanding and lack of trust; different assessments; low tolerance for change) are explicitly stated in [DTGS-1.4], including the specific meanings given in each bullet.",
+          "responsive_evidence": "The question asks for Kotter and Schlesinger’s reasons for why people resist organisational change. The answer directly lists four reasons—parochial self-interest, misunderstanding/lack of trust, different assessments of costs and benefits, and low tolerance for change—matching what the question asks for."
+        },
+        {
+          "kind": "original",
+          "case_id": "GS-14",
+          "supported": "PASS",
+          "responsive": "PASS",
+          "supported_evidence": "The answer claims that the letters in Prosci's ADKAR model stand for Awareness, Desire, Knowledge, Ability and Reinforcement, and [DTGS-1.7] explicitly lists these five phases as the ADKAR model. Therefore the cited section supports the claim.",
+          "responsive_evidence": "The question asks what the letters in Prosci's ADKAR model stand for. The answer explicitly lists Awareness, Desire, Knowledge, Ability, and Reinforcement, matching the requested expansion of the acronym."
+        },
+        {
+          "kind": "original",
+          "case_id": "GS-17",
+          "supported": "PASS",
+          "responsive": "PASS",
+          "supported_evidence": "The answer’s claims are supported by [AITB-1.4]: it states the tool-first trap as naming a tool before the task/data/risk/output/success criteria are clear, and that the better approach is to state the work first and then choose the tool. It also supports that tool selection should start with a bounded task narrow enough to test, review, and improve.",
+          "responsive_evidence": "The question asks for the definition of the tool-first trap and what should come first instead. The answer defines the trap as choosing a tool before clarifying task, data, risks, outputs, and success criteria, and it states that the work should come first, followed by choosing the category/tool, starting with a bounded task."
+        },
+        {
+          "kind": "original",
+          "case_id": "GS-20",
+          "supported": "PASS",
+          "responsive": "PASS",
+          "supported_evidence": "All claims in the answer are supported by [AITB-4.10]: it states to write yourself for condolences/bad news, disciplinary or performance letters, personal apologies, resignations or thanks, and anything read as personal; it also says AI can help check facts/dates/policy references or whether the tone will land; and it advises generating nothing if the reader would feel worse on learning it was generated.",
+          "responsive_evidence": "The question asks when the student should write a message themselves rather than have AI draft it. The answer directly lists the situations (condolences/bad news, disciplinary/performance letters, personal apologies, resignations/thanks, and anything personal) and includes the rule about generating nothing if the reader would feel worse on learning it was generated."
+        },
+        {
+          "kind": "original",
+          "case_id": "GS-23",
+          "supported": "PASS",
+          "responsive": "PASS",
+          "supported_evidence": "The answer’s claims are supported by the cited sections: the prompt improvement loop steps and rules are stated in [PEID-2.14]; the guidance about one run not being a measurement and quoting pass@k vs pass^k is stated in [PEID-5.1]; and the idea of using a fixed set of saved inputs (“golden set”) to detect drift from memory is stated in [PEID-2.15].",
+          "responsive_evidence": "The question asks how to compare two prompt versions fairly. The answer directly provides a fair-comparison procedure (keep a baseline, change one thing at a time, re-run the same inputs with the same settings, and avoid judging on a single run), which matches the key facts."
+        },
+        {
+          "kind": "wrong Section",
+          "case_id": "GS-01",
+          "supported": "FAIL",
+          "responsive": "PASS",
+          "supported_evidence": "The answer claims that Searle’s Chinese Room involves a person who does not understand Chinese following a rule book to produce correct Chinese answers, and that it is meant to show that syntax manipulation is not the same as semantic understanding and is an argument against “strong AI” [PEID-1.1]. However, [PEID-1.1] discusses tokenization and how language models process token IDs, not the Chinese Room thought experiment or its intended lesson.",
+          "responsive_evidence": "The question asks what Searle's Chinese Room thought experiment was meant to show. The answer states Searle’s point that symbol manipulation by rules (syntax) is not understanding meaning (semantics), and that this is an argument against strong AI (that a program literally has a mind)."
+        },
+        {
+          "kind": "wrong Section",
+          "case_id": "GS-04",
+          "supported": "FAIL",
+          "responsive": "PASS",
+          "supported_evidence": "The answer cites [PEID-1.1] for claims about the vanishing gradient problem (sigmoid saturation, derivatives approaching 0, gradients multiplying toward zero) and for claims about ReLU not saturating and being computationally cheap. However, [PEID-1.1] is about tokenization in language models and does not mention vanishing gradients, sigmoid/tanh saturation, ReLU behavior, or training deep networks.",
+          "responsive_evidence": "The question asks for (1) what the vanishing gradient problem is and (2) why ReLU helps with it. The answer explains sigmoid saturation leading to near-zero derivatives and how gradients shrink through backpropagation, then states that ReLU does not saturate for positive inputs and is computationally cheap."
+        },
+        {
+          "kind": "wrong Section",
+          "case_id": "GS-08",
+          "supported": "FAIL",
+          "responsive": "PASS",
+          "supported_evidence": "The answer claims that a workflow uses predefined code paths written by a developer and that an agent dynamically directs its own process and tool use, choosing the next step at runtime. The cited section [AITB-1.1] discusses choosing appropriate tools for different jobs and risks of wrong tool choice, but it does not state anything about workflows vs agents, predefined code paths, or runtime decision-making by an agent.",
+          "responsive_evidence": "The question asks for the difference between an LLM workflow and an LLM agent. The answer directly states the distinction (who decides the next step) and explains workflow as predefined code paths vs agent as dynamic runtime tool/process direction."
+        },
+        {
+          "kind": "wrong Section",
+          "case_id": "GS-11",
+          "supported": "FAIL",
+          "responsive": "PASS",
+          "supported_evidence": "The answer claims that Kotter and Schlesinger give four common reasons for resistance (parochial self-interest, misunderstanding/lack of trust, different assessments, and low tolerance for change) and cites [GAIF-1.1] for each. However, [GAIF-1.1] (“Can machines think?”) discusses philosophical/technical issues about machines thinking and definitions of intelligence/mind/cognition, and does not state any reasons for organisational resistance or any of the four listed factors.",
+          "responsive_evidence": "The question asks for Kotter and Schlesinger’s reasons for why people resist organisational change. The answer directly lists four reasons—parochial self-interest, misunderstanding/lack of trust, different assessments of costs and benefits, and low tolerance for change—matching what was asked."
+        },
+        {
+          "kind": "wrong question",
+          "case_id": "GS-06",
+          "supported": "FAIL",
+          "responsive": "FAIL",
+          "supported_evidence": "The answer claims that Searle's Chinese Room is a thought experiment with a person who does not understand Chinese and returns correct Chinese answers by following rules, and that this is used to argue against strong AI; these meanings are explicitly stated in [GAIF-1.3]. However, the question asked about prompt caching lowering cost and how a timestamp in a system prompt can stop it from working, and the cited section does not mention prompt caching or timestamps, so those parts are not addressed/supported.",
+          "responsive_evidence": "The question asks how prompt caching reduces cost and why a timestamp in a system prompt can prevent caching. The provided answer discusses Searle’s Chinese Room and the semantics vs syntax debate, which does not address prompt caching or timestamps."
+        },
+        {
+          "kind": "wrong question",
+          "case_id": "GS-06",
+          "supported": "PASS",
+          "responsive": "FAIL",
+          "supported_evidence": "The answer claims that the vanishing gradient problem occurs because sigmoid saturates and that gradients multiply layer by layer toward zero; [GAIF-2.14] states sigmoid saturates and that this leads to vanishing gradients during backpropagation. It also claims ReLU does not saturate for positive inputs, is computationally very cheap, introduces non-linearity, and that Glorot, Bordes and Bengio (2011) showed rectifier networks could be trained effectively with advantages; [GAIF-2.14] states all of these.",
+          "responsive_evidence": "The question asks how prompt caching reduces cost and why a timestamp at the top of a system prompt can prevent caching. The provided answer discusses vanishing gradients and ReLU vs sigmoid, which does not address prompt caching or timestamps."
+        },
+        {
+          "kind": "wrong question",
+          "case_id": "GS-01",
+          "supported": "FAIL",
+          "responsive": "FAIL",
+          "supported_evidence": "The answer claims that “The difference is who decides the next step, not intelligence” and defines workflow and agent in terms of predefined code paths vs dynamic tool/process direction, but the question asks what Searle's Chinese Room thought experiment is meant to show. The cited section [PEID-4.1] discusses workflow vs agent and does not mention Searle’s Chinese Room or its intended lesson, so the answer’s content is not supported by the provided section for the asked question.",
+          "responsive_evidence": "The question asks what Searle's Chinese Room thought experiment was meant to show. The provided answer discusses the difference between workflows and agents in LLM systems, which does not address the Chinese Room or its intended philosophical point."
+        },
+        {
+          "kind": "wrong question",
+          "case_id": "GS-01",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit exceeded for api_key: <redacted>. Limit type: requests. Current limit: 30, Remaining: 0. Limit resets at: 2026-10-17 21:32:26 UTC', 'type': 'throttling_error', 'param': None, 'code': '429'}}",
+          "responsive_evidence": "judge model call failed: RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit exceeded for api_key: <redacted>. Limit type: requests. Current limit: 30, Remaining: 0. Limit resets at: 2026-10-17 21:32:26 UTC', 'type': 'throttling_error', 'param': None, 'code': '429'}}"
+        }
+      ]
+    },
+    {
+      "model": "z-ai/glm-5.3",
+      "calls": 32,
+      "judge errors": 24,
+      "UNKNOWN": 0,
+      "median s": 120.1,
+      "slowest s": 120.4,
+      "original Supported PASS": "2/8",
+      "original Responsive PASS": "2/8",
+      "wrong Section caught (Supported FAIL)": "2/4",
+      "wrong question caught (Responsive FAIL)": "0/4",
+      "first error": "judge model call failed: APITimeoutError: Request timed out.",
+      "rows": [
+        {
+          "kind": "original",
+          "case_id": "GS-01",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: APITimeoutError: Request timed out.",
+          "responsive_evidence": "judge model call failed: APITimeoutError: Request timed out."
+        },
+        {
+          "kind": "original",
+          "case_id": "GS-04",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: APITimeoutError: Request timed out.",
+          "responsive_evidence": "judge model call failed: APITimeoutError: Request timed out."
+        },
+        {
+          "kind": "original",
+          "case_id": "GS-08",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: APITimeoutError: Request timed out.",
+          "responsive_evidence": "judge model call failed: APITimeoutError: Request timed out."
+        },
+        {
+          "kind": "original",
+          "case_id": "GS-11",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: APITimeoutError: Request timed out.",
+          "responsive_evidence": "judge model call failed: APITimeoutError: Request timed out."
+        },
+        {
+          "kind": "original",
+          "case_id": "GS-14",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: APITimeoutError: Request timed out.",
+          "responsive_evidence": "judge model call failed: APITimeoutError: Request timed out."
+        },
+        {
+          "kind": "original",
+          "case_id": "GS-17",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: APITimeoutError: Request timed out.",
+          "responsive_evidence": "judge model call failed: APITimeoutError: Request timed out."
+        },
+        {
+          "kind": "original",
+          "case_id": "GS-20",
+          "supported": "PASS",
+          "responsive": "PASS",
+          "supported_evidence": "Every claim in the answer — the list of situations to write yourself, the reasons (authorship is the message, discovery damages trust, words carry liability, nuance is the point, time saved is trivial), the permitted AI help with facts, dates, policy references and tone, and the rule about generating nothing if the reader would feel worse — is stated verbatim or near-verbatim in the cited Section [AITB-4.10].",
+          "responsive_evidence": "The question asks for the circumstances in which one should write a message personally rather than have AI draft it, and the answer directly lists those situations (condolences or bad news, disciplinary or performance letters, personal apologies, resignations or thanks, anything read as personal) along with the governing test that if the reader would feel worse on learning it was generated, generate nothing."
+        },
+        {
+          "kind": "original",
+          "case_id": "GS-23",
+          "supported": "PASS",
+          "responsive": "PASS",
+          "supported_evidence": "The improvement-loop steps, the rules (never change two things at once, never judge on one run, keep the old version) are all stated in PEID-2.14; the sampling/pass@k/pass^k claim matches PEID-5.1; and the golden set claim (fixed saved inputs and a score to tell drift from memory) matches the last row of the table in PEID-2.15.",
+          "responsive_evidence": "The question asks how to fairly compare two prompt versions, and the answer directly addresses this by advising to change only one thing at a time, re-run the same inputs with the same fixed settings, and never judge based on a single run, matching the key facts."
+        },
+        {
+          "kind": "wrong Section",
+          "case_id": "GS-01",
+          "supported": "FAIL",
+          "responsive": "PASS",
+          "supported_evidence": "The answer's claims about Searle's Chinese Room (a person following a rule book, syntax vs semantics, the argument against strong AI) are all cited to [PEID-1.1], but that Section is about tokenization in language models and never mentions Searle, the Chinese Room, or strong AI, so the first claim is unsupported.",
+          "responsive_evidence": "The question asks what Searle's Chinese Room thought experiment is meant to show, and the answer explicitly states this: that symbol manipulation by rules (syntax) is not the same as understanding meaning (semantics), and that intelligent behavior does not mean a program has a mind, making it an argument against strong AI."
+        },
+        {
+          "kind": "wrong Section",
+          "case_id": "GS-04",
+          "supported": "FAIL",
+          "responsive": "PASS",
+          "supported_evidence": "The first claim states that the vanishing gradient problem arises from sigmoid saturation and gradient multiplication during backpropagation, citing [PEID-1.1], but that Section is about tokenization ('Tokens, not words') and says nothing about sigmoid, gradients, ReLU, backpropagation, or Glorot, Bordes and Bengio (2011). No claim in the answer is found in the cited Section.",
+          "responsive_evidence": "The question asks for a definition of the vanishing gradient problem and an explanation of why ReLU helps; the answer defines the problem (sigmoid saturation causing near-zero derivatives that multiply layer by layer in backpropagation) and explains ReLU's benefit (no saturation for positive inputs, computational cheapness, non-linearity)."
+        },
+        {
+          "kind": "wrong Section",
+          "case_id": "GS-08",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: APITimeoutError: Request timed out.",
+          "responsive_evidence": "judge model call failed: APITimeoutError: Request timed out."
+        },
+        {
+          "kind": "wrong Section",
+          "case_id": "GS-11",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: APITimeoutError: Request timed out.",
+          "responsive_evidence": "judge model call failed: APITimeoutError: Request timed out."
+        },
+        {
+          "kind": "wrong question",
+          "case_id": "GS-06",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: APITimeoutError: Request timed out.",
+          "responsive_evidence": "judge model call failed: APITimeoutError: Request timed out."
+        },
+        {
+          "kind": "wrong question",
+          "case_id": "GS-06",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: APITimeoutError: Request timed out.",
+          "responsive_evidence": "judge model call failed: APITimeoutError: Request timed out."
+        },
+        {
+          "kind": "wrong question",
+          "case_id": "GS-01",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: APITimeoutError: Request timed out.",
+          "responsive_evidence": "judge model call failed: APITimeoutError: Request timed out."
+        },
+        {
+          "kind": "wrong question",
+          "case_id": "GS-01",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: APITimeoutError: Request timed out.",
+          "responsive_evidence": "judge model call failed: APITimeoutError: Request timed out."
+        }
+      ]
+    },
+    {
+      "model": "google/gemma-4-31b-it",
+      "calls": 32,
+      "judge errors": 30,
+      "UNKNOWN": 0,
+      "median s": 120.1,
+      "slowest s": 121.2,
+      "original Supported PASS": "0/8",
+      "original Responsive PASS": "1/8",
+      "wrong Section caught (Supported FAIL)": "0/4",
+      "wrong question caught (Responsive FAIL)": "0/4",
+      "first error": "judge model call failed: APITimeoutError: Request timed out.",
+      "rows": [
+        {
+          "kind": "original",
+          "case_id": "GS-01",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: APITimeoutError: Request timed out.",
+          "responsive_evidence": "judge model call failed: APITimeoutError: Request timed out."
+        },
+        {
+          "kind": "original",
+          "case_id": "GS-04",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: APITimeoutError: Request timed out.",
+          "responsive_evidence": "judge model call failed: APITimeoutError: Request timed out."
+        },
+        {
+          "kind": "original",
+          "case_id": "GS-08",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: APITimeoutError: Request timed out.",
+          "responsive_evidence": "judge model call failed: APITimeoutError: Request timed out."
+        },
+        {
+          "kind": "original",
+          "case_id": "GS-11",
+          "supported": "ERROR",
+          "responsive": "PASS",
+          "supported_evidence": "judge model call failed: APITimeoutError: Request timed out.",
+          "responsive_evidence": "The question asks why people resist organisational change according to Kotter and Schlesinger, and the answer provides the four specific reasons cited by those authors."
+        },
+        {
+          "kind": "original",
+          "case_id": "GS-14",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: APITimeoutError: Request timed out.",
+          "responsive_evidence": "judge model call failed: APITimeoutError: Request timed out."
+        },
+        {
+          "kind": "original",
+          "case_id": "GS-17",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: APITimeoutError: Request timed out.",
+          "responsive_evidence": "judge model call failed: APITimeoutError: Request timed out."
+        },
+        {
+          "kind": "original",
+          "case_id": "GS-20",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: APITimeoutError: Request timed out.",
+          "responsive_evidence": "judge model call failed: APITimeoutError: Request timed out."
+        },
+        {
+          "kind": "original",
+          "case_id": "GS-23",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: APITimeoutError: Request timed out.",
+          "responsive_evidence": "judge model call failed: APITimeoutError: Request timed out."
+        },
+        {
+          "kind": "wrong Section",
+          "case_id": "GS-01",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: APITimeoutError: Request timed out.",
+          "responsive_evidence": "judge model call failed: APITimeoutError: Request timed out."
+        },
+        {
+          "kind": "wrong Section",
+          "case_id": "GS-04",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: APITimeoutError: Request timed out.",
+          "responsive_evidence": "judge model call failed: APITimeoutError: Request timed out."
+        },
+        {
+          "kind": "wrong Section",
+          "case_id": "GS-08",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: APITimeoutError: Request timed out.",
+          "responsive_evidence": "judge model call failed: APITimeoutError: Request timed out."
+        },
+        {
+          "kind": "wrong Section",
+          "case_id": "GS-11",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: APITimeoutError: Request timed out.",
+          "responsive_evidence": "judge model call failed: APITimeoutError: Request timed out."
+        },
+        {
+          "kind": "wrong question",
+          "case_id": "GS-06",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: APITimeoutError: Request timed out.",
+          "responsive_evidence": "judge model call failed: APITimeoutError: Request timed out."
+        },
+        {
+          "kind": "wrong question",
+          "case_id": "GS-06",
+          "supported": "PASS",
+          "responsive": "ERROR",
+          "supported_evidence": "The claims regarding the vanishing gradient problem and ReLU are supported by Section [GAIF-2.14].",
+          "responsive_evidence": "judge model call failed: APITimeoutError: Request timed out."
+        },
+        {
+          "kind": "wrong question",
+          "case_id": "GS-01",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: APITimeoutError: Request timed out.",
+          "responsive_evidence": "judge model call failed: APITimeoutError: Request timed out."
+        },
+        {
+          "kind": "wrong question",
+          "case_id": "GS-01",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: APITimeoutError: Request timed out.",
+          "responsive_evidence": "judge model call failed: APITimeoutError: Request timed out."
+        }
+      ]
+    },
+    {
+      "model": "openai/gpt-oss-20b",
+      "calls": 32,
+      "judge errors": 0,
+      "UNKNOWN": 0,
+      "median s": 3.7,
+      "slowest s": 9.8,
+      "original Supported PASS": "8/8",
+      "original Responsive PASS": "8/8",
+      "wrong Section caught (Supported FAIL)": "4/4",
+      "wrong question caught (Responsive FAIL)": "4/4",
+      "first error": "",
+      "rows": [
+        {
+          "kind": "original",
+          "case_id": "GS-01",
+          "supported": "PASS",
+          "responsive": "PASS",
+          "supported_evidence": "All claims in the answer are directly stated in section [GAIF-1.3] of the cited material.",
+          "responsive_evidence": "The question asks what Searle’s Chinese Room is meant to show; the answer explains that it demonstrates that manipulating symbols by rules (syntax) does not entail understanding meaning (semantics) and thus argues against strong AI, directly addressing the question."
+        },
+        {
+          "kind": "original",
+          "case_id": "GS-04",
+          "supported": "PASS",
+          "responsive": "PASS",
+          "supported_evidence": "Both claims are directly supported by GAIF-2.14: the section explains that the sigmoid saturates, its derivative approaches 0, gradients multiply to zero causing the vanishing gradient problem, and that ReLU does not saturate for positive inputs, is computationally cheap, introduces non‑linearity, and cites Glorot et al. (2011) for effective training.",
+          "responsive_evidence": "The answer explains the vanishing gradient problem as the result of sigmoid saturation and gradient multiplication, and then states that ReLU helps because it does not saturate for positive inputs and is computationally cheap, directly addressing both parts of the question."
+        },
+        {
+          "kind": "original",
+          "case_id": "GS-08",
+          "supported": "PASS",
+          "responsive": "PASS",
+          "supported_evidence": "All claims in the answer are directly stated in the cited section [PEID-4.1] – the difference is who decides the next step, the definition of a workflow, and the definition of an agent.",
+          "responsive_evidence": "The question asks for the difference between an LLM workflow and an LLM agent, and the answer explicitly states that the difference is who decides the next step, describing workflows as developer‑written predefined paths and agents as LLM‑directed dynamic processes."
+        },
+        {
+          "kind": "original",
+          "case_id": "GS-11",
+          "supported": "PASS",
+          "responsive": "PASS",
+          "supported_evidence": "All four claims are directly stated in the cited section [DTGS-1.4] and match the wording provided.",
+          "responsive_evidence": "The question asks for the reasons people resist organisational change according to Kotter and Schlesinger, and the answer lists the four reasons (parochial self-interest, misunderstanding and lack of trust, different assessments, low tolerance for change)."
+        },
+        {
+          "kind": "original",
+          "case_id": "GS-14",
+          "supported": "PASS",
+          "responsive": "PASS",
+          "supported_evidence": "The cited section DTGS-1.7 explicitly lists the phases as Awareness, Desire, Knowledge, Ability, Reinforcement, matching the answer’s claim.",
+          "responsive_evidence": "The question asks for the meanings of the letters in Prosci's ADKAR model, and the answer lists Awareness, Desire, Knowledge, Ability, and Reinforcement, which are the correct expansions."
+        },
+        {
+          "kind": "original",
+          "case_id": "GS-17",
+          "supported": "PASS",
+          "responsive": "PASS",
+          "supported_evidence": "All claims in the answer are directly stated in the cited section AITB-1.4: the section describes the tool‑first trap, the recommended work‑first approach, and that tool selection should start with a bounded task.",
+          "responsive_evidence": "The answer defines the tool‑first trap as naming a tool before clarifying task, data, risk, output and success criteria, and states that the work should be defined first before selecting a tool, directly addressing both parts of the question."
+        },
+        {
+          "kind": "original",
+          "case_id": "GS-20",
+          "supported": "PASS",
+          "responsive": "PASS",
+          "supported_evidence": "All claims in the answer are directly stated in the cited section AITB-4.10.",
+          "responsive_evidence": "The question asks when to write a message yourself instead of using AI; the answer lists the specific situations (condolences, bad news, disciplinary/performance letters, personal apologies, resignations or thanks, and anything read as personal) and explains reasons, directly addressing the question."
+        },
+        {
+          "kind": "original",
+          "case_id": "GS-23",
+          "supported": "PASS",
+          "responsive": "PASS",
+          "supported_evidence": "All claims in the answer are directly supported by the cited sections: the steps and rules of the prompt improvement loop are in [PEID-2.14], the measurement guidance is in [PEID-5.1], and the golden set explanation is in [PEID-2.15].",
+          "responsive_evidence": "The answer explains that to compare two prompt versions fairly you should keep a baseline, use the same inputs and settings, change only one element at a time, re-run the same inputs, and avoid judging on a single run—exactly addressing the question."
+        },
+        {
+          "kind": "wrong Section",
+          "case_id": "GS-01",
+          "supported": "FAIL",
+          "responsive": "PASS",
+          "supported_evidence": "The answer’s first claim about Searle’s Chinese Room is unsupported because the cited section [PEID-1.1] discusses tokenization of language models, not the Chinese Room experiment or its implications.",
+          "responsive_evidence": "The question asks what Searle’s Chinese Room is meant to show; the answer explicitly states that it demonstrates that manipulating symbols by rules (syntax) is not the same as understanding meaning (semantics) and thus argues against strong AI."
+        },
+        {
+          "kind": "wrong Section",
+          "case_id": "GS-04",
+          "supported": "FAIL",
+          "responsive": "PASS",
+          "supported_evidence": "The claim that the vanishing gradient problem arises because the sigmoid activation saturates is not found in the cited section [PEID-1.1], which discusses tokenization rather than activation functions or gradients.",
+          "responsive_evidence": "The answer defines the vanishing gradient problem as the effect of sigmoid saturation and gradient multiplication, and explains that ReLU helps because it does not saturate for positive inputs and is computationally cheap, directly addressing both parts of the question."
+        },
+        {
+          "kind": "wrong Section",
+          "case_id": "GS-08",
+          "supported": "FAIL",
+          "responsive": "PASS",
+          "supported_evidence": "The claim that a workflow is orchestrated through predefined code paths written by a developer is not stated in the cited section AITB-1.1, which only discusses tool choice and its impact, not workflow structure.",
+          "responsive_evidence": "The question asks for the difference between an LLM workflow and an LLM agent; the answer explicitly states that the difference is who decides the next step, describes a workflow as developer‑written predefined code paths, and an agent as one where the LLM dynamically directs its own process at runtime."
+        },
+        {
+          "kind": "wrong Section",
+          "case_id": "GS-11",
+          "supported": "FAIL",
+          "responsive": "PASS",
+          "supported_evidence": "The claim ‘Parochial self‑interest — people focus on what they personally will lose rather than on the organisation as a whole’ is not found in the cited section GAIF‑1.1, which discusses whether machines can think, not organisational change resistance.",
+          "responsive_evidence": "The question asks for the reasons Kotter and Schlesinger give for resistance to organisational change, and the answer lists those four reasons (parochial self‑interest, misunderstanding and lack of trust, different assessments of costs and benefits, low tolerance for change)."
+        },
+        {
+          "kind": "wrong question",
+          "case_id": "GS-06",
+          "supported": "PASS",
+          "responsive": "FAIL",
+          "supported_evidence": "All claims in the answer are supported by the cited section [GAIF-1.3], which contains the description of Searle's Chinese Room and the argument about syntax versus semantics.",
+          "responsive_evidence": "The question asks how prompt caching reduces cost and why a timestamp at the top of a system prompt can disable it, but the answer discusses Searle's Chinese Room and does not address prompt caching or timestamps at all."
+        },
+        {
+          "kind": "wrong question",
+          "case_id": "GS-06",
+          "supported": "PASS",
+          "responsive": "FAIL",
+          "supported_evidence": "All claims in the answer are supported by the cited section GAIF-2.14, which describes the vanishing gradient problem, sigmoid saturation, and the advantages of ReLU.",
+          "responsive_evidence": "The question asks how prompt caching reduces cost and why a timestamp at the top of a system prompt can disable it, but the answer discusses vanishing gradients, sigmoid, and ReLU, which are unrelated to prompt caching."
+        },
+        {
+          "kind": "wrong question",
+          "case_id": "GS-01",
+          "supported": "PASS",
+          "responsive": "FAIL",
+          "supported_evidence": "All claims in the answer are found in the cited section [PEID-4.1] (workflow definition, agent definition, and the statement that the difference is who decides the next step).",
+          "responsive_evidence": "The question asks for the purpose of Searle’s Chinese Room, but the answer discusses workflows and agents, not the Chinese Room or its implications."
+        },
+        {
+          "kind": "wrong question",
+          "case_id": "GS-01",
+          "supported": "FAIL",
+          "responsive": "FAIL",
+          "supported_evidence": "The answer does not mention Searle's Chinese Room or any claim about it; it only lists Kotter and Schlesinger's reasons for resistance, which are unrelated to the question.",
+          "responsive_evidence": "The question asks for the purpose of Searle's Chinese Room, but the answer lists reasons for resistance to change, which is unrelated."
+        }
+      ]
+    },
+    {
+      "model": "mistralai/mistral-large",
+      "calls": 32,
+      "judge errors": 32,
+      "UNKNOWN": 0,
+      "median s": 0.1,
+      "slowest s": 0.6,
+      "original Supported PASS": "0/8",
+      "original Responsive PASS": "0/8",
+      "wrong Section caught (Supported FAIL)": "0/4",
+      "wrong question caught (Responsive FAIL)": "0/4",
+      "first error": "judge model call failed: NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '767b5b9a-3f9d-4c1d-86e8-fa861988cee7': Not found for account 'I8XHM57AQYbNp2YUqfIeKHrPbuEPMs3BVV6I49MbkRc'\"}",
+      "rows": [
+        {
+          "kind": "original",
+          "case_id": "GS-01",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '767b5b9a-3f9d-4c1d-86e8-fa861988cee7': Not found for account 'I8XHM57AQYbNp2YUqfIeKHrPbuEPMs3BVV6I49MbkRc'\"}",
+          "responsive_evidence": "judge model call failed: NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '767b5b9a-3f9d-4c1d-86e8-fa861988cee7': Not found for account 'I8XHM57AQYbNp2YUqfIeKHrPbuEPMs3BVV6I49MbkRc'\"}"
+        },
+        {
+          "kind": "original",
+          "case_id": "GS-04",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '767b5b9a-3f9d-4c1d-86e8-fa861988cee7': Not found for account 'I8XHM57AQYbNp2YUqfIeKHrPbuEPMs3BVV6I49MbkRc'\"}",
+          "responsive_evidence": "judge model call failed: NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '767b5b9a-3f9d-4c1d-86e8-fa861988cee7': Not found for account 'I8XHM57AQYbNp2YUqfIeKHrPbuEPMs3BVV6I49MbkRc'\"}"
+        },
+        {
+          "kind": "original",
+          "case_id": "GS-08",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '767b5b9a-3f9d-4c1d-86e8-fa861988cee7': Not found for account 'I8XHM57AQYbNp2YUqfIeKHrPbuEPMs3BVV6I49MbkRc'\"}",
+          "responsive_evidence": "judge model call failed: NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '767b5b9a-3f9d-4c1d-86e8-fa861988cee7': Not found for account 'I8XHM57AQYbNp2YUqfIeKHrPbuEPMs3BVV6I49MbkRc'\"}"
+        },
+        {
+          "kind": "original",
+          "case_id": "GS-11",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '767b5b9a-3f9d-4c1d-86e8-fa861988cee7': Not found for account 'I8XHM57AQYbNp2YUqfIeKHrPbuEPMs3BVV6I49MbkRc'\"}",
+          "responsive_evidence": "judge model call failed: NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '767b5b9a-3f9d-4c1d-86e8-fa861988cee7': Not found for account 'I8XHM57AQYbNp2YUqfIeKHrPbuEPMs3BVV6I49MbkRc'\"}"
+        },
+        {
+          "kind": "original",
+          "case_id": "GS-14",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '767b5b9a-3f9d-4c1d-86e8-fa861988cee7': Not found for account 'I8XHM57AQYbNp2YUqfIeKHrPbuEPMs3BVV6I49MbkRc'\"}",
+          "responsive_evidence": "judge model call failed: NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '767b5b9a-3f9d-4c1d-86e8-fa861988cee7': Not found for account 'I8XHM57AQYbNp2YUqfIeKHrPbuEPMs3BVV6I49MbkRc'\"}"
+        },
+        {
+          "kind": "original",
+          "case_id": "GS-17",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '767b5b9a-3f9d-4c1d-86e8-fa861988cee7': Not found for account 'I8XHM57AQYbNp2YUqfIeKHrPbuEPMs3BVV6I49MbkRc'\"}",
+          "responsive_evidence": "judge model call failed: NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '767b5b9a-3f9d-4c1d-86e8-fa861988cee7': Not found for account 'I8XHM57AQYbNp2YUqfIeKHrPbuEPMs3BVV6I49MbkRc'\"}"
+        },
+        {
+          "kind": "original",
+          "case_id": "GS-20",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '767b5b9a-3f9d-4c1d-86e8-fa861988cee7': Not found for account 'I8XHM57AQYbNp2YUqfIeKHrPbuEPMs3BVV6I49MbkRc'\"}",
+          "responsive_evidence": "judge model call failed: NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '767b5b9a-3f9d-4c1d-86e8-fa861988cee7': Not found for account 'I8XHM57AQYbNp2YUqfIeKHrPbuEPMs3BVV6I49MbkRc'\"}"
+        },
+        {
+          "kind": "original",
+          "case_id": "GS-23",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '767b5b9a-3f9d-4c1d-86e8-fa861988cee7': Not found for account 'I8XHM57AQYbNp2YUqfIeKHrPbuEPMs3BVV6I49MbkRc'\"}",
+          "responsive_evidence": "judge model call failed: NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '767b5b9a-3f9d-4c1d-86e8-fa861988cee7': Not found for account 'I8XHM57AQYbNp2YUqfIeKHrPbuEPMs3BVV6I49MbkRc'\"}"
+        },
+        {
+          "kind": "wrong Section",
+          "case_id": "GS-01",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '767b5b9a-3f9d-4c1d-86e8-fa861988cee7': Not found for account 'I8XHM57AQYbNp2YUqfIeKHrPbuEPMs3BVV6I49MbkRc'\"}",
+          "responsive_evidence": "judge model call failed: NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '767b5b9a-3f9d-4c1d-86e8-fa861988cee7': Not found for account 'I8XHM57AQYbNp2YUqfIeKHrPbuEPMs3BVV6I49MbkRc'\"}"
+        },
+        {
+          "kind": "wrong Section",
+          "case_id": "GS-04",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '767b5b9a-3f9d-4c1d-86e8-fa861988cee7': Not found for account 'I8XHM57AQYbNp2YUqfIeKHrPbuEPMs3BVV6I49MbkRc'\"}",
+          "responsive_evidence": "judge model call failed: NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '767b5b9a-3f9d-4c1d-86e8-fa861988cee7': Not found for account 'I8XHM57AQYbNp2YUqfIeKHrPbuEPMs3BVV6I49MbkRc'\"}"
+        },
+        {
+          "kind": "wrong Section",
+          "case_id": "GS-08",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '767b5b9a-3f9d-4c1d-86e8-fa861988cee7': Not found for account 'I8XHM57AQYbNp2YUqfIeKHrPbuEPMs3BVV6I49MbkRc'\"}",
+          "responsive_evidence": "judge model call failed: NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '767b5b9a-3f9d-4c1d-86e8-fa861988cee7': Not found for account 'I8XHM57AQYbNp2YUqfIeKHrPbuEPMs3BVV6I49MbkRc'\"}"
+        },
+        {
+          "kind": "wrong Section",
+          "case_id": "GS-11",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '767b5b9a-3f9d-4c1d-86e8-fa861988cee7': Not found for account 'I8XHM57AQYbNp2YUqfIeKHrPbuEPMs3BVV6I49MbkRc'\"}",
+          "responsive_evidence": "judge model call failed: NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '767b5b9a-3f9d-4c1d-86e8-fa861988cee7': Not found for account 'I8XHM57AQYbNp2YUqfIeKHrPbuEPMs3BVV6I49MbkRc'\"}"
+        },
+        {
+          "kind": "wrong question",
+          "case_id": "GS-06",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '767b5b9a-3f9d-4c1d-86e8-fa861988cee7': Not found for account 'I8XHM57AQYbNp2YUqfIeKHrPbuEPMs3BVV6I49MbkRc'\"}",
+          "responsive_evidence": "judge model call failed: NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '767b5b9a-3f9d-4c1d-86e8-fa861988cee7': Not found for account 'I8XHM57AQYbNp2YUqfIeKHrPbuEPMs3BVV6I49MbkRc'\"}"
+        },
+        {
+          "kind": "wrong question",
+          "case_id": "GS-06",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '767b5b9a-3f9d-4c1d-86e8-fa861988cee7': Not found for account 'I8XHM57AQYbNp2YUqfIeKHrPbuEPMs3BVV6I49MbkRc'\"}",
+          "responsive_evidence": "judge model call failed: NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '767b5b9a-3f9d-4c1d-86e8-fa861988cee7': Not found for account 'I8XHM57AQYbNp2YUqfIeKHrPbuEPMs3BVV6I49MbkRc'\"}"
+        },
+        {
+          "kind": "wrong question",
+          "case_id": "GS-01",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '767b5b9a-3f9d-4c1d-86e8-fa861988cee7': Not found for account 'I8XHM57AQYbNp2YUqfIeKHrPbuEPMs3BVV6I49MbkRc'\"}",
+          "responsive_evidence": "judge model call failed: NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '767b5b9a-3f9d-4c1d-86e8-fa861988cee7': Not found for account 'I8XHM57AQYbNp2YUqfIeKHrPbuEPMs3BVV6I49MbkRc'\"}"
+        },
+        {
+          "kind": "wrong question",
+          "case_id": "GS-01",
+          "supported": "ERROR",
+          "responsive": "ERROR",
+          "supported_evidence": "judge model call failed: NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '767b5b9a-3f9d-4c1d-86e8-fa861988cee7': Not found for account 'I8XHM57AQYbNp2YUqfIeKHrPbuEPMs3BVV6I49MbkRc'\"}",
+          "responsive_evidence": "judge model call failed: NotFoundError: Error code: 404 - {'status': 404, 'title': 'Not Found', 'detail': \"Function '767b5b9a-3f9d-4c1d-86e8-fa861988cee7': Not found for account 'I8XHM57AQYbNp2YUqfIeKHrPbuEPMs3BVV6I49MbkRc'\"}"
+        }
+      ]
+    }
+  ]
+}

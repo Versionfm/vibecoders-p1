@@ -14,7 +14,8 @@ MAX_RETRIES = 1
 
 # LLM_THINKING=on|off switches the app model's reasoning ("thinking") mode. Off by default: on Nemotron it made a
 # Router call about ten times slower for the same label; on DeepSeek it is on unless switched off. Quality with thinking on is not compared yet.
-THINKING_VALUES = {"on": True, "off": False}
+# `none` sends no switch at all, for endpoints that reject it (the course endpoint answers HTTP 400).
+THINKING_VALUES = {"on": True, "off": False, "none": None}
 
 
 @dataclass(frozen=True)
@@ -23,7 +24,12 @@ class LlmSettings:
     base_url: str
     app_model: str
     judge_model: str
-    thinking: bool = False
+    thinking: bool | None = False
+    # The judge may sit on another provider than the app model (it must be another model family): its endpoint and key
+    # default to the app's.
+    judge_base_url: str = ""
+    judge_api_key: str = ""
+    judge_thinking: bool | None = False
 
 
 def load_settings(env: Mapping[str, str] | None = None) -> LlmSettings:
@@ -31,16 +37,23 @@ def load_settings(env: Mapping[str, str] | None = None) -> LlmSettings:
     for name in REQUIRED_SETTINGS:
         if not env.get(name):
             raise RuntimeError(f"{name} not set. Check your .env file (see .env.example).")
-    thinking = (env.get("LLM_THINKING") or "off").strip().lower()
-    if thinking not in THINKING_VALUES:
-        raise RuntimeError(f"LLM_THINKING must be 'on' or 'off', not {thinking!r}. Check your .env file.")
     return LlmSettings(
         api_key=env["LLM_API_KEY"],
         base_url=env["LLM_BASE_URL"],
         app_model=env["LLM_MODEL"],
-        judge_model=env.get("LLM_JUDGE_MODEL") or "",  # chosen later by a probe; not the app model's family
-        thinking=THINKING_VALUES[thinking],
+        judge_model=(env.get("LLM_JUDGE_MODEL") or "").strip(),  # empty: no judge; never the app model's family
+        thinking=_thinking(env, "LLM_THINKING"),
+        judge_base_url=env.get("LLM_JUDGE_BASE_URL") or env["LLM_BASE_URL"],
+        judge_api_key=env.get("LLM_JUDGE_API_KEY") or env["LLM_API_KEY"],
+        judge_thinking=_thinking(env, "LLM_JUDGE_THINKING"),
     )
+
+
+def _thinking(env: Mapping[str, str], name: str) -> bool | None:
+    value = (env.get(name) or "off").strip().lower()
+    if value not in THINKING_VALUES:
+        raise RuntimeError(f"{name} must be 'on', 'off' or 'none', not {value!r}. Check your .env file.")
+    return THINKING_VALUES[value]
 
 
 @dataclass(frozen=True)
@@ -89,17 +102,35 @@ class OpenAIChatModel:
 
 def get_chat_model(model: str | None = None, env: Mapping[str, str] | None = None) -> OpenAIChatModel:
     """The app's chat model. Reads `.env` into the environment unless `env` is given."""
-    from openai import OpenAI
+    settings = load_settings(_environment(env))
+    client = _client(settings.base_url, settings.api_key)
+    return OpenAIChatModel(client, model or settings.app_model, thinking=settings.thinking)
 
+
+def get_judge_model(env: Mapping[str, str] | None = None) -> OpenAIChatModel | None:
+    """The LLM judge's chat model, or None when `LLM_JUDGE_MODEL` is not set. Reads `.env` unless `env` is given."""
+    env = _environment(env)
+    settings = load_settings(env)
+    if not settings.judge_model:
+        return None
+    if settings.judge_base_url != settings.base_url and not (env or os.environ).get("LLM_JUDGE_API_KEY"):
+        # Never send the app provider's key to another provider.
+        raise RuntimeError(
+            "LLM_JUDGE_BASE_URL is another endpoint, so set LLM_JUDGE_API_KEY too. Check your .env file."
+        )
+    client = _client(settings.judge_base_url, settings.judge_api_key)
+    return OpenAIChatModel(client, settings.judge_model, thinking=settings.judge_thinking)
+
+
+def _environment(env: Mapping[str, str] | None) -> Mapping[str, str] | None:
     if env is None:
         from dotenv import load_dotenv
 
         load_dotenv()
-    settings = load_settings(env)
-    client = OpenAI(
-        base_url=settings.base_url,
-        api_key=settings.api_key,
-        timeout=REQUEST_TIMEOUT_SECONDS,
-        max_retries=MAX_RETRIES,
-    )
-    return OpenAIChatModel(client, model or settings.app_model, thinking=settings.thinking)
+    return env
+
+
+def _client(base_url: str, api_key: str):
+    from openai import OpenAI
+
+    return OpenAI(base_url=base_url, api_key=api_key, timeout=REQUEST_TIMEOUT_SECONDS, max_retries=MAX_RETRIES)

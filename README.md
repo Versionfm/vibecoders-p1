@@ -20,13 +20,31 @@ The key goes in a local `.env` file, which Git ignores.
 
 Never commit `.env` or paste the key into any committed file.
 
+To use the professor's course endpoint instead (the group key, shared inside the group only; it stops working on
+21 October 2026 at 12:00 Lisbon time), put these lines in `.env` in place of the DeepSeek ones:
+
+```
+LLM_API_KEY=<the group key from the professor's e-mail>
+LLM_BASE_URL=https://llm-proxy-obfzuamujq-ew.a.run.app/v1
+LLM_MODEL=course-chat
+LLM_THINKING=none
+TUTOR=routed
+```
+
+The Routed Tutor works there (2 to 6 s per question). The Agentic Tutor does not: the endpoint has no native tool
+calls. The first question after a quiet period can take 30 to 60 s while the service wakes up.
+
 Other settings in `.env` (optional unless marked required):
 
-- `LLM_THINKING`: `on` or `off` (default `off`). Switches the app model's reasoning ("thinking") mode, sent both as
+- `LLM_THINKING`: `on`, `off` or `none` (default `off`). Switches the app model's reasoning ("thinking") mode, sent both as
   `chat_template_kwargs.enable_thinking` (Nemotron) and as DeepSeek's `thinking` type. Off is much faster (on Nemotron a
-  Router call took about 2 s instead of about 22 s). Every answer and every stored evaluation run records the setting, so both can be compared.
+  Router call took about 2 s instead of about 22 s). `none` sends no switch, for endpoints that reject it. Every answer and every stored evaluation run records the setting, so both can be compared.
 - `LLM_BASE_URL`, `LLM_MODEL`: endpoint and app model. Required, with no defaults in the code: switch provider by
-  changing these two lines. `LLM_JUDGE_MODEL`: the LLM judge (later).
+  changing these two lines.
+- `LLM_JUDGE_MODEL`: the LLM judge, used by the evaluation command only. Empty means no judge (the Answer Step is code
+  checks only). It must be another model family than the app model. `LLM_JUDGE_BASE_URL` and `LLM_JUDGE_API_KEY`
+  default to the app's endpoint and key; set them when the judge sits on another provider. `LLM_JUDGE_THINKING`
+  works like `LLM_THINKING`.
 - `TUTOR`: `routed` (default) or `agentic`. Chooses the tutor on the screen. With the Agentic Tutor the screen shows
   the Course Materials read where the Router's evidence was; it is still one box and one button. Keep `routed` for
   the demo until the Agentic Tutor wins on the Golden Set.
@@ -79,10 +97,12 @@ Every Trace is scored by three Steps, checked in this order (see [ADR 0002](docs
 
 - **Search Step:** at least one Accepted Course and no other Course chosen or read; none for an Out of scope case. For the Routed Tutor the routed Course is the Course Material read. Recall and extra Reads are recorded.
 - **Path Step:** fails on a failed model call or an invalid Router reply, a `read_file` argument that is not a Course, a Course Material read twice, the Read limit reached, or an in-scope answer or Refusal with no Read.
-- **Answer Step:** cites an expected Section and only valid Sections, or gives the expected Refusal or Out of scope. Code checks only until the LLM judge adds Supported and Responsive.
+- **Answer Step:** cites an expected Section and only valid Sections, or gives the expected Refusal or Out of scope. With a judge model set, an expected answer must also be judged **Supported** (every claim is in the Section it cites) and **Responsive** (it addresses what was asked); without one it is code checks only, and the report says so.
 - **End-to-end Success:** the Trace passes all three Steps. It is the headline number.
 
-Metrics kept from before: routing accuracy (choice within Accepted Courses), recall per class over GAIF, PEID, AITB, DTGS and OUT_OF_SCOPE with its macro average (labelled "macro"), citation correctness, Refusal correctness and Out of scope correctness. The Supported and Responsive rates need the LLM judge and are shown as pending until it exists.
+Metrics kept from before: routing accuracy (choice within Accepted Courses), recall per class over GAIF, PEID, AITB, DTGS and OUT_OF_SCOPE with its macro average (labelled "macro"), citation correctness, Refusal correctness and Out of scope correctness. With the judge: Supported rate, Responsive rate and the Judge undecided rate (UNKNOWN verdicts and judge errors, which count as a fail).
+
+The LLM judge ([src/judge.py](src/judge.py)) makes one call per criterion at temperature 0, with its own versioned prompt (`prompts/judge_supported_v1.md`, `prompts/judge_responsive_v1.md`). Each reply is JSON with the evidence before the verdict (`PASS`, `FAIL` or `UNKNOWN`); an unparseable reply or a failed call is a judge error, never a pass. The judge is called only for an answer given where an answer was expected, never for a Refusal or Out of scope. `--no-judge` runs code checks only even when `LLM_JUDGE_MODEL` is set.
 
 Case file fields: `id`, `type` (`in_material`, `near_miss`, `overlap`, `out_of_scope`, `refusal`), `question`, `accepted_courses` (`["OUT_OF_SCOPE"]` for Out of scope cases), `expected_sections`, `expect_refusal`, `key_facts`. `evaluation/sample_cases.json` is a small synthetic SAMPLE for trying the command; it is not the Golden Set.
 

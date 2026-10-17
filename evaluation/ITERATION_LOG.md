@@ -217,3 +217,66 @@ Copy this block for each entry:
   Responsive rates. Most of the gain over the pilot comes from the changed case file (GS-15, GS-36) and from GS-27
   passing 3/3 under the same configuration that gave the Refusal in 2/3 pilot runs, which shows run-to-run variation
   at temperature 0.
+
+## 2026-10-14 Agentic Tutor on Golden Set v1, deepseek-flash (code checks only)
+
+- **Change:** none to the app; first run of the Agentic Tutor on the frozen `evaluation/golden_set.json` (version 1).
+  Compared with the Agentic Tutor pilot on the candidates (`2026-10-14_120227_pilot_deepseek_agentic`), which used a
+  different case file: four questions changed (GS-02, GS-08, GS-15, GS-36) and labels changed on GS-01 and GS-04, so
+  the overall before -> after is not like for like; the like-for-like comparison is on the 30 unchanged cases.
+- **Configuration:** Agentic Tutor `agentic_tutor_v1`, app model `deepseek-flash`, thinking off, no judge (Answer
+  Step and End-to-end Success are code checks only), `--workers 3`, commit `b6f0a43` (Agentic Tutor code as on
+  `agent-tutor` at `b4f8482`), case file `evaluation/golden_set.json`. 3 of 3 Runs and 108 of 108 Traces finished;
+  no Trace recorded an error.
+- **Run folder:** `evaluation/runs/2026-10-14_195710_golden_set_v1_agentic` (with `failures.md` and `compare.html`
+  against the Routed Tutor on Golden Set v1, `2026-10-14_193513_golden_set_v1_routed`).
+- **Result:** pilot on candidates -> Golden Set v1, mean (range): End-to-end Success 86.1% (86.1% to 86.1%) -> 86.1%
+  (86.1% to 86.1%); Search Step 86.1% -> 86.1%; Path Step 98.1% (97.2% to 100.0%) -> 97.2% (97.2% to 97.2%); Answer
+  Step 87.0% (86.1% to 88.9%) -> 88.9% (86.1% to 91.7%); Routing accuracy 87.0% (86.1% to 88.9%) -> 90.7% (88.9% to
+  91.7%); Recall (macro average) 86.6% (85.5% to 88.8%) -> 89.6% (88.0% to 90.5%); Recall GAIF 72.2% (66.7% to
+  83.3%) -> 66.7%; Recall PEID 100.0% -> 100.0%; Recall AITB 85.7% -> 85.7%; Recall DTGS 75.0% -> 95.8% (87.5% to
+  100.0%); Recall OUT_OF_SCOPE 100.0% -> 100.0%; Citation correctness 96.3% -> 100.0%; Refusal correctness 33.3%
+  (25.0% to 50.0%) -> 50.0% (50.0% to 50.0%); Out of scope correctness 100.0% -> 100.0%. Supported rate and Responsive
+  rate: pending (#7). On the 30 unchanged cases, End-to-end Success 90.0% (90.0% to 90.0%) -> 86.7% (86.7% to
+  86.7%) (GS-13 2/3 -> 0/3, GS-33 1/3 -> 0/3; GS-05 and GS-35 0/3 in both). Six changed cases: GS-01, GS-02, GS-04,
+  GS-08 3/3 in both; GS-36 0/3 -> 3/3 (new question, DTGS Refusal); GS-15 0/3 -> 0/3 (new question, still an extra
+  Read of PEID). Failing cases: GS-05 3/3 (Search: read AITB only, AITB Refusal), GS-13 3/3 (Search: extra Read of
+  AITB in runs 1-2 with a correct DTGS-3.20 answer; AITB only and the AITB Refusal in run 3), GS-15 3/3 (Search:
+  extra Read of PEID after DTGS; answer citing DTGS-3.7 in run 1, DTGS Refusal in runs 2-3), GS-33 3/3 (Search: no
+  Read, refused in its own words before the Refusal sentence), GS-35 3/3 (Search: no Read, Out of scope sentence).
+  No Trace reached the Read limit and no Course Material was read twice. Routed Tutor -> Agentic Tutor on the same
+  file: End-to-end Success 97.2% -> 86.1%; Search 97.2% -> 86.1%; Path 100.0% -> 97.2%; Answer 97.2% -> 88.9% (86.1%
+  to 91.7%); Refusal correctness 100.0% -> 50.0%; cases passing 3/3 for the Routed Tutor and 0/3 for the Agentic
+  Tutor: GS-13, GS-15, GS-33, GS-35; none the other way.
+- **Decision:** pending.
+- **Reason:** for keeping the Agentic Tutor: GS-36 now passes and Citation correctness is 100.0% on the answers it
+  gave. For abandoning it: on the frozen file it trails the Routed Tutor by four cases per Run (15 failing Traces
+  vs 3), all failing at the Search Step (extra Reads of a non-Accepted Course, or no Read before a Refusal), and on
+  the 30 unchanged cases it lost one case per Run against its own pilot. Evidence toward #17; no decision until the
+  judge's Supported and Responsive rates exist.
+
+## 2026-10-17 LLM judge (Supported, Responsive) and the choice of judge model
+
+- **Change:** the LLM judge (#7). One call per criterion at temperature 0, prompts `judge_supported_v1` and
+  `judge_responsive_v1`, JSON reply with the evidence before the verdict (PASS, FAIL or UNKNOWN); a failed call or
+  an unparseable reply is a judge error and fails the Answer Step. The judge is called only for an answer given
+  where an answer was expected. With a judge model set, the Answer Step needs both verdicts PASS. The judge may sit on
+  another endpoint than the app model (`LLM_JUDGE_BASE_URL`, `LLM_JUDGE_API_KEY`).
+- **Configuration:** probe `evaluation/probes/judge_probe.py` on the first Run of
+  `2026-10-14_193513_golden_set_v1_routed` (answers by `deepseek-flash`): 8 answers as given, 4 with every cited
+  Section swapped for a Section of another Course (should be judged not Supported), 4 answers paired with the question
+  of a case from another Course (should be judged not Responsive); 16 items, 32 calls per model, 3 at a time, 120 s
+  timeout, no retry. Candidates exclude the app model's family (DeepSeek) and Nemotron. Results in
+  `evaluation/probes/judge_probe.json`.
+- **Run folder:** none (probe only); the baseline with the judge is the next entry.
+- **Result:** `openai/gpt-oss-20b` (NVIDIA, no thinking switch sent): 0 judge errors in 32 calls, median 3.7 s
+  (slowest 9.8 s), originals 8/8 Supported and 8/8 Responsive, swapped Sections caught 4/4, wrong questions caught
+  4/4. `course-chat` (the professor's endpoint, `azure/gpt-5.4-nano`): median 1.6 s, originals 8/8 and 8/8, swapped
+  Sections 4/4, wrong questions 3/4, the fourth a judge error: 2 calls hit HTTP 429 (the proxy allows 30 requests per
+  minute per key). `z-ai/glm-5.3`: 24 of 32 calls timed out at 120 s. `google/gemma-4-31b-it`: 30 of 32 timed out.
+  `mistralai/mistral-large`: 404 on every call.
+- **Decision:** kept, with `openai/gpt-oss-20b` as the judge model.
+- **Reason:** the only candidate with no judge error, fast enough for three Runs, from a family other than the app
+  model's, and on an endpoint that keeps working after the course key stops on 2026-10-21. The probe only shows that
+  the judge works and catches gross errors; whether its verdicts agree with ours is ticket #8 (hand labels, TPR and
+  TNR). `course-chat` is the fallback, within its rate limit and before its key stops.

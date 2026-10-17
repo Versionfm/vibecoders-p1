@@ -3,8 +3,10 @@
     python src/evaluate.py evaluation/sample_cases.json            # 3 runs, results under evaluation/runs/
     python src/evaluate.py <case file> --runs 3 --out evaluation/runs --label tutor_v3 --workers 4
     python src/evaluate.py <case file> --tutor agentic            # the Agentic Tutor instead of the Routed Tutor
+    python src/evaluate.py <case file> --no-judge                 # code checks only, even with LLM_JUDGE_MODEL set
 
-Each run is stored as soon as it finishes, so an interrupted evaluation keeps the runs that completed.
+The LLM judge runs whenever `LLM_JUDGE_MODEL` is set (see .env.example). Each run is stored as soon as it finishes,
+so an interrupted evaluation keeps the runs that completed.
 """
 import argparse
 import itertools
@@ -13,15 +15,28 @@ import sys
 from collections import Counter
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 
 from cases import EvaluationCase, load_cases
 from course_material import CourseMaterial, default_course_materials
 from html_report import load_runs, render_html_report
+from judge import JUDGE_PROMPT_VERSIONS, Judgement, judge_answer
 from prompts import AGENTIC_TUTOR_PROMPT_VERSION, ROUTER_PROMPT_VERSION, TUTOR_PROMPT_VERSION
-from scoring import CLASSES, END_TO_END, MACRO_RECALL, STEP_METRICS, STEPS, score_run, score_trace, summarise
+from scoring import (
+    CLASSES,
+    END_TO_END,
+    JUDGE_METRICS,
+    JUDGE_UNDECIDED,
+    MACRO_RECALL,
+    STEP_METRICS,
+    STEPS,
+    needs_judge,
+    score_run,
+    score_trace,
+    summarise,
+)
 from tutor import AGENTIC_TUTOR, ROUTED_TUTOR, TUTORS, ChatModel, TutorResult, answer_question
 
 PROMPT_VERSIONS = {
@@ -32,9 +47,6 @@ APP_MODEL_ROLES = {ROUTED_TUTOR: "Router and Course Tutor", AGENTIC_TUTOR: "Agen
 DEFAULT_RUNS = 3
 DEFAULT_WORKERS = 1
 DEFAULT_OUT_DIR = Path(__file__).resolve().parent.parent / "evaluation" / "runs"
-
-# Metrics that need the LLM judge (ticket #7). Shown as pending until the judge exists.
-JUDGE_METRICS = ("Supported rate", "Responsive rate")
 
 
 @dataclass
@@ -48,6 +60,7 @@ class Run:
     results: list[TutorResult]
     metrics: dict[str, float | None]
     tutor: str = ROUTED_TUTOR
+    judgements: list[Judgement | None] = field(default_factory=list)  # one per case; empty when no judge was set
 
 
 def run_evaluation(
@@ -60,27 +73,39 @@ def run_evaluation(
     on_run: Callable[[Run], None] = lambda run: None,
     workers: int = DEFAULT_WORKERS,
     tutor: str = ROUTED_TUTOR,
+    judge: ChatModel | None = None,
 ) -> list[Run]:
     """Answer every case once per run. `on_run` gets each run as soon as it finishes (e.g. to store it).
 
-    With `workers` > 1 the cases of a run are answered in parallel threads; results stay in case order.
+    With a `judge`, every answer given where an answer was expected is judged right after it is given (never a
+    Refusal or Out of scope). With `workers` > 1 the cases of a run are answered in parallel threads; results stay
+    in case order.
     """
     materials = default_course_materials() if materials is None else materials
+
+    def answer(case: EvaluationCase) -> tuple[TutorResult, Judgement | None]:
+        result = answer_question(case.question, model, materials, tutor)
+        judged = judge is not None and needs_judge(case, result)
+        return result, judge_answer(case, result, judge, materials) if judged else None
+
     stored = []
     with ThreadPoolExecutor(max_workers=max(1, workers)) as pool:
         for number in range(1, runs + 1):
             timestamp = clock().isoformat(timespec="seconds")
-            results = list(pool.map(lambda case: answer_question(case.question, model, materials, tutor), cases))
+            answered = list(pool.map(answer, cases))
+            results = [result for result, _ in answered]
+            judgements = [judgement for _, judgement in answered] if judge is not None else []
             run = Run(
                 number,
                 timestamp,
                 case_file,
                 model.name,
                 getattr(model, "thinking", None),
-                None,
+                judge.name if judge is not None else None,
                 results,
-                score_run(cases, results),
+                score_run(cases, results, judgements if judge is not None else None),
                 tutor,
+                judgements,
             )
             on_run(run)
             stored.append(run)
@@ -93,7 +118,7 @@ def run_record(run: Run, cases: list[EvaluationCase]) -> dict:
         "timestamp": run.timestamp,
         "tutor": run.tutor,
         "case_file": run.case_file,
-        "prompt_versions": PROMPT_VERSIONS[run.tutor],
+        "prompt_versions": _prompt_versions(run),
         "models": {"app": run.app_model, "judge": run.judge_model},
         "thinking": run.app_thinking,
         "metrics": run.metrics,
@@ -103,11 +128,20 @@ def run_record(run: Run, cases: list[EvaluationCase]) -> dict:
                 "type": case.type,
                 "accepted_courses": case.accepted_courses,
                 **_output(result),
-                "steps": _steps(case, result),
+                "judge": judgement and asdict(judgement),
+                "steps": _steps(case, result, judgement),
             }
-            for case, result in zip(cases, run.results, strict=True)
+            for case, result, judgement in zip(cases, run.results, _judgements(run), strict=True)
         ],
     }
+
+
+def _prompt_versions(run: Run) -> dict[str, str]:
+    return {**PROMPT_VERSIONS[run.tutor], **(JUDGE_PROMPT_VERSIONS if run.judge_model else {})}
+
+
+def _judgements(run: Run) -> list[Judgement | None]:
+    return run.judgements or [None] * len(run.results)
 
 
 def create_run_folder(out_dir: Path, started: datetime, label: str = "") -> Path:
@@ -145,8 +179,9 @@ def render_report(runs: list[Run], cases: list[EvaluationCase], stored: list[dic
         f"- Case file: `{first.case_file}` ({len(cases)} cases: {type_counts})",
         f"- Runs: {len(runs)} (every case answered once per run)",
         f"- App model ({APP_MODEL_ROLES[first.tutor]}): `{first.app_model}`. Thinking: {_on_off(first.app_thinking)}",
-        "- Prompt versions: " + ", ".join(f"{k} `{v}`" for k, v in PROMPT_VERSIONS[first.tutor].items()),
-        f"- Judge model: {f'`{first.judge_model}`' if first.judge_model else 'none yet (LLM judge comes in ticket #7)'}",
+        "- Prompt versions: " + ", ".join(f"{k} `{v}`" for k, v in _prompt_versions(first).items()),
+        f"- Judge model: {f'`{first.judge_model}`' if first.judge_model else 'none (LLM_JUDGE_MODEL not set)'}. "
+        + ("The Answer Step uses the judge." if first.judge_model else "The Answer Step is code checks only."),
         f"- Tutor: `{first.tutor}`",
         "",
         "## Steps",
@@ -162,7 +197,12 @@ def render_report(runs: list[Run], cases: list[EvaluationCase], stored: list[dic
         "- Path Step: no failed model call or invalid Router reply, no `read_file` argument that is not a Course, "
         "no Course Material read twice, within the Read limit, and no in-scope answer or Refusal without a Read.",
         "- Answer Step: cites an expected Section and only valid Sections, or gives the expected Refusal or Out of "
-        "scope. Code checks only: claims are not checked until the LLM judge exists (ticket #7).",
+        "scope; "
+        + (
+            "an expected answer must also be judged Supported and Responsive by the LLM judge."
+            if first.judge_model
+            else "code checks only: no judge model was set, so claims are not checked."
+        ),
         f"- {END_TO_END}: the Trace passes all three Steps.",
         "",
         "Per case: Traces passing each Step out of the runs, and the earliest failing Step with its reason.",
@@ -179,9 +219,13 @@ def render_report(runs: list[Run], cases: list[EvaluationCase], stored: list[dic
         f"| Metric | Mean | Range | {run_headers} |",
         "|---|---|---|" + "---|" * len(runs),
     ]
-    lines += [_metric_row(runs, name, bold=name == MACRO_RECALL) for name in first.metrics if name not in STEP_METRICS]
+    shown = [name for name in first.metrics if name not in STEP_METRICS and name not in JUDGE_METRICS]
+    lines += [_metric_row(runs, name, bold=name == MACRO_RECALL) for name in shown]
     for name in JUDGE_METRICS:
-        lines.append(f"| {name} | pending | needs the LLM judge (ticket #7) |" + " |" * len(runs))
+        if name in first.metrics:
+            lines.append(_metric_row(runs, name))
+        else:
+            lines.append(f"| {name} | not measured | no judge model set |" + " |" * len(runs))
     lines += [
         "",
         "Definitions:",
@@ -195,6 +239,10 @@ def render_report(runs: list[Run], cases: list[EvaluationCase], stored: list[dic
         "- Refusal correctness: of the Refusal-expected cases, the share routed to an Accepted Course that gave "
         "the exact Refusal sentence.",
         "- Out of scope correctness: of the Out of scope-expected cases, the share the Router marked Out of scope.",
+        "- Supported rate and Responsive rate: of the answers the judge was called for (an answer given where an "
+        "answer was expected), the share judged Supported (every claim is in the Section it cites) and Responsive "
+        f"(it addresses what was asked). {JUDGE_UNDECIDED}: the share of the judge's verdicts that were UNKNOWN or "
+        "a judge error; both count as a fail.",
         "",
         "## Per case",
         "",
@@ -214,7 +262,11 @@ def render_report(runs: list[Run], cases: list[EvaluationCase], stored: list[dic
     return "\n".join(lines) + "\n"
 
 
-def main(argv: list[str] | None = None, model: ChatModel | None = None, clock=None) -> int:
+def main(
+    argv: list[str] | None = None, model: ChatModel | None = None, clock=None, judge: ChatModel | None = None
+) -> int:
+    """`model` and `judge` stand in for the models from .env (tests); with `model` given, the judge comes only from
+    `judge`."""
     parser = argparse.ArgumentParser(description="Run a case file through the Course Tutor and report metrics.")
     parser.add_argument("case_file", type=Path, help="JSON case file in the Golden Set format")
     parser.add_argument("--runs", type=int, default=DEFAULT_RUNS, help="times each case is run (default 3)")
@@ -231,13 +283,18 @@ def main(argv: list[str] | None = None, model: ChatModel | None = None, clock=No
         choices=TUTORS,
         help=f"which tutor answers (default {ROUTED_TUTOR}); when given, it is added to the run folder name",
     )
+    parser.add_argument("--no-judge", action="store_true", help="code checks only, even with LLM_JUDGE_MODEL set")
     args = parser.parse_args(argv)
 
     cases = load_cases(args.case_file)
     if model is None:
-        from llm import get_chat_model
+        from llm import get_chat_model, get_judge_model
 
         model = get_chat_model()
+        judge = judge or get_judge_model()
+    if args.no_judge:
+        judge = None
+    print(f"Judge: {judge.name if judge else 'none, code checks only'}")
     clock = clock or (lambda: datetime.now(timezone.utc))
     run_dir = create_run_folder(args.out, clock(), "_".join(p for p in (args.label, args.tutor) if p))
 
@@ -254,6 +311,7 @@ def main(argv: list[str] | None = None, model: ChatModel | None = None, clock=No
         on_run=store,
         workers=args.workers,
         tutor=args.tutor or ROUTED_TUTOR,
+        judge=judge,
     )
     write_report(runs, cases, run_dir)
     print(f"Stored {len(runs)} runs of {len(cases)} cases in {run_dir}")
@@ -289,8 +347,8 @@ def _step_row(case: EvaluationCase, scores: list[dict]) -> str:
     return f"| {case.id} | {case.type} | {counts} | {earliest.replace('|', '/')} |"
 
 
-def _steps(case: EvaluationCase, result: TutorResult) -> dict:
-    score = score_trace(case, result)
+def _steps(case: EvaluationCase, result: TutorResult, judgement: Judgement | None = None) -> dict:
+    score = score_trace(case, result, judgement)
     failure = score.earliest_failure
     return {
         **{step.lower(): asdict(getattr(score, step.lower())) for step in STEPS},
