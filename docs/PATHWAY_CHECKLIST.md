@@ -43,13 +43,13 @@ Last checked: 2026-10-18, branch `golden-set` (judge baselines and the #17 decis
 | App: Golden Set of 20+ cases, labelled before seeing a score | Done | [evaluation/golden_set.json](../evaluation/golden_set.json): 36 cases, version 1, frozen 2026-10-14; review in [golden_set_review.md](../evaluation/golden_set_review.md); checks in [tests/test_golden_set.py](../tests/test_golden_set.py). Limitation to report: the pilots on the candidates were seen before the freeze ([ITERATION_LOG](../evaluation/ITERATION_LOG.md)). |
 | App: deterministic checks in code for everything with a right answer | Done | [src/scoring.py](../src/scoring.py): routing accuracy, recall per Course and macro, citation correctness, Refusal and Out of scope correctness, Search/Path/Answer Steps and End-to-end Success; tested in [tests/test_scoring.py](../tests/test_scoring.py) and [tests/test_steps.py](../tests/test_steps.py). |
 | App: LLM-as-a-judge for what code cannot check (one criterion per call, evidence before PASS/FAIL, an "unknown" exit) | Done | [src/judge.py](../src/judge.py), prompts `judge_supported_v1` and `judge_responsive_v1`: one call per criterion, JSON with the evidence before PASS/FAIL/UNKNOWN; a failed call or unparseable reply is a judge error and never a pass. Judge `openai/gpt-oss-20b` on NVIDIA, chosen by [a probe](../evaluation/probes/judge_probe.py) (iteration log, 2026-10-17). |
-| App: judge checked against our hand labels (about 20, TPR and TNR with PASS as positive) | Missing | Ticket #8. Hand-label about 20 answers from the 2026-10-18 runs (judge verdicts hidden), then report TPR and TNR. Until then the judge's verdicts are provisional. |
+| App: judge checked against our hand labels (about 20, TPR and TNR with PASS as positive) | Done | Ticket #8: 28 answers labelled by one labeller without the judge ([labels.md](../evaluation/calibration/labels.md)); held-out (19): `judge_supported_v2` 84.2% accuracy, kappa 0.56, TPR 86.7%, TNR 75.0%; Responsive 84.2% ([report](../evaluation/calibration/report_first_labels_judge_v2.md)). Limits: one labeller, 15 questions, no human Responsive FAIL on held-out. |
 
 ## M4 · Iterate and measure
 
 | Item | Status | Evidence or what is left |
 | --- | --- | --- |
-| App: one number we can defend (the metric, why, what it does not cover) | Partial | End-to-end Success on Golden Set v1 with the judge: Routed Tutor 90.7% (88.9% to 91.7%) over 3 Runs ([report](../evaluation/runs/2026-10-18_020503_golden_set_v1_judge_routed/report.md)); 97.2% with code checks only. Still to write: the "why this one / what it misses" sentence, after the judge's calibration (#8). |
+| App: one number we can defend (the metric, why, what it does not cover) | Partial | End-to-end Success on Golden Set v1 with the calibrated judge: Routed Tutor 92.6% (88.9% to 94.4%) over 3 Runs ([report](../evaluation/runs/2026-10-18_040522_golden_set_v1_judge_v2_routed/report.md)); 97.2% with code checks only. Still to write in the report: the "why this one / what it misses" sentence. |
 | App: one change tried, measured, and kept or abandoned with a reason | Done | [ITERATION_LOG.md](../evaluation/ITERATION_LOG.md): Lightning → Super (Lightning abandoned: no citations), the professor's `course-chat` endpoint (abandoned), Nemotron → DeepSeek (kept), the professor's endpoint re-tested after his proxy fix (not adopted), and the Agentic Tutor (abandoned, #17): 85.2% vs 90.7% End-to-end Success with the judge, same day ([compare.html](../evaluation/runs/2026-10-18_022123_golden_set_v1_judge_agentic/compare.html)). |
 | Copilot: evidence for every steering file, at least two in the report | Partial | Commits that show the files changing: `9f83b7a` (evaluator skill and agent), `b4f8482` (both learn the Agentic Tutor). Still to collect: what changed *because of* `CLAUDE.md` and the skill (screenshots or before/after outputs). Context in [WORKFLOW_ITERATIONS.md](WORKFLOW_ITERATIONS.md). |
 
@@ -64,13 +64,12 @@ Last checked: 2026-10-18, branch `golden-set` (judge baselines and the #17 decis
 
 ## Open work, in order
 
-1. Judge calibration on our hand labels: TPR and TNR (#8).
-2. `evaluation/FAILURE_TAXONOMY.md` in the group's words, from the `failures.md` files.
-3. Steering evidence: before/after for `CLAUDE.md`, the skill firing unnamed.
-4. Merge into `main`, make the repo public, check the secrets scan.
-5. Report, deck, rehearsal and backup recording.
+1. `evaluation/FAILURE_TAXONOMY.md` in the group's words, from the `failures.md` files.
+2. Steering evidence: before/after for `CLAUDE.md`, the skill firing unnamed.
+3. Merge into `main`, make the repo public, check the secrets scan.
+4. Report, deck, rehearsal and backup recording.
 
-Done since 2026-10-17: the LLM judge (#7) and its baselines; Routed vs Agentic Tutor decided (#17).
+Done since 2026-10-17: the LLM judge (#7) and its baselines; Routed vs Agentic Tutor decided (#17); judge calibration (#8), with `judge_supported_v2` and the baseline judged again (92.6%).
 
 Smaller gaps: no worked examples in the prompts (a candidate change to measure: a new prompt version, never an edit
 of an evaluated one); latency not stored in the Traces.
