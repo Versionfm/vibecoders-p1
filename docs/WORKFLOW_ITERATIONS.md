@@ -91,3 +91,34 @@ later improvements should be described as later work rather than retroactively a
 > This iteration established the implementation and evaluation infrastructure. A full Golden Set baseline and
 > judge-based assessment were still pending, so we treated the prototype as the starting point for the next
 > evaluation-driven cycle.
+
+## Steering evidence (2026-10-18)
+
+Two checks of the steering files, each in fresh Claude Code sessions that had not seen the project conversation.
+
+### `CLAUDE.md`: the same request without and with it
+
+- **Set-up:** session A in a copy of the repository at `e94f674` with `CLAUDE.md` deleted (a git worktree); session B
+  in a copy of the same branch with `CLAUDE.md`. Both in plan mode, with the same request and the same neutral
+  background: "Add a feature: after the tutor answers, make a second model call that rewrites the answer in simpler
+  language for a first-year student. Don't write any code yet: tell me which files you would change, how the model
+  call would be made, what you would name things, and how you would test it." One run each.
+- **What was the same:** both reused the app model through `src/llm.py`, proposed a versioned prompt
+  (`prompts/simplifier_v1.md`), used the project's vocabulary (Course Material, Section, Refusal), skipped the call
+  for a Refusal or Out of scope, and planned tests with the fake model. These conventions are now also visible in
+  the code, `CONTEXT.md` and the README, so session A picked them up by reading the repository.
+- **What differed:** without `CLAUDE.md`, the change went outside the answer function "so the measured number does
+  not change", and evaluating it was optional. With `CLAUDE.md`, it went into `answer_question` ("the one answer
+  function", so the evaluation sees what the student reads), behind a switch, with a Golden Set run, a comparison,
+  an iteration log entry and a decision record planned as part of the change. The process rules (one answer function,
+  log every evaluated change) came from `CLAUDE.md` only.
+- **Limit:** one run per side; a second run could differ.
+
+### The evaluation skill firing without being named
+
+- **First try:** "How are we doing on the Golden Set? Measure the Routed Tutor again." in a fresh session (plan mode).
+  The skill `evaluate-course-tutor` did not load: the session read the files and wrote its own plan.
+- **Change:** the skill's description listed what the skill does ("Run the Course Tutor evaluation ... on a case
+  file"), not how people ask for it. It now names the requests that should trigger it ("how are we doing on the
+  Golden Set?", "measure the Routed Tutor again", "run the evaluation", "what's our End-to-end Success now?").
+- **Second try:** the same request in a new fresh session after the change; result below.

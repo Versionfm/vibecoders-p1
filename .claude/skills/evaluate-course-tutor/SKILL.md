@@ -1,6 +1,6 @@
 ---
 name: evaluate-course-tutor
-description: Run the Course Tutor evaluation (Routed Tutor or Agentic Tutor) on a case file and record the result in the iteration log. Use to set a baseline on the Golden Set, to measure a prompt, model or setting change against the previous run, or to collect failing outputs for the failure taxonomy.
+description: Run the Course Tutor evaluation (Routed Tutor or Agentic Tutor) on a case file and record the result in the iteration log. Use whenever someone asks how the tutor is doing, what it scores, or to measure, re-measure, run or re-run it on the Golden Set ("how are we doing on the Golden Set?", "measure the Routed Tutor again", "run the evaluation", "what's our End-to-end Success now?"); to set a baseline; to measure a prompt, model, judge or setting change against the previous run; or to collect failing outputs for the failure taxonomy. Use it before running src/evaluate.py by hand.
 ---
 
 # Evaluate the Course Tutor
