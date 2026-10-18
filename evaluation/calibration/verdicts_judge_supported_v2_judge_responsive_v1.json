@@ -1,0 +1,289 @@
+{
+  "judge_model": "openai/gpt-oss-20b",
+  "prompt_versions": {
+    "judge_supported": "judge_supported_v2",
+    "judge_responsive": "judge_responsive_v1"
+  },
+  "items": {
+    "L01": {
+      "supported": {
+        "verdict": "PASS",
+        "evidence": "All claims are supported by the cited sections: the description of off‑the‑shelf tools and shadow AI risk is in DTGS‑3.7; weak governance details are in DTGS‑3.2; governance and assurance as a licence to operate is in DTGS‑3.6; and the non‑negotiable assets are listed in DTGS‑3.8."
+      },
+      "responsive": {
+        "verdict": "PASS",
+        "evidence": "The answer first explains that shadow AI refers to staff using off‑the‑shelf AI tools without organisational awareness, and then discusses why companies should worry—highlighting governance, control, data leakage, and value leakage issues—directly addressing both parts of the question."
+      }
+    },
+    "L02": {
+      "supported": {
+        "verdict": "FAIL",
+        "evidence": "The claim \"Structure therefore does not guarantee accuracy or grounding\" is unsupported because the cited sections (AITB‑2.6) state that a table can still contain errors and must be compared with the source, implying lack of guaranteed accuracy, but they do not mention grounding."
+      },
+      "responsive": {
+        "verdict": "PASS",
+        "evidence": "The answer explains that a table or fixed schema reduces editing, eases comparison, and exposes missing elements, and it also states that structure does not guarantee accuracy or grounding, directly addressing both parts of the question."
+      }
+    },
+    "L03": {
+      "supported": {
+        "verdict": "PASS",
+        "evidence": "All claims in the answer are supported by the cited sections: hallucination as a design feature in PEID-1.9, prediction vs retrieval in PEID-1.8, missing facts not fixed by wording in PEID-3.1, delimiters and reference marking in PEID-2.4 and PEID-3.10, evidence field and quoting in PEID-2.7 and PEID-3.1, escape hatch in PEID-2.4 and PEID-3.12, RAG steps in PEID-3.7, retrieval quality in PEID-3.8, chunking in PEID-3.9, symptom cause and fix in PEID-2.15 and PEID-3.12."
+      },
+      "responsive": {
+        "verdict": "PASS",
+        "evidence": "The question asks for ways to prevent an AI from inventing facts not present in supplied material; the answer lists concrete methods such as supplying the source, delimiting the material, requiring quoted evidence, providing an escape hatch, and using RAG, directly addressing the question."
+      }
+    },
+    "L04": {
+      "supported": {
+        "verdict": "PASS",
+        "evidence": "All claims in the answer are directly supported by the cited section [PEID-5.12], which contains the formula, the interpretation of 1 and 0, the example with 0.90/0.82, the conventional bands, and the recommendation to rewrite label definitions."
+      },
+      "responsive": {
+        "verdict": "PASS",
+        "evidence": "The answer defines Cohen's kappa as inter‑annotator agreement after subtracting chance agreement, and explains that raw agreement can be misleading because high agreement can arise by chance on imbalanced data, thus raw agreement is not sufficient."
+      }
+    },
+    "L05": {
+      "supported": {
+        "verdict": "PASS",
+        "evidence": "All claims in the answer are supported by the cited sections: the short answer, intrinsic self‑correction, external check, evaluator‑optimizer pattern, LLM judge conditions, code‑based grader, and evidence field are all explicitly stated in the referenced sections."
+      },
+      "responsive": {
+        "verdict": "PASS",
+        "evidence": "The question asks whether one can rely on an AI to review and correct its own answer; the answer directly states that this is not reliable and explains the conditions under which self‑correction may work, thus addressing the question."
+      }
+    },
+    "L06": {
+      "supported": {
+        "verdict": "PASS",
+        "evidence": "All claims are supported by the cited DTGS‑3.7 section, which lists the risk of shadow AI and data leakage for the off‑the‑shelf tool rung and does not provide a definition or further explanation of shadow AI or why a company should worry beyond that risk note."
+      },
+      "responsive": {
+        "verdict": "FAIL",
+        "evidence": "The answer does not provide a definition of shadow AI nor explain why a company should worry about it; it merely states that the material does not cover these points, so it fails to address the question."
+      }
+    },
+    "L07": {
+      "supported": {
+        "verdict": "FAIL",
+        "evidence": "The claim that \"the material frames this as a governance and control problem rather than a technology problem\" is not found in the cited section DTGS-3.2, which only lists weak governance as one of four value leak categories without framing it as a governance/control problem."
+      },
+      "responsive": {
+        "verdict": "PASS",
+        "evidence": "The answer explains that shadow AI is the use of off‑the‑shelf AI tools by staff without organisational awareness, and it discusses why companies should worry—highlighting governance, data leakage, and value leakage risks—directly addressing both parts of the question."
+      }
+    },
+    "L08": {
+      "supported": {
+        "verdict": "PASS",
+        "evidence": "All claims are supported by the cited sections: AITB-1.4 for the first three claims and AITB-1.2 for the last claim."
+      },
+      "responsive": {
+        "verdict": "PASS",
+        "evidence": "The answer defines the tool‑first trap as naming a tool before task, data, risk, output and success criteria are clear, and states that the work should be defined first, then the category and tool chosen, which directly answers both parts of the question."
+      }
+    },
+    "L09": {
+      "supported": {
+        "verdict": "PASS",
+        "evidence": "All claims in the answer are directly supported by the cited sections: the definition of the tool‑first trap, the recommended order of work, the bounded task example, and the selection sequence are all found in AITB‑1.4 and AITB‑1.2."
+      },
+      "responsive": {
+        "verdict": "PASS",
+        "evidence": "The answer defines the tool‑first trap as naming a tool before task, data, risk, output and success criteria are clear, and states that the work (task definition) should come first, then choosing category and tool."
+      }
+    },
+    "L10": {
+      "supported": {
+        "verdict": "ERROR",
+        "evidence": "judge model call failed: APITimeoutError: Request timed out."
+      },
+      "responsive": {
+        "verdict": "PASS",
+        "evidence": "The question asks how attention decides which earlier words matter for the next token; the answer explains that attention is a learned weighting that re‑weights all previously seen tokens, giving an example of which words receive more weight, thereby addressing the mechanism of selection."
+      }
+    },
+    "L11": {
+      "supported": {
+        "verdict": "PASS",
+        "evidence": "All claims are supported by the cited section DTGS-3.7, which states that shadow AI is a risk of the off‑the‑shelf tool rung and does not provide a definition or further explanation beyond that risk note."
+      },
+      "responsive": {
+        "verdict": "FAIL",
+        "evidence": "The answer does not provide a definition of shadow AI nor explain why a company should worry about it; it merely states that the material does not cover it, which does not address the question asked."
+      }
+    },
+    "L12": {
+      "supported": {
+        "verdict": "PASS",
+        "evidence": "All claims are supported by the cited sections: [PEID-3.10] covers the definition, risk ranking, and mitigation steps; [PEID-3.12] covers the context-level guidance."
+      },
+      "responsive": {
+        "verdict": "PASS",
+        "evidence": "The question asks for the name of the risk and ways to mitigate it; the answer identifies the risk as indirect prompt injection and lists several mitigation steps, directly addressing both parts of the question."
+      }
+    },
+    "L13": {
+      "supported": {
+        "verdict": "FAIL",
+        "evidence": "The claim that the material does not define shadow AI beyond this is unsupported because DTGS-3.7 and DTGS-3.2 do not state that the material fails to define it; they only mention the risk of shadow AI and data leakage and weak governance as a leak point."
+      },
+      "responsive": {
+        "verdict": "PASS",
+        "evidence": "The answer identifies shadow AI as the risk of unapproved off‑the‑shelf AI tool use and explains that companies should worry because it occurs when tasks are generic, data is not sensitive, and weak governance allows data leakage and loss of control."
+      }
+    },
+    "L14": {
+      "supported": {
+        "verdict": "PASS",
+        "evidence": "All claims in the answer are found in the cited section DTGS-1.7, which lists the phases Awareness, Desire, Knowledge, Ability, Reinforcement and states they are supported by tools such as communication, sponsorship, roadmaps, coaching, training and resistance management."
+      },
+      "responsive": {
+        "verdict": "PASS",
+        "evidence": "The question asks for the meanings of the letters in Prosci's ADKAR model; the answer lists Awareness, Desire, Knowledge, Ability, Reinforcement, directly addressing the question."
+      }
+    },
+    "L15": {
+      "supported": {
+        "verdict": "PASS",
+        "evidence": "All claims in the answer are supported by the cited sections: the hallucination mechanism and fix are in [PEID-1.9]; wording cannot fix missing info in [PEID-3.1]; delimiting, verbatim quote, and escape hatch are in [PEID-3.1] and [PEID-2.4]; evidence field for groundedness is in [PEID-2.7]; allowing 'cannot tell from these documents' is in [PEID-3.12]; and the symptom/fix row for 'It invents specifics' is in [PEID-2.15]."
+      },
+      "responsive": {
+        "verdict": "PASS",
+        "evidence": "The question asks for ways to prevent an AI from inventing facts not present in supplied material, and the answer lists concrete steps—providing the source, adding an escape hatch, requiring quoted evidence, and allowing a 'cannot tell' response—that directly address how to stop hallucinations."
+      }
+    },
+    "L16": {
+      "supported": {
+        "verdict": "PASS",
+        "evidence": "The claims are supported by DTGS-3.7, which lists the risk of shadow AI and data leakage for the off‑the‑shelf tool rung but does not provide a definition of shadow AI or an explanation of why a company should worry about it."
+      },
+      "responsive": {
+        "verdict": "FAIL",
+        "evidence": "The question asks for a definition of shadow AI and why a company should worry about it, but the answer merely states that the material does not define it or explain the concerns, providing no definition or rationale."
+      }
+    },
+    "L17": {
+      "supported": {
+        "verdict": "PASS",
+        "evidence": "All claims in the answer are found in the cited section [GAIF-1.3]."
+      },
+      "responsive": {
+        "verdict": "PASS",
+        "evidence": "The question asks what the Chinese Room is meant to show; the answer explains that it demonstrates that symbol manipulation (syntax) does not equal understanding (semantics) and thus argues against strong AI, directly addressing the question."
+      }
+    },
+    "L18": {
+      "supported": {
+        "verdict": "FAIL",
+        "evidence": "The claim that Klarna reversed course, reintroduced humans for disputes, fraud and hardship, and that satisfaction fell on complex and emotional cases even when answers were correct is not found in DTGS-3.21, which does not mention Klarna; the claim is only present in DTGS-3.20."
+      },
+      "responsive": {
+        "verdict": "PASS",
+        "evidence": "The question asks for potential problems when a company uses AI to answer customers; the answer lists multiple risks such as liability, quality issues, automation bias, model collapse, pricing exposure, hidden costs, etc., directly addressing what can go wrong."
+      }
+    },
+    "L19": {
+      "supported": {
+        "verdict": "PASS",
+        "evidence": "All claims are supported by the cited sections: AITB-3.9 for the evidence table details, AITB-3.8 for citation practices, and AITB-3.10 for claim‑by‑claim evidence."
+      },
+      "responsive": {
+        "verdict": "PASS",
+        "evidence": "The question asks what an evidence table should record for each important claim; the answer lists the claim, source, date, exact evidence, verification status, and notes, and confirms the chain and that the table should be built before writing the brief, directly addressing the question."
+      }
+    },
+    "L20": {
+      "supported": {
+        "verdict": "FAIL",
+        "evidence": "The claim that \"Format is one of the six elements of a request\" is not stated in AITB-2.4, which only describes format but does not list it as one of six elements."
+      },
+      "responsive": {
+        "verdict": "PASS",
+        "evidence": "The question asks for reasons to request a table or fixed schema instead of free text, and what guarantees structure cannot provide; the answer gives both—explaining benefits like easier checking, comparison, and missing‑info exposure, and noting that structure still allows errors, invented facts, and lacks truth guarantees."
+      }
+    },
+    "L21": {
+      "supported": {
+        "verdict": "PASS",
+        "evidence": "All claims in the answer are directly stated in section GAIF-1.6, which defines superintelligence, lists the three pathways, and notes that whether it is possible is an open question."
+      },
+      "responsive": {
+        "verdict": "PASS",
+        "evidence": "The question asks for Bostrom’s definition of superintelligence and the pathways discussed; the answer provides the definition and lists the three pathways (biological cognition, whole brain emulation, AI)."
+      }
+    },
+    "L22": {
+      "supported": {
+        "verdict": "PASS",
+        "evidence": "All claims in the answer are directly supported by the cited sections: the short answer, intrinsic self‑correction, external check, evaluator‑optimizer pattern, LLM judge conditions, and the retirement of 'double‑check your answer' are all stated in the referenced PEID sections."
+      },
+      "responsive": {
+        "verdict": "PASS",
+        "evidence": "The question asks whether one can rely on an AI to review and correct its own answer; the answer explicitly states that this is not reliable and explains that self-correction only works with an external check, directly addressing the question."
+      }
+    },
+    "L23": {
+      "supported": {
+        "verdict": "PASS",
+        "evidence": "All claims are found verbatim in the cited section [DTGS-3.20]."
+      },
+      "responsive": {
+        "verdict": "PASS",
+        "evidence": "The question asks what happened with Klarna's AI customer service assistant after its launch; the answer describes its initial usage, the cost‑driven quality decline, the reintroduction of humans for complex cases, and the tiered service model that followed, directly addressing the asked changes."
+      }
+    },
+    "L24": {
+      "supported": {
+        "verdict": "FAIL",
+        "evidence": "The claim “Structure does not guarantee accuracy or grounding” is unsupported because the cited sections (AITB‑2.4 and AITB‑2.6) mention that tables can still contain errors (accuracy) but do not state anything about grounding."
+      },
+      "responsive": {
+        "verdict": "PASS",
+        "evidence": "The question asks why a table or fixed schema is preferred over free text and what guarantees structure cannot provide; the answer explains that a table eases editing, comparison, and reveals missing data, and notes that structure still allows errors and does not guarantee accuracy or grounding."
+      }
+    },
+    "L25": {
+      "supported": {
+        "verdict": "PASS",
+        "evidence": "All claims are supported by GAIF-2.10, which states that a too large learning rate causes corrections to grow without limit, a too small rate makes convergence very slow, a constant rate can cause oscillation, and a decreasing rate leads to convergence (with α = 1/n as a common choice); it also gives the delta rule formula and that α is between 0 and 1."
+      },
+      "responsive": {
+        "verdict": "PASS",
+        "evidence": "The question asks what happens when the learning rate is too large or too small; the answer explicitly states that a large rate causes corrections to grow without limit and a small rate causes very slow convergence, directly addressing the question."
+      }
+    },
+    "L26": {
+      "supported": {
+        "verdict": "FAIL",
+        "evidence": "The claim \"Format is one of the six elements of a request\" is not found in the cited section AITB-2.4, which only describes format as a type of constraint and does not mention six elements."
+      },
+      "responsive": {
+        "verdict": "PASS",
+        "evidence": "The answer explains that a table or fixed schema reduces editing, eases comparison, and exposes missing elements, directly addressing why one would ask for a structured output instead of free text. It also states that structure cannot guarantee truth, can still contain errors, and may not detect all gaps, answering what structure cannot guarantee."
+      }
+    },
+    "L27": {
+      "supported": {
+        "verdict": "PASS",
+        "evidence": "All claims are supported: the hallucination claim and fix are in PEID-1.9; the no wording claim in PEID-3.1; delimiting and quote claim in PEID-3.1; escape hatch claim in PEID-2.4; evidence field claim in PEID-2.7; 'cannot tell' claim in PEID-3.12; reference material claim in PEID-3.10."
+      },
+      "responsive": {
+        "verdict": "PASS",
+        "evidence": "The question asks how to prevent an AI from inventing facts not in the supplied material; the answer lists concrete steps—providing the source in context, requiring verbatim quotes, adding an escape hatch or abstention, and checking evidence—which directly address that request."
+      }
+    },
+    "L28": {
+      "supported": {
+        "verdict": "PASS",
+        "evidence": "All claims are supported by the cited sections: DTGS-3.20 covers the launch, reversal, and 2026 framing, and DTGS-3.18 covers the disruptive‑innovation pattern."
+      },
+      "responsive": {
+        "verdict": "PASS",
+        "evidence": "The question asks what happened with Klarna's AI customer service assistant after its launch; the answer describes the launch, the reversal in May 2025, and the subsequent shift to a premium tier, directly addressing the post-launch developments."
+      }
+    }
+  }
+}

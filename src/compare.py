@@ -11,7 +11,7 @@ from html import escape
 from pathlib import Path
 
 from html_report import bar, load_runs, page
-from scoring import END_TO_END, STEP_METRICS
+from scoring import END_TO_END, JUDGE_METRICS, STEP_METRICS
 
 
 def differences(runs_a: list[dict], runs_b: list[dict]) -> list[str]:
@@ -41,7 +41,7 @@ def render_compare(runs_a: list[dict], runs_b: list[dict], name_a: str, name_b: 
 <h2>Pass rate per Step</h2>
 {"".join(_metric_panel(name, runs_a, runs_b) for name in STEP_METRICS)}
 <small>Bar: mean over the Runs. Marks: lowest to highest Run.</small>
-
+{_judge_panels(runs_a, runs_b)}
 <h2>Cases whose {END_TO_END} changed</h2>
 {_changed_table(changed, name_a, name_b) if changed else f"<p>No case changed its {END_TO_END}.</p>"}
 
@@ -60,6 +60,14 @@ def _metric_panel(name: str, runs_a: list[dict], runs_b: list[dict]) -> str:
         + bar(f"B {runs_b[0]['tutor']}", [r["metrics"][name] for r in runs_b], strong)
         + "</div>"
     )
+
+
+def _judge_panels(runs_a: list[dict], runs_b: list[dict]) -> str:
+    """The judge rates, only when both evaluations used the judge."""
+    names = [n for n in JUDGE_METRICS if n in runs_a[0]["metrics"] and n in runs_b[0]["metrics"]]
+    if not names:
+        return ""
+    return "<h2>LLM judge</h2>" + "".join(_metric_panel(name, runs_a, runs_b) for name in names)
 
 
 def _per_case(runs: list[dict]) -> dict[str, list[str | None]]:

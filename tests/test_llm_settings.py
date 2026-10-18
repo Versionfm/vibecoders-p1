@@ -3,7 +3,7 @@ import unittest
 
 from types import SimpleNamespace
 
-from llm import OpenAIChatModel, ToolCall, get_chat_model, load_settings
+from llm import OpenAIChatModel, ToolCall, get_chat_model, get_judge_model, load_settings
 
 ENV = {"LLM_API_KEY": "k", "LLM_BASE_URL": "https://example.test/v1", "LLM_MODEL": "some/app-model"}
 READ_FILE_TOOL = {"type": "function", "function": {"name": "read_file", "parameters": {"type": "object"}}}
@@ -80,6 +80,34 @@ class GetChatModelTest(unittest.TestCase):
         self.assertIs(get_chat_model(env=ENV).thinking, False)
         self.assertIs(get_chat_model(env={**ENV, "LLM_THINKING": "on"}).thinking, True)
 
+    def test_there_is_no_judge_model_unless_one_is_set(self):
+        self.assertIsNone(get_judge_model(env=ENV))
+        self.assertIsNone(get_judge_model(env={**ENV, "LLM_JUDGE_MODEL": " "}))
+
+    def test_the_judge_uses_the_app_endpoint_unless_it_has_its_own(self):
+        same = get_judge_model(env={**ENV, "LLM_JUDGE_MODEL": "other/judge-model"})
+        self.assertEqual(same.name, "other/judge-model")
+        self.assertEqual(str(same._client.base_url), "https://example.test/v1/")
+        self.assertEqual(same._client.api_key, "k")
+        own = get_judge_model(
+            env={
+                **ENV,
+                "LLM_JUDGE_MODEL": "other/judge-model",
+                "LLM_JUDGE_BASE_URL": "https://judge.example.test/v1",
+                "LLM_JUDGE_API_KEY": "judge-key",
+                "LLM_JUDGE_THINKING": "none",
+            }
+        )
+        self.assertEqual(str(own._client.base_url), "https://judge.example.test/v1/")
+        self.assertEqual(own._client.api_key, "judge-key")
+        self.assertIsNone(own.thinking)
+        self.assertEqual(own._client.max_retries, 1)
+
+    def test_a_judge_on_another_endpoint_without_its_own_key_is_reported_clearly(self):
+        env = {**ENV, "LLM_JUDGE_MODEL": "other/judge-model", "LLM_JUDGE_BASE_URL": "https://judge.example.test/v1"}
+        with self.assertRaisesRegex(RuntimeError, "LLM_JUDGE_API_KEY"):
+            get_judge_model(env=env)
+
 
 class LlmSettingsTest(unittest.TestCase):
     def test_endpoint_and_app_model_have_no_default_and_are_reported_clearly_when_missing(self):
@@ -109,9 +137,17 @@ class LlmSettingsTest(unittest.TestCase):
         for value in ("on", "ON", " on "):
             self.assertTrue(load_settings({**ENV, "LLM_THINKING": value}).thinking)
 
+    def test_thinking_none_sends_no_switch_for_endpoints_that_reject_it(self):
+        self.assertIsNone(load_settings({**ENV, "LLM_THINKING": "none"}).thinking)
+        client = FakeOpenAIClient("hello")
+        OpenAIChatModel(client, "some/app-model", thinking=None).complete([{"role": "user", "content": "hi"}])
+        self.assertNotIn("extra_body", client.requests[0])
+
     def test_an_unknown_thinking_value_is_reported_clearly(self):
         with self.assertRaisesRegex(RuntimeError, "LLM_THINKING"):
             load_settings({**ENV, "LLM_THINKING": "maybe"})
+        with self.assertRaisesRegex(RuntimeError, "LLM_JUDGE_THINKING"):
+            load_settings({**ENV, "LLM_JUDGE_THINKING": "maybe"})
 
     def test_missing_api_key_is_reported_clearly(self):
         with self.assertRaisesRegex(RuntimeError, "LLM_API_KEY"):

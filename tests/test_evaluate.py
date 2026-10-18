@@ -4,13 +4,14 @@ import io
 import json
 import tempfile
 import unittest
+from unittest import mock
 from datetime import datetime, timezone
 from pathlib import Path
 
 from cases import SAMPLE_CASE_FILE, load_cases
 from evaluate import main
 from prompts import AGENTIC_TUTOR_PROMPT_VERSION, ROUTER_PROMPT_VERSION, TUTOR_PROMPT_VERSION
-from tests.fakes import QuestionScriptedModel, reads
+from tests.fakes import FakeChatModel, QuestionScriptedModel, reads
 
 QUESTIONS = {case.id: case.question for case in load_cases(SAMPLE_CASE_FILE)}
 FIXED_CLOCK = lambda: datetime(2026, 10, 9, 14, 30, 0, tzinfo=timezone.utc)  # noqa: E731
@@ -33,13 +34,13 @@ def well_behaved_script():
 
 
 class EvaluationCommandTest(unittest.TestCase):
-    def run_command(self, script, extra_args=()):
+    def run_command(self, script, extra_args=(), judge=None):
         self.model = QuestionScriptedModel(script, name="fake/app-model", thinking=False)
         self.folder = tempfile.TemporaryDirectory()
         self.addCleanup(self.folder.cleanup)
         argv = [str(SAMPLE_CASE_FILE), "--out", self.folder.name, *extra_args]
         with contextlib.redirect_stdout(io.StringIO()):
-            exit_code = main(argv, model=self.model, clock=FIXED_CLOCK)
+            exit_code = main(argv, model=self.model, clock=FIXED_CLOCK, judge=judge)
         self.assertEqual(exit_code, 0)
         [run_dir] = Path(self.folder.name).iterdir()
         return run_dir
@@ -219,6 +220,54 @@ class EvaluationCommandTest(unittest.TestCase):
         self.assertIn("Tutor: `agentic`", report)
         self.assertIn("App model (Agentic Tutor): `fake/app-model`", report)
         self.assertNotIn("Router", report.split("## Steps")[0])
+
+    def test_with_a_judge_only_expected_answers_are_judged_and_the_report_shows_the_judge_rates(self):
+        # Four sample cases expect an answer; SAMPLE-05 (Out of scope) and SAMPLE-06 (Refusal) are never judged.
+        # One Run: the first answer is judged not Supported, the other three pass both criteria.
+        replies = [json.dumps({"evidence": "not in PEID-1.9", "verdict": "FAIL"})]
+        replies += [json.dumps({"evidence": "ok", "verdict": "PASS"})] * 7
+        judge = FakeChatModel(replies, name="fake/judge-model")
+        run_dir = self.run_command(well_behaved_script(), ["--runs", "1"], judge=judge)
+        run = json.loads((run_dir / "run_1.json").read_text(encoding="utf-8"))
+
+        self.assertEqual(len(judge.calls), 8)  # two criteria for each of the four expected answers
+        self.assertEqual(run["models"]["judge"], "fake/judge-model")
+        self.assertIn("judge_supported", run["prompt_versions"])
+        outputs = {o["case_id"]: o for o in run["outputs"]}
+        self.assertIsNone(outputs["SAMPLE-05"]["judge"])
+        self.assertIsNone(outputs["SAMPLE-06"]["judge"])
+        judged = [o for o in run["outputs"] if o["judge"]]
+        self.assertEqual(len(judged), 4)
+        failed = [o for o in judged if o["judge"]["supported"]["verdict"] == "FAIL"]
+        self.assertEqual(len(failed), 1)
+        self.assertIn("not Supported", failed[0]["steps"]["earliest_failing_step"]["reason"])
+        self.assertAlmostEqual(run["metrics"]["Supported rate"], 3 / 4)
+        self.assertAlmostEqual(run["metrics"]["End-to-end Success"], 5 / 6)
+
+        report = (run_dir / "report.md").read_text(encoding="utf-8")
+        self.assertIn("Judge model: `fake/judge-model`", report)
+        self.assertIn("| Supported rate | 75.0% |", report)
+        self.assertIn("| Responsive rate | 100.0% |", report)
+        html = (run_dir / "report.html").read_text(encoding="utf-8")
+        self.assertIn("Supported rate", html)
+
+    def test_without_a_judge_the_report_says_the_judge_rates_were_not_measured(self):
+        run_dir = self.run_command(well_behaved_script(), ["--runs", "1"])
+        report = (run_dir / "report.md").read_text(encoding="utf-8")
+        self.assertIn("| Supported rate | not measured | no judge model set |", report)
+        self.assertIn("code checks only", report)
+
+    def test_the_command_refuses_to_run_without_a_judge_in_the_settings(self):
+        app_model = QuestionScriptedModel(well_behaved_script(), name="fake/app-model")
+        with (
+            tempfile.TemporaryDirectory() as folder,
+            mock.patch("llm.get_chat_model", return_value=app_model),
+            mock.patch("llm.get_judge_model", return_value=None),
+            contextlib.redirect_stdout(io.StringIO()),
+            self.assertRaisesRegex(SystemExit, "LLM_JUDGE_MODEL"),
+        ):
+            main([str(SAMPLE_CASE_FILE), "--out", folder], clock=FIXED_CLOCK)
+        self.assertEqual(app_model.calls_for(QUESTIONS["SAMPLE-01"]), 0)  # refused before any question was asked
 
 
 if __name__ == "__main__":

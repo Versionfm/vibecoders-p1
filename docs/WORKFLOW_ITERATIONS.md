@@ -91,3 +91,45 @@ later improvements should be described as later work rather than retroactively a
 > This iteration established the implementation and evaluation infrastructure. A full Golden Set baseline and
 > judge-based assessment were still pending, so we treated the prototype as the starting point for the next
 > evaluation-driven cycle.
+
+## Steering evidence (2026-10-18)
+
+Two checks of the steering files, each in fresh Claude Code sessions that had not seen the project conversation,
+in plan mode, one run per condition.
+
+### `CLAUDE.md`: the same request without and with it
+
+- **Set-up:** two copies of the repository at the same commit, `e94f674`: session A in a copy with `CLAUDE.md`
+  deleted, session B2 in a copy with it. Same request and the same neutral background in both: "Add a feature: after
+  the tutor answers, make a second model call that rewrites the answer in simpler language for a first-year student.
+  Don't write any code yet: tell me which files you would change, how the model call would be made, what you would
+  name things, and how you would test it."
+- **What was the same:** both put the rewrite after `answer_question`, outside the measured path, so the Golden Set
+  number stays valid; both reused the injected app model (no new client), proposed a versioned prompt
+  (`prompts/simplifier_v1.md`), added two terms to `CONTEXT.md`, skipped the call for a Refusal or Out of scope,
+  checked the rewrite's citations in code, and planned tests with the fake model. These conventions are visible in
+  the code, `CONTEXT.md` and the README, so session A picked them up by reading the repository.
+- **What differed:** only B2 used the rules that live in `CLAUDE.md` alone: it ruled out a switch on the screen
+  ("the one-screen rule forbids settings there") and planned to update `CLAUDE.md`'s layout for the new module. A
+  added nothing about the screen rule.
+- **Reading:** by this stage of the project `CLAUDE.md` changes little, because most of its rules are already built
+  into the code it describes; what it still adds is the rules no file shows by example (one screen, keep the steering
+  file current).
+- **A first, discarded attempt:** a session with `CLAUDE.md` started in a copy that the app cut from the remote
+  branch (`b6f0a43`, four days older) put the change inside `answer_question` and planned a Golden Set run, an
+  iteration log entry and a decision record. It ran on older code than A, so it is not counted as the comparison.
+- **Limit:** one run per condition; another run could differ.
+
+### The evaluation skill firing without being named
+
+- **First try (session C, copy at `e94f674`):** "How are we doing on the Golden Set? Measure the Routed Tutor
+  again." The skill `evaluate-course-tutor` did not load: the session read the files and wrote its own plan.
+- **Change (`3f66605`):** the skill's description listed what the skill does ("Run the Course Tutor evaluation ... on
+  a case file"), not how people ask for it. It now names the requests that should trigger it ("how are we doing on
+  the Golden Set?", "measure the Routed Tutor again", "run the evaluation", "what's our End-to-end Success now?").
+- **Second try (session D2, copy at `3f66605`, same request and background):** the skill loaded as the session's
+  first step, and the session then followed its steps (pin the configuration, run the tests, run the evaluation,
+  write the failure sheet, log the result).
+- **Side effect:** after their plans were approved, C and D2 ran real evaluations in their copies. C's repeat of the
+  Routed Tutor with the calibrated judge scored 93.5% (91.7% to 94.4%), against 92.6% for the baseline (branch
+  `claude/optimistic-leakey-517146`, not merged).

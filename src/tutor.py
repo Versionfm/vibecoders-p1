@@ -135,7 +135,7 @@ def parse_router_reply(reply: str, courses: set[str]) -> tuple[str, str]:
     try:
         route = json.loads(reply)
     except json.JSONDecodeError:
-        route = _first_json_object(reply)
+        route = first_json_object(reply)
         if route is None:
             raise RouterReplyError(f"Router reply is not valid JSON: {reply[:200]!r}") from None
     if not isinstance(route, dict):
@@ -147,7 +147,7 @@ def parse_router_reply(reply: str, courses: set[str]) -> tuple[str, str]:
     return course, evidence if isinstance(evidence, str) else ""
 
 
-def _first_json_object(text: str) -> dict | None:
+def first_json_object(text: str) -> dict | None:
     decoder = json.JSONDecoder()
     start = text.find("{")
     while start != -1:
