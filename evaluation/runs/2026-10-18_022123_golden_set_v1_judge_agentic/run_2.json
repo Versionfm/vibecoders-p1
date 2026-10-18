@@ -1,0 +1,1870 @@
+{
+  "run": 2,
+  "timestamp": "2026-10-18T02:25:49+00:00",
+  "tutor": "agentic",
+  "case_file": "evaluation/golden_set.json",
+  "prompt_versions": {
+    "agentic_tutor": "agentic_tutor_v1",
+    "judge_supported": "judge_supported_v1",
+    "judge_responsive": "judge_responsive_v1"
+  },
+  "models": {
+    "app": "deepseek-flash",
+    "judge": "openai/gpt-oss-20b"
+  },
+  "thinking": false,
+  "metrics": {
+    "Search Step": 0.9444444444444444,
+    "Path Step": 1.0,
+    "Answer Step": 0.8888888888888888,
+    "End-to-end Success": 0.8611111111111112,
+    "Routing accuracy": 0.9444444444444444,
+    "Recall GAIF": 0.6666666666666666,
+    "Recall PEID": 1.0,
+    "Recall AITB": 1.0,
+    "Recall DTGS": 1.0,
+    "Recall OUT_OF_SCOPE": 1.0,
+    "Recall (macro average)": 0.9333333333333333,
+    "Citation correctness": 1.0,
+    "Refusal correctness": 1.0,
+    "Out of scope correctness": 1.0,
+    "Supported rate": 0.8888888888888888,
+    "Responsive rate": 1.0,
+    "Judge undecided rate": 0.0
+  },
+  "outputs": [
+    {
+      "case_id": "GS-01",
+      "type": "in_material",
+      "accepted_courses": [
+        "GAIF"
+      ],
+      "course": "GAIF",
+      "evidence": "",
+      "answer": "Searle's Chinese Room thought experiment (from \"Minds, Brains and Programs\", 1980) places a person who does not understand Chinese in a room with a rule book; by following the rules, the person returns correct Chinese answers to Chinese questions passed in. From outside, the room appears to understand Chinese, but nobody inside does. Searle's point is that manipulating symbols according to rules (syntax) is not the same as understanding meaning (semantics), so a program that behaves intelligently does not thereby have a mind — an argument against \"strong AI\", the idea that a suitably programmed computer literally has a mind [GAIF-1.3].",
+      "citations": [
+        "GAIF-1.3"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "GAIF"
+      ],
+      "read_arguments": [
+        "GAIF"
+      ],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "judge": {
+        "supported": {
+          "verdict": "PASS",
+          "evidence": "All claims in the answer are found verbatim in the cited section GAIF-1.3, which describes the Chinese Room experiment, its appearance to outsiders, Searle’s point about syntax vs semantics, and the implication for strong AI."
+        },
+        "responsive": {
+          "verdict": "PASS",
+          "evidence": "The question asks what Searle’s Chinese Room is meant to show; the answer explains that it demonstrates that manipulating symbols by rules (syntax) does not equate to understanding meaning (semantics) and thus argues against strong AI, directly addressing the question."
+        }
+      },
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 1.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-02",
+      "type": "near_miss",
+      "accepted_courses": [
+        "GAIF"
+      ],
+      "course": "PEID",
+      "evidence": "",
+      "answer": "The learning rate is covered in the Adaline/delta-rule section of GAIF:\n\n- **Too large:** the corrections grow without limit [GAIF-2.10].\n- **Too small:** convergence is very slow [GAIF-2.10].\n- **Constant:** the weights may keep oscillating around the best solution [GAIF-2.10].\n- **Decreasing over time:** the weights converge, possibly before the error is fully corrected; a common choice is α = 1/n for n learning steps [GAIF-2.10].\n\nThe learning coefficient α is chosen between 0 and 1 [GAIF-2.10].",
+      "citations": [
+        "GAIF-2.10"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "PEID",
+        "GAIF"
+      ],
+      "read_arguments": [
+        "PEID",
+        "GAIF"
+      ],
+      "read_count": 2,
+      "read_limit_hit": false,
+      "judge": {
+        "supported": {
+          "verdict": "PASS",
+          "evidence": "All claims are supported by GAIF-2.10: it states that a too large learning rate causes corrections to grow without limit, a too small rate makes convergence very slow, a constant rate can cause oscillation around the optimum, a decreasing rate leads to convergence (with a common choice α=1/n), and the learning coefficient α is chosen between 0 and 1."
+        },
+        "responsive": {
+          "verdict": "PASS",
+          "evidence": "The question asks what happens when the learning rate is too large or too small, and the answer explicitly states that a too‑large rate causes corrections to grow without limit and a too‑small rate causes very slow convergence, directly addressing the question."
+        }
+      },
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "read PEID, not an Accepted Course",
+          "recall": 1.0,
+          "extra_reads": [
+            "PEID"
+          ]
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Search",
+          "reason": "read PEID, not an Accepted Course"
+        }
+      }
+    },
+    {
+      "case_id": "GS-03",
+      "type": "in_material",
+      "accepted_courses": [
+        "GAIF"
+      ],
+      "course": "GAIF",
+      "evidence": "",
+      "answer": "Bostrom defines superintelligence as any intellect that greatly exceeds human cognitive performance in virtually all domains of interest [GAIF-1.6]. The pathways discussed are biological cognition (enhancing human brains), whole brain emulation (copying a brain in a computer) and artificial intelligence; when — or whether — this is possible is an open question [GAIF-1.6].",
+      "citations": [
+        "GAIF-1.6"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "GAIF"
+      ],
+      "read_arguments": [
+        "GAIF"
+      ],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "judge": {
+        "supported": {
+          "verdict": "PASS",
+          "evidence": "All claims in the answer are directly stated in section GAIF-1.6, which defines superintelligence and lists the three pathways and notes the open question."
+        },
+        "responsive": {
+          "verdict": "PASS",
+          "evidence": "The answer states Bostrom’s definition of superintelligence and lists the three pathways (biological cognition, whole brain emulation, artificial intelligence) that he discusses, directly addressing both parts of the question."
+        }
+      },
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 1.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-04",
+      "type": "in_material",
+      "accepted_courses": [
+        "GAIF"
+      ],
+      "course": "GAIF",
+      "evidence": "",
+      "answer": "**Vanishing gradient problem:** The sigmoid activation, f(x) = 1/(1+e⁻ˣ), squashes inputs into 0–1, but it **saturates**: for very large positive or negative inputs its output flattens towards 1 or 0 and its derivative approaches 0 [GAIF-2.14]. During backpropagation, gradients are multiplied layer by layer, so many small gradients multiply towards zero (0.1 × 0.1 × 0.1 …) — this is the vanishing gradient problem, a major obstacle to training deep networks [GAIF-2.14]. Tanh improved some properties but still saturates [GAIF-2.14].\n\n**Why ReLU helps:** The ReLU (rectified linear unit), f(z) = max(0, z), outputs 0 for negative inputs and the input itself for positive inputs [GAIF-2.14]. It works well because:\n- it does **not saturate for positive inputs** (so gradients do not shrink towards zero there) [GAIF-2.14];\n- it is computationally very cheap, which matters for deep learning [GAIF-2.14];\n- it still introduces non-linearity [GAIF-2.14].\n\nGlorot, Bordes and Bengio (2011) showed rectifier networks could be trained effectively and had advantages over sigmoid and tanh networks [GAIF-2.14].",
+      "citations": [
+        "GAIF-2.14"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "GAIF"
+      ],
+      "read_arguments": [
+        "GAIF"
+      ],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "judge": {
+        "supported": {
+          "verdict": "PASS",
+          "evidence": "All claims in the answer are supported by the cited section GAIF-2.14, which contains the statements about sigmoid saturation, vanishing gradients, tanh saturation, ReLU definition, non‑saturation for positive inputs, computational cheapness, non‑linearity, and the Glorot et al. 2011 result."
+        },
+        "responsive": {
+          "verdict": "PASS",
+          "evidence": "The question asks for a definition of the vanishing gradient problem and an explanation of why ReLU helps; the answer gives both a definition (sigmoid saturation and gradient multiplication) and explains ReLU’s non-saturating positive side and computational cheapness as the reason it mitigates the problem."
+        }
+      },
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 1.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-05",
+      "type": "near_miss",
+      "accepted_courses": [
+        "GAIF"
+      ],
+      "course": "AITB",
+      "evidence": "",
+      "answer": "This is not covered in the AITB material.",
+      "citations": [],
+      "is_refusal": true,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "AITB"
+      ],
+      "read_arguments": [
+        "AITB"
+      ],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "judge": null,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "read AITB, not an Accepted Course",
+          "recall": 0.0,
+          "extra_reads": [
+            "AITB"
+          ]
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": false,
+          "reason": "gave the Refusal where an answer was expected"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Search",
+          "reason": "read AITB, not an Accepted Course"
+        }
+      }
+    },
+    {
+      "case_id": "GS-06",
+      "type": "in_material",
+      "accepted_courses": [
+        "PEID"
+      ],
+      "course": "PEID",
+      "evidence": "",
+      "answer": "Prompt caching works because providers can store the processed front of a context, so a later call that starts with a byte-identical prefix is billed at a fraction of the normal input price and answers faster — on one provider, cache reads cost about 0.1× and writes 1.25–2×, with a minimum prefix length and a short default lifetime [PEID-3.13].\n\nThe catch is that the match is an exact prefix from the very start, so one changed character invalidates everything after it [PEID-3.13]. A timestamp at the top of a system prompt changes on every call, so the prefix is never identical and caching silently stops working. The fix is to order the context stable first (tools, system prompt, examples) and volatile last (retrieved text, history, question) [PEID-3.13]. Note also that caching makes a stable context cheap, not a bloated one [PEID-3.13].",
+      "citations": [
+        "PEID-3.13"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "PEID"
+      ],
+      "read_arguments": [
+        "PEID"
+      ],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "judge": {
+        "supported": {
+          "verdict": "FAIL",
+          "evidence": "The claim that a timestamp at the top of a system prompt changes on every call is unsupported because the cited section only states that a timestamp silently disables caching, not that it changes each call."
+        },
+        "responsive": {
+          "verdict": "PASS",
+          "evidence": "The answer explains that prompt caching reduces cost by reusing a byte‑identical prefix, lowering input billing and speeding responses, and it also states that a timestamp at the top changes the prefix each call, preventing the cache from matching and thus stopping it from working."
+        }
+      },
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 1.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": false,
+          "reason": "judged not Supported: The claim that a timestamp at the top of a system prompt changes on every call is unsupported because the cited section only states that a timestamp silently disables caching, not that it changes each call."
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Answer",
+          "reason": "judged not Supported: The claim that a timestamp at the top of a system prompt changes on every call is unsupported because the cited section only states that a timestamp silently disables caching, not that it changes each call."
+        }
+      }
+    },
+    {
+      "case_id": "GS-07",
+      "type": "in_material",
+      "accepted_courses": [
+        "PEID"
+      ],
+      "course": "PEID",
+      "evidence": "",
+      "answer": "**Precision vs. recall** — both come from the four boxes of a confusion table (true positives, false positives, false negatives, true negatives) [PEID-5.6]:\n\n- **Precision** = TP/(TP+FP): of the ones we flagged, how many were right. Its cost is wasted effort [PEID-5.6].\n- **Recall** = TP/(TP+FN): of the ones that mattered, how many we caught. Its cost is a missed case [PEID-5.6].\n\n**Why accuracy misleads** — accuracy = (TP+TN)/all, and it lies on imbalanced data: a classifier that found three of four bug reports and raised six false alarms still scored 82.5% accuracy, because the large harmless true-negative box did the work [PEID-5.6].\n\nThe practical consequence: price the mistake first, since the metric follows from which error you can afford — favour recall when a miss is a public incident, favour precision when a wrong positive loses a customer, and use F1 only when both errors genuinely cost the same [PEID-5.8].",
+      "citations": [
+        "PEID-5.6",
+        "PEID-5.8"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "PEID"
+      ],
+      "read_arguments": [
+        "PEID"
+      ],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "judge": {
+        "supported": {
+          "verdict": "PASS",
+          "evidence": "All claims are supported by the cited sections: precision, recall, and accuracy details are in [PEID-5.6] and the error‑cost guidance is in [PEID-5.8]."
+        },
+        "responsive": {
+          "verdict": "PASS",
+          "evidence": "The answer defines precision and recall and explains their differences, and it also explains why accuracy can be misleading on imbalanced data, directly addressing both parts of the question."
+        }
+      },
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 1.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-08",
+      "type": "in_material",
+      "accepted_courses": [
+        "PEID"
+      ],
+      "course": "PEID",
+      "evidence": "",
+      "answer": "The difference is **who decides the next step** — not how intelligent the system is [PEID-4.1]:\n\n- **Workflow:** LLMs and tools are orchestrated through **predefined code paths written by a developer** (e.g. classify → draft reply → send) [PEID-4.1].\n- **Agent:** the **LLM dynamically directs its own process and tool use**, choosing the next step at runtime (search, read a file, run tests, decide what next) [PEID-4.1].\n\nIn the agent loop, the context is assembled, the model predicts, a tool call is run and its result pasted back, and everything returned stays in the window for later turns [PEID-4.1]. Relatedly, of the five composition patterns (prompt chaining, routing, parallelisation, orchestrator-workers, evaluator-optimizer), the first four are workflows; only the evaluator-optimizer hands the stopping decision to a model's judgement [PEID-4.2]. The recommended approach is to start with simple prompts, optimise them with evaluation, and add multi-step agentic systems only when simpler solutions fall short [PEID-4.2].",
+      "citations": [
+        "PEID-4.1",
+        "PEID-4.2"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "PEID"
+      ],
+      "read_arguments": [
+        "PEID"
+      ],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "judge": {
+        "supported": {
+          "verdict": "PASS",
+          "evidence": "All claims in the answer are directly supported by the cited sections: the differences, workflow definition, agent definition, agent loop details, pattern classification, and recommended approach are all stated in [PEID-4.1] and [PEID-4.2]."
+        },
+        "responsive": {
+          "verdict": "PASS",
+          "evidence": "The question asks for the difference between an LLM workflow and an LLM agent; the answer explicitly states that the difference is who decides the next step and then describes workflow as developer‑written code paths and agent as LLM‑directed runtime decisions, directly addressing the question."
+        }
+      },
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 1.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-09",
+      "type": "in_material",
+      "accepted_courses": [
+        "PEID"
+      ],
+      "course": "PEID",
+      "evidence": "",
+      "answer": "**Cohen's kappa** measures inter-annotator agreement after subtracting the agreement you would expect by chance: κ = (pₒ − pₑ)/(1 − pₑ), where pₒ is observed agreement and pₑ is chance agreement. A value of 1 is perfect agreement and 0 means no better than chance [PEID-5.12].\n\n**Why raw agreement is not enough:** raw agreement flatters. Two annotators labelling a set that is 90% \"other\" can agree 90% of the time while guessing [PEID-5.12]. The worked example makes the gap concrete: observed agreement of 0.90 with chance agreement of 0.82 gives κ = 0.44 — labels barely usable [PEID-5.12].\n\nConventional bands: below 0.4 the labels are not usable; 0.4–0.6 the guidelines are ambiguous; above 0.8 strong. The fix for low kappa is to rewrite the label definitions, never to ask people to \"try harder\" [PEID-5.12].",
+      "citations": [
+        "PEID-5.12"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "PEID"
+      ],
+      "read_arguments": [
+        "PEID"
+      ],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "judge": {
+        "supported": {
+          "verdict": "PASS",
+          "evidence": "All claims in the answer are found in the cited section [PEID-5.12]."
+        },
+        "responsive": {
+          "verdict": "PASS",
+          "evidence": "The answer defines Cohen's kappa as inter‑annotator agreement adjusted for chance and explains that raw agreement can be misleading because it can be inflated by chance, especially with imbalanced label distributions."
+        }
+      },
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 1.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-10",
+      "type": "near_miss",
+      "accepted_courses": [
+        "PEID"
+      ],
+      "course": "PEID",
+      "evidence": "",
+      "answer": "Attention is the mechanism by which, for every token it produces, the model re-weights all the tokens it has already seen — in \"the ticket the customer opened yesterday is still unresolved\", \"ticket\" and \"customer\" get most of the weight and \"the\" almost none [PEID-1.4]. That weighting is learned, not programmed; word order and position matter, and its cost grows with the square of the context length [PEID-1.4]. Before attention, models looked at a fixed window of nearby words and lost anything outside it; attention lets the model ask \"which earlier word is this about?\" at any distance [PEID-1.4]. A transformer is a stack of 30–100 layers, each doing attention (look around) and a feed-forward step (think), with early layers capturing syntax and later layers meaning [PEID-1.4].\n\nTwo practical consequences: because attention is weighted rather than uniform, put the instruction near where the answer starts, not buried mid-prompt [PEID-1.8]; and because attention is a competition, each added page competes with every other page [PEID-3.3].",
+      "citations": [
+        "PEID-1.4",
+        "PEID-1.8",
+        "PEID-3.3"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "PEID"
+      ],
+      "read_arguments": [
+        "PEID"
+      ],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "judge": {
+        "supported": {
+          "verdict": "PASS",
+          "evidence": "All claims are supported by the cited sections: PEID-1.4, PEID-1.8, and PEID-3.3."
+        },
+        "responsive": {
+          "verdict": "PASS",
+          "evidence": "The question asks how attention decides which earlier words matter for the next token; the answer explains that attention re‑weights all previously seen tokens, that this weighting is learned (not programmed), and gives an example of which words receive more weight, directly addressing the mechanism asked for."
+        }
+      },
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 1.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-11",
+      "type": "in_material",
+      "accepted_courses": [
+        "DTGS"
+      ],
+      "course": "DTGS",
+      "evidence": "",
+      "answer": "Kotter and Schlesinger give four common reasons for resistance to change [DTGS-1.4]:\n\n- **Parochial self-interest** — people focus on what they personally will lose rather than on the organisation as a whole [DTGS-1.4].\n- **Misunderstanding and lack of trust** — they do not understand the change and its implications, and do not trust those proposing it [DTGS-1.4].\n- **Different assessments** — they evaluate the situation differently from the initiators and see more costs than benefits [DTGS-1.4].\n- **Low tolerance for change** — fear of not being able to develop the new skills and behaviour required [DTGS-1.4].",
+      "citations": [
+        "DTGS-1.4"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "DTGS"
+      ],
+      "read_arguments": [
+        "DTGS"
+      ],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "judge": {
+        "supported": {
+          "verdict": "PASS",
+          "evidence": "All four claims are directly stated in the cited section [DTGS-1.4]."
+        },
+        "responsive": {
+          "verdict": "PASS",
+          "evidence": "The question asks for the reasons Kotter and Schlesinger give for resistance to change, and the answer lists those four reasons directly."
+        }
+      },
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 1.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-12",
+      "type": "in_material",
+      "accepted_courses": [
+        "DTGS"
+      ],
+      "course": "DTGS",
+      "evidence": "",
+      "answer": "**Cost per verified outcome** is the dashboard metric for AI unit economics [DTGS-3.9]:\n\n- **Formula:** cost per verified outcome = (model + retrieval + verification + escalation + rework + governance cost) ÷ outcomes accepted by a human or a defined automatic test [DTGS-3.9].\n- **Why it matters:** the token is not the main cost — retrieval infrastructure, human verification, rework, escalation, evaluation when models update and governance do not deflate, because they are wage- and process-linked [DTGS-3.9].\n- **Worked example** (100,000 customer-service cases a month): total cost per verified outcome of about €1.36, of which model inference is only €0.02 (1.5%), while escalation (€0.70) and rework (€0.33) dominate [DTGS-3.9].\n- **Tracked with four numbers:** volume, containment (share resolved without a human), verification rate (should fall but never reach zero) and defect escape rate (wrong and shipped) [DTGS-3.9].\n- **Governance rule:** no AI initiative gets a second budget round without a cost per verified outcome for the first [DTGS-3.9].\n\nIt also appears as the single \"one metric\" column of the Applied AI for business models worksheet, and as one of the two dashboard numbers for an AI-native platform [DTGS-3.22].",
+      "citations": [
+        "DTGS-3.9",
+        "DTGS-3.22"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "DTGS"
+      ],
+      "read_arguments": [
+        "DTGS"
+      ],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "judge": {
+        "supported": {
+          "verdict": "PASS",
+          "evidence": "All claims in the answer are supported by the cited sections: the formula, explanation, example, tracked numbers, governance rule are all in DTGS-3.9, and the worksheet and dashboard references are in DTGS-3.22."
+        },
+        "responsive": {
+          "verdict": "PASS",
+          "evidence": "The answer defines cost per verified outcome as the formula (model + retrieval + verification + escalation + rework + governance cost) divided by accepted outcomes, and lists the specific cost components that go into it, directly answering both parts of the question."
+        }
+      },
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 1.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-13",
+      "type": "in_material",
+      "accepted_courses": [
+        "DTGS"
+      ],
+      "course": "DTGS",
+      "evidence": "",
+      "answer": "Klarna's customer-service deployment is the most instructive public case because it was reversed in public [DTGS-3.20]:\n\n- **Launch (February 2024):** an AI assistant handled 2.3 million conversations in its first month, equated to about 700 full-time agents, and cut resolution time from 11 minutes to under 2 minutes — all company-reported claims [DTGS-3.20].\n- **Reversal (May 2025):** the CEO said the focus on cost had led to lower quality; humans were reintroduced for disputes, fraud and hardship, with a commitment that customers can always reach a human, because satisfaction fell on complex and emotional cases even when answers were correct [DTGS-3.20].\n- **Settled framing (2026):** AI handles the simple tier and human service becomes almost a \"VIP\" premium tier — a business-model decision, not a technology one [DTGS-3.20].\n- **Why:** causal evidence from a staggered rollout to 5,172 support agents found a 15% average increase in issues resolved per hour, but +30–34% for the least experienced, and a slight quality drop for the most skilled. AI raises the floor but not the ceiling: variance compresses, the routine cases through which juniors learned disappear, and service quality differentiates only at the top — an argument for a premium human tier [DTGS-3.20].\n\nThe case is also used to illustrate Christensen's disruptive innovation pattern: AI customer service was worse at first, allowed in on the cheap tier, good enough on simple cases, and is now climbing into contested work [DTGS-3.18].",
+      "citations": [
+        "DTGS-3.20",
+        "DTGS-3.18"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "DTGS"
+      ],
+      "read_arguments": [
+        "DTGS"
+      ],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "judge": {
+        "supported": {
+          "verdict": "PASS",
+          "evidence": "All claims in the answer are directly supported by the cited sections: the launch, reversal, framing, causal evidence, and Christensen pattern are all stated in [DTGS-3.20] and [DTGS-3.18] respectively."
+        },
+        "responsive": {
+          "verdict": "PASS",
+          "evidence": "The question asks what happened with Klarna's AI customer service assistant after its launch; the answer describes the launch, the reversal in May 2025, the reintroduction of humans for certain cases, and the subsequent business model shift, directly addressing the post-launch events."
+        }
+      },
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 1.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-14",
+      "type": "in_material",
+      "accepted_courses": [
+        "DTGS"
+      ],
+      "course": "DTGS",
+      "evidence": "",
+      "answer": "Prosci's ADKAR model describes the phases individuals go through in a change: **Awareness**, **Desire**, **Knowledge**, **Ability**, **Reinforcement** [DTGS-1.7].",
+      "citations": [
+        "DTGS-1.7"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "DTGS"
+      ],
+      "read_arguments": [
+        "DTGS"
+      ],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "judge": {
+        "supported": {
+          "verdict": "PASS",
+          "evidence": "The claim that Prosci's ADKAR model includes Awareness, Desire, Knowledge, Ability, and Reinforcement is directly stated in section [DTGS-1.7]."
+        },
+        "responsive": {
+          "verdict": "PASS",
+          "evidence": "The question asks for the meanings of the letters in Prosci's ADKAR model, and the answer lists Awareness, Desire, Knowledge, Ability, Reinforcement, directly addressing the question."
+        }
+      },
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 1.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-15",
+      "type": "near_miss",
+      "accepted_courses": [
+        "DTGS"
+      ],
+      "course": "DTGS",
+      "evidence": "",
+      "answer": "This is covered in DTGS-3.7, which compares the implementation rungs on cost, control, risk and time to value.\n\n**Retrieval (RAG) vs. fine-tuning, as two rungs of the make-or-buy ladder [DTGS-3.7]:**\n\n- **Retrieval (RAG)**, grounded in your own documents: medium cost, high control, retrieval quality becomes the ceiling, **1–3 months** to value. Use it when answers must be traceable to your own sources.\n- **Fine-tuning or adapters**: medium-high **recurring** cost, risk of **deprecation when the base model moves**, **2–4 months** to value. Use it when format and behaviour matter more than knowledge.\n\n**Related points:**\n- Model deprecation is a hidden liability: every fine-tune and prompt library must be re-tested when the base model changes [DTGS-3.10].\n- The context and data layer (your documents, records, exceptions, tacit rules) is the scarce, cumulative, hard-to-copy layer that is *yours*, whereas orchestration and tooling (prompting, retrieval, agent frameworks) is rented and replaceable [DTGS-3.6].\n- Decision rule: choose the lowest rung that meets the requirement and climb one rung only when you can name, in one sentence, the constraint the current rung cannot meet and who will verify the next one does (e.g. 2→3: \"we cannot answer without citing our own current documents\") [DTGS-3.7].\n- Most organisations skip rungs 2 and 3 and jump to agents, then discover the ceiling was the context they never assembled [DTGS-3.7].",
+      "citations": [
+        "DTGS-3.7",
+        "DTGS-3.10",
+        "DTGS-3.6"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "DTGS"
+      ],
+      "read_arguments": [
+        "DTGS"
+      ],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "judge": {
+        "supported": {
+          "verdict": "PASS",
+          "evidence": "All claims are supported by the cited sections: DTGS-3.7 for retrieval, fine‑tuning, decision rule and skipping rungs; DTGS-3.10 for model deprecation; DTGS-3.6 for context and orchestration."
+        },
+        "responsive": {
+          "verdict": "PASS",
+          "evidence": "The question asks for a comparison of retrieval and fine‑tuning in terms of cost, time to value, risk, and fit for a company; the answer lists medium cost, 1–3 months, high control for retrieval and medium‑high recurring cost, 2–4 months, deprecation risk for fine‑tuning, and specifies when each is appropriate, directly addressing all requested aspects."
+        }
+      },
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 1.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-16",
+      "type": "in_material",
+      "accepted_courses": [
+        "AITB"
+      ],
+      "course": "AITB",
+      "evidence": "",
+      "answer": "The five source-quality checks are [AITB-3.5]:\n\n1. **Authority** — who produced it; are they qualified, accountable or directly involved?\n2. **Relevance** — does it answer your question or only a nearby one?\n3. **Timeliness** — is it recent enough for the topic?\n4. **Independence** — is it neutral, promotional, sponsored or selling something?\n5. **Traceability** — can you see the evidence behind the claim?\n\nWeak sources can still be leads, but they should not become evidence [AITB-3.5].",
+      "citations": [
+        "AITB-3.5"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "AITB"
+      ],
+      "read_arguments": [
+        "AITB"
+      ],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "judge": {
+        "supported": {
+          "verdict": "PASS",
+          "evidence": "All claims in the answer are directly stated in the cited section AITB-3.5, including the five source‑quality checks and the note that weak sources can be leads but should not become evidence."
+        },
+        "responsive": {
+          "verdict": "PASS",
+          "evidence": "The question asks for the five checks for judging source quality, and the answer lists exactly those five checks: Authority, Relevance, Timeliness, Independence, and Traceability."
+        }
+      },
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 1.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-17",
+      "type": "in_material",
+      "accepted_courses": [
+        "AITB"
+      ],
+      "course": "AITB",
+      "evidence": "",
+      "answer": "The tool-first trap is naming a tool (\"we should use ChatGPT / Copilot / Zapier\") before the task, data, risk, output and success criteria are clear [AITB-1.4]. What should come first is the work itself — stating \"we need to produce X for user Y, from approved data Z, with quality checks A and B\" — and only then choosing the category and the tool [AITB-1.4]. Tool selection therefore starts with a **bounded task**: one narrow enough to test, review and improve (e.g. \"create a verified one-page competitor brief for a product manager by Friday\" rather than \"use AI in marketing\") [AITB-1.4]. The selection sequence is: define the task → check the inputs → choose the category → select the tool [AITB-1.2].",
+      "citations": [
+        "AITB-1.4",
+        "AITB-1.2"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "AITB"
+      ],
+      "read_arguments": [
+        "AITB"
+      ],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "judge": {
+        "supported": {
+          "verdict": "PASS",
+          "evidence": "All claims in the answer are supported by the cited sections: the description of the tool‑first trap, the recommended order of stating the work, the emphasis on a bounded task, and the selection sequence are all found verbatim in AITB‑1.4 and AITB‑1.2 respectively."
+        },
+        "responsive": {
+          "verdict": "PASS",
+          "evidence": "The answer defines the tool‑first trap as naming a tool before the task, data, risk, output and success criteria are clear, and states that the work (task definition) should come first before choosing a tool."
+        }
+      },
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 1.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-18",
+      "type": "in_material",
+      "accepted_courses": [
+        "AITB"
+      ],
+      "course": "AITB",
+      "evidence": "",
+      "answer": "A business professional should not use an AI tool in these situations [AITB-1.6]:\n\n- **Restricted data** — personal, confidential or client data without approval.\n- **High-stakes decisions** — legal, medical, financial or employment decisions without qualified review.\n- **No verification path** — when outputs cannot be checked against sources, rules or calculations.\n- **False-authority risk** — when the output would be consumed as official evidence without review.\n- **Unclear ownership** — when nobody owns the prompt, data, output or consequences.\n\nThe rule of thumb given is that if the review step is impossible, the tool is probably not suitable yet [AITB-1.6]. For sensitive data, alternatives include local models and business accounts of frontier models that do not share data [AITB-1.6].\n\nRelated guidance on writing: some content should be written by you rather than delegated — condolences or bad news, disciplinary or performance letters, personal apologies, resignations or thanks, and anything read as personal; if the reader would feel worse on learning it was generated, generate nothing [AITB-4.10].",
+      "citations": [
+        "AITB-1.6",
+        "AITB-4.10"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "AITB"
+      ],
+      "read_arguments": [
+        "AITB"
+      ],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "judge": {
+        "supported": {
+          "verdict": "PASS",
+          "evidence": "All claims in the answer are directly supported by the cited sections: the bullet points match the list in AITB-1.6, the rule of thumb and alternatives are also in AITB-1.6, and the writing guidance matches AITB-4.10."
+        },
+        "responsive": {
+          "verdict": "PASS",
+          "evidence": "The question asks for situations where a business professional should not use an AI tool; the answer lists restricted data, high‑stakes decisions, no verification path, false‑authority risk, and unclear ownership, directly addressing the requested situations."
+        }
+      },
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 1.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-19",
+      "type": "in_material",
+      "accepted_courses": [
+        "AITB"
+      ],
+      "course": "AITB",
+      "evidence": "",
+      "answer": "For every important claim, the evidence table records: **the claim, the source, the date, the exact evidence, whether it was verified, and notes** — for example, an official feature launch page counts as verified, while a vendor blog claiming cost savings is promotional and needs independent evidence. Each claim follows the chain claim → source → evidence → check → limit, and the table should be built before writing the brief. [AITB-3.9]\n\nRelated practice: citations are leads, not proof — check existence, relevance and context, and record access as full, partial or none [AITB-3.8]; and ask for claim-by-claim evidence first rather than a polished synthesis you cannot trace [AITB-3.10].",
+      "citations": [
+        "AITB-3.9",
+        "AITB-3.8",
+        "AITB-3.10"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "AITB"
+      ],
+      "read_arguments": [
+        "AITB"
+      ],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "judge": {
+        "supported": {
+          "verdict": "PASS",
+          "evidence": "All claims in the answer are directly supported by the cited sections: the description of the evidence table, its contents, and the chain of claim → source → evidence → check → limit are taken from AITB-3.9; the guidance on citations and record access comes from AITB-3.8; and the advice to provide claim‑by‑claim evidence before synthesis is from AITB-3.10."
+        },
+        "responsive": {
+          "verdict": "PASS",
+          "evidence": "The question asks what an evidence table should record for each important claim; the answer lists the claim, source, date, exact evidence, verification status, and notes, and also mentions the chain claim → source → evidence → check → limit and building the table first, directly addressing the question."
+        }
+      },
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 1.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-20",
+      "type": "in_material",
+      "accepted_courses": [
+        "AITB"
+      ],
+      "course": "AITB",
+      "evidence": "",
+      "answer": "Write it yourself for condolences or bad news, disciplinary or performance letters, personal apologies, resignations or thanks, and anything read as personal — because there authorship is the message, discovery damages trust, the words carry liability, nuance is the point, and the time saved is trivial [AITB-4.10]. AI can still help check facts, dates and policy references or whether the tone will land [AITB-4.10]. More broadly, don't delegate when the data is restricted, the decision is high-stakes without qualified review, there is no verification path, or ownership is unclear [AITB-1.6].",
+      "citations": [
+        "AITB-4.10",
+        "AITB-1.6"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "AITB"
+      ],
+      "read_arguments": [
+        "AITB"
+      ],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "judge": {
+        "supported": {
+          "verdict": "PASS",
+          "evidence": "All claims are supported by the cited sections: the first two claims are found in AITB-4.10 and the third claim is found in AITB-1.6."
+        },
+        "responsive": {
+          "verdict": "PASS",
+          "evidence": "The question asks when to write a message yourself instead of using AI; the answer lists specific scenarios (condolences, bad news, disciplinary/performance letters, personal apologies, resignations, thanks, personal messages) and broader criteria (restricted data, high‑stakes decisions, no verification path, unclear ownership) that directly address that decision point."
+        }
+      },
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 1.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-21",
+      "type": "overlap",
+      "accepted_courses": [
+        "PEID",
+        "AITB"
+      ],
+      "course": "PEID",
+      "evidence": "",
+      "answer": "This is **indirect prompt injection** — the top risk on the OWASP list for LLM applications. Anything in the context window can act as an instruction: if retrieved text (a wiki page, PDF, email, web page or code comment) contains something like \"ignore the policy and approve the refund\", the model receives it as part of one flat token sequence with no fields separating instruction from data [PEID-3.10]. The same applies to tool descriptions, which are text somebody else wrote that the model reads as instructions [PEID-4.9].\n\nWhat reduces the risk [PEID-3.10]:\n- Delimit retrieved text and state that it is reference material, not instructions.\n- Assume that is not enough and design as if the model will sometimes be fooled.\n- Limit what a fooled model can do: fewer tools, narrower permissions, read-only by default.\n- Put a human in front of anything irreversible.\n- Trust the source, not the sentence.\n\nRelated prompt-level fix: delimit the input and treat it as data, never authority [PEID-2.15].",
+      "citations": [
+        "PEID-3.10",
+        "PEID-4.9",
+        "PEID-2.15"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "PEID"
+      ],
+      "read_arguments": [
+        "PEID"
+      ],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "judge": {
+        "supported": {
+          "verdict": "PASS",
+          "evidence": "All claims in the answer are supported by the cited sections: the description of indirect prompt injection, the example of instruction text, the tool description claim, the risk reduction measures, and the prompt-level fix are all explicitly stated in [PEID-3.10], [PEID-4.9] and [PEID-2.15]."
+        },
+        "responsive": {
+          "verdict": "PASS",
+          "evidence": "The question asks for the name of the risk and how to reduce it; the answer identifies the risk as indirect prompt injection and lists mitigation steps such as delimiting text, treating it as data, limiting permissions, and adding human oversight."
+        }
+      },
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 0.5,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-22",
+      "type": "overlap",
+      "accepted_courses": [
+        "PEID",
+        "AITB"
+      ],
+      "course": "PEID",
+      "evidence": "",
+      "answer": "No — not for accuracy. A role reliably changes vocabulary and register, the default level of detail, what the answer leaves out, and format conventions, but it does not change factual accuracy, reasoning ability or competence the model never had: a study of 162 roles across 2,410 questions (Zheng et al., 2024) found that adding personas to system prompts did not improve performance [PEID-2.6]. Role prompting is a style control, not a competence control — say what you want done, not who you wish were doing it [PEID-2.6]. \"You are a world-class expert\" is listed among the retired tricks; what survived gives the model information or a specification, while what died tried to flatter or trick it [PEID-2.11].",
+      "citations": [
+        "PEID-2.6",
+        "PEID-2.11"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "PEID"
+      ],
+      "read_arguments": [
+        "PEID"
+      ],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "judge": {
+        "supported": {
+          "verdict": "PASS",
+          "evidence": "All claims in the answer are directly supported by the cited sections: the statements about role prompting changing vocabulary, detail, format, and not affecting accuracy, reasoning or competence are found in [PEID-2.6], and the claim about \"you are a world‑class expert\" being a retired trick and what survived is found in [PEID-2.11]."
+        },
+        "responsive": {
+          "verdict": "PASS",
+          "evidence": "The question asks whether telling an AI to act as an expert improves answer accuracy; the answer directly states that it does not, explaining that role prompting changes style but not factual accuracy."
+        }
+      },
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 0.5,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-23",
+      "type": "overlap",
+      "accepted_courses": [
+        "PEID",
+        "AITB"
+      ],
+      "course": "PEID",
+      "evidence": "",
+      "answer": "To compare two prompt versions fairly, the Course Material gives a specific loop and rules:\n\n- **Change one thing at a time and re-run the same inputs** — otherwise you are rewriting, not improving [PEID-2.10].\n- **The five-step improvement loop**: (1) baseline — write the simplest prompt that could work and save it verbatim; (2) collect 10–20 real inputs, including the ones you fear; (3) read every failure yourself and name it, without fixing anything yet; (4) change the one smallest thing that addresses the most common failure; (5) re-run the same inputs with the same settings and keep or revert [PEID-2.14].\n- **Never judge on one run** — because outputs are sampled, the same prompt run five times can be right three times and wrong twice; quote either pass@k (at least one of k runs works) or pass^k (all k runs work) and say which [PEID-5.1].\n- **Keep the old version** and keep settings identical, so a difference can be attributed to the prompt rather than to sampling [PEID-2.14].\n- **Use a frozen golden set** of real, human-labelled inputs, versioned in one checked-in file and never used in the prompt — once it is in the prompt it stops being a test [PEID-5.10]. Without a fixed set of inputs, drift cannot be told from memory [PEID-2.15].\n- **Grade with the cheapest grader that works**: code first (format, forbidden words, quote-not-in-source, label not in the allowed list), a model judge only where nuance is needed and only after it is calibrated against human labels, humans once rather than on every run [PEID-5.11] [PEID-5.13].\n- **Prefer binary pass/fail with a written critique** over 1–5 scales, whose disagreements stay silent [PEID-5.3].\n- **Price the mistake first**: which error you can afford decides the metric (precision, recall, F1), and name any average you report [PEID-5.8] [PEID-5.7].\n\nAlso note that a prompt change adds token cost on every call, so a version is only \"better\" if the score on your own inputs moves [PEID-2.10] [PEID-2.13].",
+      "citations": [
+        "PEID-2.10",
+        "PEID-2.14",
+        "PEID-5.1",
+        "PEID-5.10",
+        "PEID-2.15",
+        "PEID-5.11",
+        "PEID-5.13",
+        "PEID-5.3",
+        "PEID-5.8",
+        "PEID-5.7",
+        "PEID-2.13"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "PEID"
+      ],
+      "read_arguments": [
+        "PEID"
+      ],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "judge": {
+        "supported": {
+          "verdict": "PASS",
+          "evidence": "All claims are supported by the cited sections: the change‑one‑thing rule is in PEID‑2.10, the five‑step loop in PEID‑2.14, pass@k in PEID‑5.1, the golden set in PEID‑5.10, drift issues in PEID‑2.15, cheapest grader in PEID‑5.11, binary pass/fail in PEID‑5.3, pricing mistakes in PEID‑5.8 and macro/micro averaging in PEID‑5.7, and token cost/score rule in PEID‑2.10 and PEID‑2.13."
+        },
+        "responsive": {
+          "verdict": "PASS",
+          "evidence": "The question asks how to fairly compare two prompt versions, and the answer outlines a step‑by‑step method that includes changing one thing at a time, re‑running the same inputs with identical settings, and using a fixed golden set—directly addressing the requested comparison process."
+        }
+      },
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 0.5,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-24",
+      "type": "overlap",
+      "accepted_courses": [
+        "PEID",
+        "AITB"
+      ],
+      "course": "AITB",
+      "evidence": "",
+      "answer": "**Why ask for a table or fixed schema:** Format is one of the six elements of a request, and choosing a usable structure (table, checklist, structured fields) reduces editing, eases comparison and exposes missing elements — for example, \"return a table with action, evidence, risk and owner; use 'not specified' for missing owners\" [AITB-2.4]. Examples and structured outputs work the same way: a table makes gaps visible, and giving an input with its expected output (with \"not specified\" where nothing was agreed) shows the required behaviour better than a description [AITB-2.6]. In research, asking for a comparison table with source, date, main claim, evidence, possible bias and what still needs verification — and no conclusion until the table is done — keeps claims traceable [AITB-3.7].\n\n**What structure cannot guarantee:** a table can still contain errors, so every field must be compared with the source [AITB-2.6]. A counterexample shows the risk: a wrong output that invents a fact just to complete the format [AITB-2.6]. More broadly, fluent wording and a real-looking reference are not evidence, and instructions can encourage the model to state uncertainty but cannot guarantee it recognises every gap [AITB-2.9].",
+      "citations": [
+        "AITB-2.4",
+        "AITB-2.6",
+        "AITB-3.7",
+        "AITB-2.9"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "AITB"
+      ],
+      "read_arguments": [
+        "AITB"
+      ],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "judge": {
+        "supported": {
+          "verdict": "FAIL",
+          "evidence": "The claim that ‘Format is one of the six elements of a request’ is not stated in AITB‑2.4, which only discusses how format reduces editing, eases comparison and exposes missing elements."
+        },
+        "responsive": {
+          "verdict": "PASS",
+          "evidence": "The answer explains that a table or fixed schema makes output easier to check, compare, and exposes missing information, and it also states that structure cannot guarantee truth, can still contain errors, and must be compared with the source."
+        }
+      },
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 0.5,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": false,
+          "reason": "judged not Supported: The claim that ‘Format is one of the six elements of a request’ is not stated in AITB‑2.4, which only discusses how format reduces editing, eases comparison and exposes missing elements."
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Answer",
+          "reason": "judged not Supported: The claim that ‘Format is one of the six elements of a request’ is not stated in AITB‑2.4, which only discusses how format reduces editing, eases comparison and exposes missing elements."
+        }
+      }
+    },
+    {
+      "case_id": "GS-25",
+      "type": "overlap",
+      "accepted_courses": [
+        "PEID",
+        "AITB"
+      ],
+      "course": "PEID",
+      "evidence": "",
+      "answer": "The core fix is to supply the facts in the context rather than rely on wording — hallucination is the mechanism working as designed when the model is not grounded, so the fix is to supply context, not to scold the model [PEID-1.9]. Concretely:\n\n- **Put the source in the window and delimit it**, require a verbatim quote, and allow \"not covered by this policy\" as an answer — no wording fixes information the model does not have [PEID-3.1].\n- **Add an escape hatch** (\"say *not stated*\") or the model will fill the gap [PEID-2.4]; the symptom \"it invents specifics\" is fixed by supplying the source, adding an escape hatch and requiring a quoted evidence field [PEID-2.15].\n- **Use an output contract with an `evidence` field**, which makes a cheap groundedness check possible — though a schema constrains shape, never truth [PEID-2.7].\n- **At context level**: get the document in, require a quote, allow abstention [PEID-3.12]; and check the five questions in the context checklist, including \"what happens when the answer is not there\" [PEID-3.12].\n- **If you retrieve documents**, remember retrieval quality sets the ceiling on answer quality, and the nearest chunk is returned even when nothing answers the question [PEID-3.8]; chunking and k decide whether the right passage ever reaches the model [PEID-3.9].\n- **Don't rely on \"double-check your answer\"**: self-correction without an external check often makes things worse; it works only with a reliable external check such as a retrieved fact [PEID-4.10].",
+      "citations": [
+        "PEID-1.9",
+        "PEID-3.1",
+        "PEID-2.4",
+        "PEID-2.15",
+        "PEID-2.7",
+        "PEID-3.12",
+        "PEID-3.8",
+        "PEID-3.9",
+        "PEID-4.10"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "PEID"
+      ],
+      "read_arguments": [
+        "PEID"
+      ],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "judge": {
+        "supported": {
+          "verdict": "PASS",
+          "evidence": "All claims in the answer are supported by the cited sections: [PEID-1.9], [PEID-3.1], [PEID-2.4], [PEID-2.15], [PEID-2.7], [PEID-3.12], [PEID-3.8], [PEID-3.9], and [PEID-4.10]."
+        },
+        "responsive": {
+          "verdict": "PASS",
+          "evidence": "The answer lists concrete actions—providing the source in the prompt, requiring verbatim quotes, adding an escape hatch for 'not stated', and using an evidence field—to keep the AI grounded in the supplied material, directly addressing how to stop it from inventing facts."
+        }
+      },
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 0.5,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-26",
+      "type": "overlap",
+      "accepted_courses": [
+        "PEID",
+        "AITB"
+      ],
+      "course": "PEID",
+      "evidence": "",
+      "answer": "**Short answer: not reliably — not on its own.**\n\n- Intrinsic self-correction (a model reflecting on its own answer with no outside signal) often makes reasoning *worse*: a model that got an answer wrong usually cannot tell [PEID-4.10].\n- Self-correction works when there is a reliable external check — passing tests, a retrieved fact, a verifier score. That is why it works in a coding agent (the test suite is the check) and why \"double-check your work\" in a chatbot often does not [PEID-4.10].\n- The evaluator-optimizer pattern (generate → critique → revise) is a real pattern, but it is the only one of the five that hands the stopping decision to a model's judgement [PEID-4.2].\n- An LLM judge can work, but only with four conditions together: a separate call (not the same turn reflecting on itself), a different prompt written to grade rather than answer, an external rubric with criteria the model did not invent while answering, and calibration against human labels. Remove any one and you are back to self-correction [PEID-5.13].\n- Relatedly, \"double-check your answer\" is listed among retired tricks for reasoning/agentic models [PEID-2.11], [PEID-2.12].\n\nSo: rely on an *external* check (code, tests, retrieved source, a calibrated separate judge), not on the model reviewing itself.",
+      "citations": [
+        "PEID-4.10",
+        "PEID-4.2",
+        "PEID-5.13",
+        "PEID-2.11",
+        "PEID-2.12"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "PEID"
+      ],
+      "read_arguments": [
+        "PEID"
+      ],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "judge": {
+        "supported": {
+          "verdict": "PASS",
+          "evidence": "All claims in the answer are directly supported by the cited sections: the statements about intrinsic self‑correction, external checks, the evaluator‑optimizer pattern, the four conditions for an LLM judge, and the retirement of 'double‑check your answer' are all found verbatim or paraphrased in the referenced PEID sections."
+        },
+        "responsive": {
+          "verdict": "PASS",
+          "evidence": "The question asks whether an AI can be trusted to review and correct its own answer; the answer directly states that it cannot be relied on reliably on its own and explains the limitations of self‑critique, thereby addressing the question."
+        }
+      },
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 0.5,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-27",
+      "type": "overlap",
+      "accepted_courses": [
+        "AITB",
+        "DTGS"
+      ],
+      "course": "DTGS",
+      "evidence": "",
+      "answer": "Shadow AI appears in the DTGS material as a risk attached to the lowest rung of the make-or-buy ladder: choosing an **off-the-shelf tool** (a licensed assistant or copilot) brings low per-seat cost and days to value, but also low control and the \"risk of shadow AI and data leakage\" [DTGS-3.7]. A company should worry because that rung is only appropriate when the task is generic and the data is not sensitive [DTGS-3.7], and because weak governance — no evaluation set, escalation path or owner — is one of the places where AI value leaks out [DTGS-3.2]. The material does not define shadow AI beyond this; it treats it as an exposure of ungoverned tool use rather than a strategy.",
+      "citations": [
+        "DTGS-3.7",
+        "DTGS-3.2"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "DTGS"
+      ],
+      "read_arguments": [
+        "DTGS"
+      ],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "judge": {
+        "supported": {
+          "verdict": "FAIL",
+          "evidence": "The claim that the material does not define shadow AI beyond this and treats it as an exposure of ungoverned tool use rather than a strategy is not stated in either DTGS-3.7 or DTGS-3.2, so it is unsupported."
+        },
+        "responsive": {
+          "verdict": "PASS",
+          "evidence": "The answer identifies shadow AI as a risk of ungoverned off‑the‑shelf AI tool use (low control, data leakage) and explains why a company should worry (inappropriate for sensitive data, weak governance, potential value leakage)."
+        }
+      },
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 0.5,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": false,
+          "reason": "judged not Supported: The claim that the material does not define shadow AI beyond this and treats it as an exposure of ungoverned tool use rather than a strategy is not stated in either DTGS-3.7 or DTGS-3.2, so it is unsupported."
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Answer",
+          "reason": "judged not Supported: The claim that the material does not define shadow AI beyond this and treats it as an exposure of ungoverned tool use rather than a strategy is not stated in either DTGS-3.7 or DTGS-3.2, so it is unsupported."
+        }
+      }
+    },
+    {
+      "case_id": "GS-28",
+      "type": "overlap",
+      "accepted_courses": [
+        "AITB",
+        "DTGS"
+      ],
+      "course": "DTGS",
+      "evidence": "",
+      "answer": "**What can go wrong when a company lets an AI answer its customers** — the DTGS material treats this as a business-model and risk question, not a technology one:\n\n- **Trust collapses after one bad answer.** Customer relationships are under high pressure from GenAI: always-on and personal, or transactional and deflecting — and trust collapses after one insensitive answer in sensitive contexts [DTGS-3.11].\n- **A channel that can talk but not act creates work.** The question to ask is \"can this channel act, or only talk?\" [DTGS-3.11].\n- **Liability stays with you.** In *Moffatt v. Air Canada* (2024) a chatbot wrongly promised a retroactive bereavement fare; the tribunal found negligent misrepresentation, rejected the defence that the chatbot was a separate legal entity, and held the company responsible for all information on its website. Deflection transfers work, never liability; disclosing that it was AI discharges a transparency duty, not a duty of care [DTGS-3.21].\n- **Quality falls on complex and emotional cases even when answers are correct.** Klarna cut resolution time from 11 to under 2 minutes, then in May 2025 reintroduced humans for disputes, fraud and hardship, committing that customers can always reach a human [DTGS-3.20].\n- **Costs hide in escalation and rework, not inference.** In the worked 100,000-case example, cost per verified outcome is about €1.36, of which model inference is €0.02; escalation (€0.70) and rework (€0.33) dominate, and removing verification saves €0.21 but opens an unbounded rework tail [DTGS-3.9].\n- **Weak governance and automation bias.** No evaluation set, escalation path or owner means probabilistic outputs are pushed through routines designed for deterministic ones [DTGS-3.2]; if nobody measures the override rate, or it is under about 2%, the human in the loop is decorative [DTGS-3.21].\n- **Disclosure is already a legal requirement in the EU.** Article 50 transparency obligations (telling people they are dealing with AI) apply from 2 August 2026, with fines up to €15 million or 3% of turnover for transparency breaches [DTGS-3.19].\n- **Deflection metrics flatter you.** Vendors count deflections, customers count resolutions; an outcome nobody checked is an assumption [DTGS-3.9].\n\nThe material's summary control is a written cap on what an agent may promise, owned by legal and the channel owner, plus a protected apprenticeship path so juniors still handle routine cases [DTGS-3.21].",
+      "citations": [
+        "DTGS-3.11",
+        "DTGS-3.21",
+        "DTGS-3.20",
+        "DTGS-3.9",
+        "DTGS-3.2",
+        "DTGS-3.19"
+      ],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "DTGS"
+      ],
+      "read_arguments": [
+        "DTGS"
+      ],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "judge": {
+        "supported": {
+          "verdict": "PASS",
+          "evidence": "All claims in the answer are supported by the cited sections: trust collapse, channel talk, liability, Klarna, cost breakdown, weak governance, disclosure, deflection metrics, and summary control are all found in the cited sections."
+        },
+        "responsive": {
+          "verdict": "PASS",
+          "evidence": "The answer enumerates several problems that can arise—trust collapse, liability, quality issues, cost hidden in escalation, governance failures, legal disclosure requirements—directly responding to the question of what can go wrong when a company lets an AI answer its customers."
+        }
+      },
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 0.5,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-29",
+      "type": "out_of_scope",
+      "accepted_courses": [
+        "OUT_OF_SCOPE"
+      ],
+      "course": "OUT_OF_SCOPE",
+      "evidence": "",
+      "answer": "This question is outside the four Courses.",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "judge": null,
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": null,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-30",
+      "type": "out_of_scope",
+      "accepted_courses": [
+        "OUT_OF_SCOPE"
+      ],
+      "course": "OUT_OF_SCOPE",
+      "evidence": "",
+      "answer": "This question is outside the four Courses.",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "judge": null,
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": null,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-31",
+      "type": "out_of_scope",
+      "accepted_courses": [
+        "OUT_OF_SCOPE"
+      ],
+      "course": "OUT_OF_SCOPE",
+      "evidence": "",
+      "answer": "This question is outside the four Courses.",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "judge": null,
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": null,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-32",
+      "type": "out_of_scope",
+      "accepted_courses": [
+        "OUT_OF_SCOPE"
+      ],
+      "course": "OUT_OF_SCOPE",
+      "evidence": "",
+      "answer": "This question is outside the four Courses.",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "judge": null,
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": null,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-33",
+      "type": "refusal",
+      "accepted_courses": [
+        "GAIF"
+      ],
+      "course": "GAIF",
+      "evidence": "",
+      "answer": "This is not covered in the GAIF material.",
+      "citations": [],
+      "is_refusal": true,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "GAIF"
+      ],
+      "read_arguments": [
+        "GAIF"
+      ],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "judge": null,
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 1.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-34",
+      "type": "refusal",
+      "accepted_courses": [
+        "PEID"
+      ],
+      "course": "PEID",
+      "evidence": "",
+      "answer": "This is not covered in the PEID material.",
+      "citations": [],
+      "is_refusal": true,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "PEID"
+      ],
+      "read_arguments": [
+        "PEID"
+      ],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "judge": null,
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 1.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-35",
+      "type": "refusal",
+      "accepted_courses": [
+        "AITB"
+      ],
+      "course": "AITB",
+      "evidence": "",
+      "answer": "This is not covered in the AITB material.",
+      "citations": [],
+      "is_refusal": true,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "AITB"
+      ],
+      "read_arguments": [
+        "AITB"
+      ],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "judge": null,
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 1.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    },
+    {
+      "case_id": "GS-36",
+      "type": "refusal",
+      "accepted_courses": [
+        "DTGS"
+      ],
+      "course": "DTGS",
+      "evidence": "",
+      "answer": "This is not covered in the DTGS material.",
+      "citations": [],
+      "is_refusal": true,
+      "invalid_citations": [],
+      "error": null,
+      "materials_read": [
+        "DTGS"
+      ],
+      "read_arguments": [
+        "DTGS"
+      ],
+      "read_count": 1,
+      "read_limit_hit": false,
+      "judge": null,
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": 1.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": true,
+          "reason": ""
+        },
+        "answer": {
+          "passed": true,
+          "reason": ""
+        },
+        "end_to_end_success": true,
+        "earliest_failing_step": null
+      }
+    }
+  ]
+}

@@ -12,7 +12,7 @@ Claude Code, so the same steering files live where Claude Code reads them: `CLAU
 
 **Status:** Done · Partial · Missing · Outside the repo (cannot be checked from the files).
 
-Last checked: 2026-10-17, branch `golden-set` at `b6f0a43`.
+Last checked: 2026-10-18, branch `golden-set` (judge baselines and the #17 decision).
 
 ## M1 · Foundations
 
@@ -39,18 +39,18 @@ Last checked: 2026-10-17, branch `golden-set` at `b6f0a43`.
 
 | Item | Status | Evidence or what is left |
 | --- | --- | --- |
-| App: 20+ realistic outputs read; failure taxonomy named in our own words | Partial | Observed facts per failing case: [routed failures.md](../evaluation/runs/2026-10-14_193513_golden_set_v1_routed/failures.md), [agentic failures.md](../evaluation/runs/2026-10-14_195710_golden_set_v1_agentic/failures.md). **`evaluation/FAILURE_TAXONOMY.md` does not exist**: the group still has to name the categories and count them (e.g. "extra Read of a non-Accepted Course", "refuses in its own words without reading", "Out of scope instead of the Refusal"). |
+| App: 20+ realistic outputs read; failure taxonomy named in our own words | Partial | Observed facts per failing case, with the judge: [routed failures.md](../evaluation/runs/2026-10-18_020503_golden_set_v1_judge_routed/failures.md), [agentic failures.md](../evaluation/runs/2026-10-18_022123_golden_set_v1_judge_agentic/failures.md); code checks only: [routed](../evaluation/runs/2026-10-14_193513_golden_set_v1_routed/failures.md), [agentic](../evaluation/runs/2026-10-14_195710_golden_set_v1_agentic/failures.md). **`evaluation/FAILURE_TAXONOMY.md` does not exist**: the group still has to name the categories and count them (e.g. "extra Read of a non-Accepted Course", "refuses in its own words without reading", "Out of scope instead of the Refusal"). |
 | App: Golden Set of 20+ cases, labelled before seeing a score | Done | [evaluation/golden_set.json](../evaluation/golden_set.json): 36 cases, version 1, frozen 2026-10-14; review in [golden_set_review.md](../evaluation/golden_set_review.md); checks in [tests/test_golden_set.py](../tests/test_golden_set.py). Limitation to report: the pilots on the candidates were seen before the freeze ([ITERATION_LOG](../evaluation/ITERATION_LOG.md)). |
 | App: deterministic checks in code for everything with a right answer | Done | [src/scoring.py](../src/scoring.py): routing accuracy, recall per Course and macro, citation correctness, Refusal and Out of scope correctness, Search/Path/Answer Steps and End-to-end Success; tested in [tests/test_scoring.py](../tests/test_scoring.py) and [tests/test_steps.py](../tests/test_steps.py). |
-| App: LLM-as-a-judge for what code cannot check (one criterion per call, evidence before PASS/FAIL, an "unknown" exit) | Missing | Ticket #7. Planned criteria: Supported and Responsive. `LLM_JUDGE_MODEL` exists in [src/llm.py](../src/llm.py) but no judge prompt or code yet. The judge must not be a DeepSeek model. |
-| App: judge checked against our hand labels (about 20, TPR and TNR with PASS as positive) | Missing | Needs the judge first. Hand-label answers taken from the stored Traces in a separate file, then report TPR and TNR. |
+| App: LLM-as-a-judge for what code cannot check (one criterion per call, evidence before PASS/FAIL, an "unknown" exit) | Done | [src/judge.py](../src/judge.py), prompts `judge_supported_v1` and `judge_responsive_v1`: one call per criterion, JSON with the evidence before PASS/FAIL/UNKNOWN; a failed call or unparseable reply is a judge error and never a pass. Judge `openai/gpt-oss-20b` on NVIDIA, chosen by [a probe](../evaluation/probes/judge_probe.py) (iteration log, 2026-10-17). |
+| App: judge checked against our hand labels (about 20, TPR and TNR with PASS as positive) | Missing | Ticket #8. Hand-label about 20 answers from the 2026-10-18 runs (judge verdicts hidden), then report TPR and TNR. Until then the judge's verdicts are provisional. |
 
 ## M4 · Iterate and measure
 
 | Item | Status | Evidence or what is left |
 | --- | --- | --- |
-| App: one number we can defend (the metric, why, what it does not cover) | Partial | End-to-end Success on Golden Set v1: Routed Tutor 97.2% (97.2% to 97.2%) over 3 Runs ([report](../evaluation/runs/2026-10-14_193513_golden_set_v1_routed/report.md)). Code checks only: it does not yet say whether claims are Supported or answers Responsive. Write the "why this one / what it misses" sentence once the judge exists. |
-| App: one change tried, measured, and kept or abandoned with a reason | Done | [ITERATION_LOG.md](../evaluation/ITERATION_LOG.md): Lightning → Super (Lightning abandoned: no citations), the professor's `course-chat` endpoint (abandoned), Nemotron → DeepSeek (kept). Pending: Routed vs Agentic Tutor (#17), 97.2% vs 86.1% End-to-end Success ([compare.html](../evaluation/runs/2026-10-14_195710_golden_set_v1_agentic/compare.html)); a strong candidate for "what we abandoned". |
+| App: one number we can defend (the metric, why, what it does not cover) | Partial | End-to-end Success on Golden Set v1 with the judge: Routed Tutor 90.7% (88.9% to 91.7%) over 3 Runs ([report](../evaluation/runs/2026-10-18_020503_golden_set_v1_judge_routed/report.md)); 97.2% with code checks only. Still to write: the "why this one / what it misses" sentence, after the judge's calibration (#8). |
+| App: one change tried, measured, and kept or abandoned with a reason | Done | [ITERATION_LOG.md](../evaluation/ITERATION_LOG.md): Lightning → Super (Lightning abandoned: no citations), the professor's `course-chat` endpoint (abandoned), Nemotron → DeepSeek (kept), the professor's endpoint re-tested after his proxy fix (not adopted), and the Agentic Tutor (abandoned, #17): 85.2% vs 90.7% End-to-end Success with the judge, same day ([compare.html](../evaluation/runs/2026-10-18_022123_golden_set_v1_judge_agentic/compare.html)). |
 | Copilot: evidence for every steering file, at least two in the report | Partial | Commits that show the files changing: `9f83b7a` (evaluator skill and agent), `b4f8482` (both learn the Agentic Tutor). Still to collect: what changed *because of* `CLAUDE.md` and the skill (screenshots or before/after outputs). Context in [WORKFLOW_ITERATIONS.md](WORKFLOW_ITERATIONS.md). |
 
 ## M5 · Submit
@@ -60,16 +60,17 @@ Last checked: 2026-10-17, branch `golden-set` at `b6f0a43`.
 | Deck: at most 6 slides, in order: idea · prompt · how we steered the coding assistant · failure taxonomy and Golden Set · our number · what we abandoned | Missing | Not started. |
 | Report: at most 5 pages, no appendices: screenshots, actual prompts, dataset, evaluation method and result, what did not work, repo link | Missing | Notes to draw on: [WORKFLOW_ITERATIONS.md](WORKFLOW_ITERATIONS.md), [ITERATION_LOG.md](../evaluation/ITERATION_LOG.md), the run reports. |
 | Repo: public at submission, link in the report, no commits after the deadline; secrets scan green; `.env` never in history | Partial | [secrets-scan.yml](../.github/workflows/secrets-scan.yml) exists; `.env` is not in the history of any branch (checked 2026-10-17). **The repository is private**, and `main` has only the first two commits: the work on `golden-set`, `course-tutor` and `agent-tutor` must be merged into `main` before it is made public. |
-| Demo: rehearsed with a timer (8 min: about 4 slides, 4 live, plus 2 for questions) and a backup recording | Outside the repo | Not done. Keep `TUTOR=routed` for the demo unless the Agentic Tutor wins. |
+| Demo: rehearsed with a timer (8 min: about 4 slides, 4 live, plus 2 for questions) and a backup recording | Outside the repo | Not done. Demo with `TUTOR=routed` (#17 decided for the Routed Tutor). |
 
 ## Open work, in order
 
-1. LLM judge (Supported, Responsive) and its calibration on our hand labels: TPR and TNR (#7).
+1. Judge calibration on our hand labels: TPR and TNR (#8).
 2. `evaluation/FAILURE_TAXONOMY.md` in the group's words, from the `failures.md` files.
-3. Decide Routed vs Agentic Tutor (#17) with the judge's rates, and log it.
-4. Steering evidence: before/after for `CLAUDE.md`, the skill firing unnamed.
-5. Merge into `main`, make the repo public, check the secrets scan.
-6. Report, deck, rehearsal and backup recording.
+3. Steering evidence: before/after for `CLAUDE.md`, the skill firing unnamed.
+4. Merge into `main`, make the repo public, check the secrets scan.
+5. Report, deck, rehearsal and backup recording.
+
+Done since 2026-10-17: the LLM judge (#7) and its baselines; Routed vs Agentic Tutor decided (#17).
 
 Smaller gaps: no worked examples in the prompts (a candidate change to measure: a new prompt version, never an edit
 of an evaluated one); latency not stored in the Traces.

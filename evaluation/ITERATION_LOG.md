@@ -280,3 +280,81 @@ Copy this block for each entry:
   model's, and on an endpoint that keeps working after the course key stops on 2026-10-21. The probe only shows that
   the judge works and catches gross errors; whether its verdicts agree with ours is ticket #8 (hand labels, TPR and
   TNR). `course-chat` is the fallback, within its rate limit and before its key stops.
+
+## 2026-10-18 Professor's endpoint re-tested after the proxy fix; app model stays deepseek-flash
+
+- **Change:** none to the app. The professor changed the course proxy (LiteLLM) to assume `reasoning_effort = none`
+  when the parameter is missing; before, it treated such requests as thinking-mode requests and sent them to the
+  Responses API, which is not enabled in the region (the 404 on `tools` in the 2026-10-14 entry). Re-tested
+  `course-chat` (`/model/info` reports `azure/gpt-5.4-nano`).
+- **Configuration:** single calls on 2026-10-18 through the app's own code: `read_file` offered as a native tool with
+  and without `reasoning_effort="none"`, then the Agentic Tutor (`agentic_tutor_v1`) on four throwaway questions
+  (not Golden Set cases), `LLM_THINKING=none`.
+- **Run folder:** none (single calls).
+- **Result:** native tool calls work with and without `reasoning_effort` (1.5 s; 59 s for the first call after a quiet
+  period). The Agentic Tutor gave the expected behaviour on all four questions: a PEID answer citing PEID-1.3, Out of
+  scope with no Read, the GAIF Refusal for an exam-date question, and an AITB answer citing AITB-2.7, AITB-3.5,
+  AITB-3.8 and AITB-3.9 (1.5 to 5.6 s). The Router gave the same Course as `deepseek-flash` on six Golden Set
+  questions, including the wrong AITB for GS-05.
+- **Decision:** app model stays `deepseek-flash`; `course-chat` not adopted.
+- **Reason:** both tutors were already measured on `deepseek-flash`, and the deadline (2026-10-20) leaves no room to
+  measure both again under the proxy's limit of 30 requests per minute; the course key also stops on 2026-10-21. This
+  is not a quality comparison: the two models were never run on the Golden Set under the same conditions, so nothing
+  here says that one is better.
+
+## 2026-10-18 Routed Tutor on Golden Set v1 with the LLM judge (baseline)
+
+- **Change:** none to the app; the first evaluation with the LLM judge (#7). The Answer Step now also needs every
+  expected answer to be judged Supported and Responsive. Compared with the Routed Tutor run on 2026-10-14
+  (`2026-10-14_193513_golden_set_v1_routed`, code checks only), so the before -> after below is not like for like:
+  it adds the judge, it does not change the app.
+- **Configuration:** Routed Tutor, Router `router_v2`, Course Tutor `tutor_v2`, app model `deepseek-flash`, thinking
+  off, judge `openai/gpt-oss-20b` (NVIDIA, no thinking switch) with `judge_supported_v1` and `judge_responsive_v1`,
+  `--workers 2`, commit `683608f`, case file `evaluation/golden_set.json` (version 1). 3 of 3 Runs and 108 of 108
+  Traces finished; no Trace recorded an error; 81 answers judged, no verdict UNKNOWN or a judge error.
+- **Run folder:** `evaluation/runs/2026-10-18_020503_golden_set_v1_judge_routed` (with `failures.md`).
+- **Result:** code checks only -> with the judge, mean (range): End-to-end Success 97.2% (97.2% to 97.2%) -> 90.7%
+  (88.9% to 91.7%); Search Step 97.2% -> 97.2%; Path Step 100.0% -> 100.0%; Answer Step 97.2% -> 90.7% (88.9% to
+  91.7%). New: Supported rate 93.8% (92.6% to 96.3%), Responsive rate 96.3% (96.3% to 96.3%), Judge undecided rate
+  0.0%. Unchanged: Routing accuracy 97.2%, Recall (macro average) 96.7%, Citation correctness 100.0%, Refusal
+  correctness 100.0%, Out of scope correctness 100.0%. Failing cases: GS-05 3/3 (Search: routed to AITB, the AITB
+  Refusal; as on 2026-10-14), GS-27 3/3 (Answer: judged not Responsive in runs 1-2, not Supported in run 3; the
+  answer cites DTGS-3.7 and then ends with the DTGS Refusal sentence), GS-24 2/3 (Answer: judged not Supported, the
+  claim that structure does not guarantee accuracy), GS-06 1/3 and GS-25 1/3 (Answer: judged not Supported). Every
+  case that fails only through the judge passed the code checks on 2026-10-14.
+- **Decision:** kept as the baseline with the judge.
+- **Reason:** the number to defend is now 90.7% End-to-end Success, which checks claims as well as citations. The
+  drop from 97.2% comes only from the judge: the code-check Steps and diagnostics did not move. The judge is not yet
+  checked against our hand labels (#8): some verdicts may be too strict (GS-06: a timestamp "changes the prefix" was
+  judged not stated by a Section that says a timestamp disables caching), so the 90.7% is provisional until #8.
+
+## 2026-10-18 Agentic Tutor on Golden Set v1 with the LLM judge
+
+- **Change:** none to the app; the Agentic Tutor evaluated with the LLM judge, the same day, model, judge and commit
+  as the Routed Tutor baseline above, so Routed -> Agentic below changes only the tutor. Also compared with the
+  Agentic Tutor run on 2026-10-14 (`2026-10-14_195710_golden_set_v1_agentic`, code checks only).
+- **Configuration:** Agentic Tutor `agentic_tutor_v1`, app model `deepseek-flash`, thinking off, judge
+  `openai/gpt-oss-20b` with `judge_supported_v1` and `judge_responsive_v1`, `--workers 2`, commit `683608f`, case
+  file `evaluation/golden_set.json`. 3 of 3 Runs and 108 of 108 Traces finished; no Trace recorded an error or reached
+  the Read limit; 81 answers judged, no verdict UNKNOWN or a judge error.
+- **Run folder:** `evaluation/runs/2026-10-18_022123_golden_set_v1_judge_agentic` (with `failures.md` and
+  `compare.html` against the Routed Tutor baseline above).
+- **Result:** Routed Tutor -> Agentic Tutor, both with the judge, mean (range): End-to-end Success 90.7% (88.9% to
+  91.7%) -> 85.2% (83.3% to 86.1%); Search Step 97.2% -> 92.6% (91.7% to 94.4%); Path Step 100.0% -> 100.0%; Answer
+  Step 90.7% (88.9% to 91.7%) -> 89.8% (88.9% to 91.7%); Supported rate 93.8% -> 90.1% (88.9% to 92.6%); Responsive
+  rate 96.3% -> 100.0%; Routing accuracy 97.2% -> 95.4% (94.4% to 97.2%); Recall GAIF 83.3% -> 72.2% (66.7% to
+  83.3%); Refusal correctness 100.0% -> 100.0%. Cases that differ: GS-02 3/3 -> 0/3 (Search: reads GAIF then PEID,
+  with a correct answer citing GAIF-2.10), GS-15 3/3 -> 1/3 (Search: extra Read of PEID), GS-26 3/3 -> 1/3 (Answer:
+  judged not Supported, an uncited "Short answer" sentence), GS-25 2/3 -> 3/3. Both fail GS-05 3/3, GS-27 3/3, GS-24
+  2/3 and GS-06 1/3. Against the Agentic Tutor on 2026-10-14 (code checks only, same code apart from the judge):
+  End-to-end Success 86.1% -> 85.2%, Search Step 86.1% -> 92.6%, Path Step 97.2% -> 100.0%, Refusal correctness
+  50.0% -> 100.0%; GS-13, GS-33 and GS-35 went from 0/3 to 3/3, and GS-02 from 3/3 to 0/3, with the same prompts,
+  model name and temperature 0.
+- **Decision:** abandoned (#17): the Routed Tutor stays the app's tutor and the screen default (`TUTOR=routed`); the
+  Agentic Tutor stays in the code as the measured alternative.
+- **Reason:** measured the same day with the same model and judge, the Routed Tutor leads by about two cases per Run
+  (90.7% vs 85.2% End-to-end Success), and it led on 2026-10-14 too (97.2% vs 86.1%, code checks only). The Agentic
+  Tutor's extra losses are mostly extra Reads of a Course that is not Accepted (Search Step), which the Router rules
+  out by choosing exactly one Course. In its favour: Responsive rate 100.0% and GS-25 3/3. The four-day shift in which
+  Agentic Traces fail, with nothing changed on our side, shows that a run on one day is a sample of a model that can
+  change behind the same name; this comparison is like for like because both tutors ran the same day.
