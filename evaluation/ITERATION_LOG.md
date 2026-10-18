@@ -444,3 +444,29 @@ Copy this block for each entry:
   that ends with the Refusal sentence, GS-06 one extra claim. GS-10 failed on a judge timeout, not on the answer, so
   1 of the 3 failing Traces in Run 1 says nothing about the tutor. The judge's ability to catch an unresponsive answer
   is untested (no human Responsive FAIL in the held-out set).
+
+## 2026-10-18 Routed Tutor re-measured on Golden Set v1, same configuration
+
+- **Change:** none to the app, the judge or the case file; the calibrated-judge baseline above
+  (`2026-10-18_040522_golden_set_v1_judge_v2_routed`) run again to see how stable its number is. Nothing under `src/`,
+  `prompts/`, `data/` or `evaluation/golden_set.json` changed between its commit `dcee50a` and this one.
+- **Configuration:** Routed Tutor, Router `router_v2`, Course Tutor `tutor_v2`, app model `deepseek-flash`, thinking
+  off, judge `openai/gpt-oss-20b` with `judge_supported_v2` and `judge_responsive_v1`, `--workers 2`, commit
+  `3f66605`, case file `evaluation/golden_set.json`. 3 of 3 Runs and 108 of 108 Traces finished; no Trace recorded an
+  error; 81 answers judged, no judge error or UNKNOWN verdict.
+- **Run folder:** `evaluation/runs/2026-10-18_045930_golden_set_v1_judge_v2_rerun_routed` (with `failures.md` and
+  `compare.html` against the baseline).
+- **Result:** first run -> re-run, mean (range): End-to-end Success 92.6% (88.9% to 94.4%) -> 93.5% (91.7% to 94.4%);
+  Answer Step 92.6% (88.9% to 94.4%) -> 93.5% (91.7% to 94.4%); Supported rate 97.5% (92.6% to 100.0%) -> 98.8% (96.3%
+  to 100.0%); Judge undecided rate 0.6% (0.0% to 1.9%) -> 0.0%. Unchanged: Search Step 97.2%, Path Step 100.0%,
+  Responsive rate 96.3%, Routing accuracy 97.2%, Recall GAIF 83.3%, Citation, Refusal and Out of scope correctness
+  100.0%. Failing cases: GS-05 3/3 (Search: routed to AITB, the AITB Refusal) and GS-27 3/3 (Answer: judged not
+  Responsive, ends with the DTGS Refusal sentence), both as before; GS-24 1/3 (Answer: judged not Supported, the uncited
+  sentence "Structure does not guarantee accuracy or grounding"), new. GS-06 and GS-10, 1/3 each before (a claim beyond
+  PEID-3.13; a judge timeout), passed 3/3.
+- **Decision:** pending.
+- **Reason:** the re-run supports the 92.6% figure: the same two cases fail in every run of both measurements, and
+  the difference (one Trace in 108) comes from the 1/3 failures, which move between GS-06, GS-10 and GS-24 across runs.
+  Six runs of this configuration range from 88.9% to 94.4% End-to-end Success, so a later change has to move more than that
+  spread before it counts as an effect. GS-24's failure is the judge pattern already noted on the calibration tuning items
+  (a sentence adding "grounding"), not a new kind of tutor failure.
