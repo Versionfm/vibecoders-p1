@@ -546,3 +546,46 @@ Copy this block for each entry:
   that ends with the Refusal sentence, GS-06 one extra claim. GS-10 failed on a judge timeout, not on the answer, so
   1 of the 3 failing Traces in Run 1 says nothing about the tutor. The judge's ability to catch an unresponsive answer
   is untested (no human Responsive FAIL in the held-out set).
+
+## 2026-10-18 Agentic Tutor (chat version) on Golden Set v1 with the calibrated judge (judge_supported_v2)
+
+- **Change:** none to the prompts or model; the Agentic Tutor of branch `agent-tutor-chat` (the chat screen with
+  conversation history and the tool loop separated from the answer checks, `src/agentic.py`), measured for the first
+  time on the frozen Golden Set with the calibrated judge. Routed -> Agentic below is compared with the Routed Tutor
+  baseline judged by `judge_supported_v2` (`2026-10-18_040522_golden_set_v1_judge_v2_routed`): same case file, app
+  model, thinking setting, judge model and judge prompts, so the change is the tutor (and the code of this branch,
+  commit `3b7125c` against `dcee50a`). Same-tutor previous entry: the Agentic Tutor judged by `judge_supported_v1`
+  (`2026-10-18_022123_golden_set_v1_judge_agentic`, commit `683608f`, before the chat refactor was merged).
+- **Configuration:** Agentic Tutor `agentic_tutor_v1`, app model `deepseek-flash`, thinking off, judge
+  `openai/gpt-oss-20b` on NVIDIA with `judge_supported_v2` and `judge_responsive_v1`, judge thinking `none` (the
+  judge model and judge thinking were passed as environment variables because `.env` still held an empty
+  `LLM_JUDGE_MODEL=` line; same values as `.env.example`), `--workers 2`, commit `3b7125c`, case file
+  `evaluation/golden_set.json`. 3 of 3 Runs and 108 of 108 Traces finished; no Trace recorded an error or reached the
+  Read limit; 81 answers judged, no verdict UNKNOWN or a judge error. 188 tests passed before the run.
+- **Run folder:** `evaluation/runs/2026-10-18_113506_golden_set_v1_judge_v2_agentic` (with `failures.md` and
+  `compare.html` against the Routed Tutor baseline with the calibrated judge).
+- **Result:** Routed Tutor -> Agentic Tutor, both with `judge_supported_v2`, mean (range): End-to-end Success 92.6%
+  (88.9% to 94.4%) -> 87.0% (83.3% to 88.9%); Search Step 97.2% -> 91.7% (88.9% to 94.4%); Path Step 100.0% ->
+  100.0%; Answer Step 92.6% (88.9% to 94.4%) -> 92.6% (91.7% to 94.4%); Supported rate 97.5% (92.6% to 100.0%) ->
+  93.8% (92.6% to 96.3%); Responsive rate 96.3% -> 100.0%; Judge undecided rate 0.6% (0.0% to 1.9%) -> 0.0%; Routing
+  accuracy 97.2% -> 94.4%; Recall GAIF 83.3% -> 66.7%; Recall (macro average) 96.7% -> 93.3%; Citation correctness,
+  Refusal correctness and Out of scope correctness 100.0% -> 100.0%. Failing cases (14 Traces): GS-02 3/3 (Search:
+  reads PEID, then GAIF, with an answer citing GAIF-2.10 that the judge passes), GS-05 3/3 (Search: reads AITB only,
+  the AITB Refusal), GS-13 2/3 (Search: extra Read of AITB), GS-27 2/3 (Answer: judged not Supported, sentences about
+  how "the material" frames or defines shadow AI), GS-06 1/3, GS-24 1/3 ("six elements"), GS-28 1/3 (Answer: judged
+  not Supported, one claim beyond the cited Section), GS-15 1/3 (Search: extra Read of PEID). Against the Routed
+  Tutor, the cases that differ: GS-02 3/3 -> 0/3, GS-13 3/3 -> 1/3, GS-15, GS-24 and GS-28 3/3 -> 2/3, GS-27 0/3 ->
+  1/3, GS-10 2/3 -> 3/3 (the Routed Tutor's judge timeout). Same tutor, judge v1 -> judge v2: End-to-end Success
+  85.2% (83.3% to 86.1%) -> 87.0%; Search Step 92.6% (91.7% to 94.4%) -> 91.7%; Answer Step 89.8% (88.9% to 91.7%)
+  -> 92.6%; Supported rate 90.1% (88.9% to 92.6%) -> 93.8%; Routing accuracy 95.4% (94.4% to 97.2%) -> 94.4%; GS-26
+  1/3 -> 3/3, GS-27 0/3 -> 1/3, GS-24 1/3 -> 2/3, GS-15 1/3 -> 2/3, GS-13 3/3 -> 1/3.
+- **Decision:** pending.
+- **Reason:** for keeping the Routed Tutor as the app's tutor (the #17 decision): with the calibrated judge, the same
+  day, model and judge, it still leads by about two cases per Run (92.6% vs 87.0% End-to-end Success; the ranges
+  touch only at 88.9%), and the gap is almost all in the Search Step: 6 of the Agentic Tutor's 14 failing Traces are
+  an extra Read of a Course that is not Accepted (taxonomy category 2), which the Router rules out by choosing one
+  Course. For the Agentic Tutor: its Answer Step equals the Routed Tutor's (92.6%), its Responsive rate is 100.0%
+  (the Routed Tutor fails GS-27 3/3 on Responsive), and the judge v1 -> v2 change moved it by about as much as the
+  Routed Tutor (+1.8 and +1.9 points). Not covered: the difference between commits `dcee50a` and `3b7125c` and the
+  conversation history of the chat screen (each Golden Set case is a single question); one labeller behind the judge
+  calibration; 36 cases and three Runs.
