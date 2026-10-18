@@ -1,0 +1,18 @@
+{
+  "diagnostic": "network failure cause; redacted endpoint and credential",
+  "dns": "gaierror",
+  "exception_chain": [
+    {
+      "type": "APIConnectionError",
+      "message": "Connection error."
+    },
+    {
+      "type": "ConnectError",
+      "message": "[Errno -2] Name or service not known"
+    },
+    {
+      "type": "ConnectError",
+      "message": "[Errno -2] Name or service not known"
+    }
+  ]
+}

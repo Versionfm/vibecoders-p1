@@ -1,0 +1,234 @@
+{
+  "seed": 8,
+  "case_file": "evaluation/golden_set.json",
+  "run_folders": [
+    "2026-10-18_020503_golden_set_v1_judge_routed",
+    "2026-10-18_022123_golden_set_v1_judge_agentic"
+  ],
+  "items": [
+    {
+      "item": "L01",
+      "split": "tuning",
+      "run_folder": "2026-10-18_022123_golden_set_v1_judge_agentic",
+      "run": 1,
+      "tutor": "agentic",
+      "case_id": "GS-27"
+    },
+    {
+      "item": "L02",
+      "split": "tuning",
+      "run_folder": "2026-10-18_020503_golden_set_v1_judge_routed",
+      "run": 3,
+      "tutor": "routed",
+      "case_id": "GS-24"
+    },
+    {
+      "item": "L03",
+      "split": "held-out",
+      "run_folder": "2026-10-18_022123_golden_set_v1_judge_agentic",
+      "run": 1,
+      "tutor": "agentic",
+      "case_id": "GS-25"
+    },
+    {
+      "item": "L04",
+      "split": "held-out",
+      "run_folder": "2026-10-18_022123_golden_set_v1_judge_agentic",
+      "run": 1,
+      "tutor": "agentic",
+      "case_id": "GS-09"
+    },
+    {
+      "item": "L05",
+      "split": "held-out",
+      "run_folder": "2026-10-18_022123_golden_set_v1_judge_agentic",
+      "run": 1,
+      "tutor": "agentic",
+      "case_id": "GS-26"
+    },
+    {
+      "item": "L06",
+      "split": "held-out",
+      "run_folder": "2026-10-18_020503_golden_set_v1_judge_routed",
+      "run": 2,
+      "tutor": "routed",
+      "case_id": "GS-27"
+    },
+    {
+      "item": "L07",
+      "split": "held-out",
+      "run_folder": "2026-10-18_022123_golden_set_v1_judge_agentic",
+      "run": 3,
+      "tutor": "agentic",
+      "case_id": "GS-27"
+    },
+    {
+      "item": "L08",
+      "split": "held-out",
+      "run_folder": "2026-10-18_022123_golden_set_v1_judge_agentic",
+      "run": 3,
+      "tutor": "agentic",
+      "case_id": "GS-17"
+    },
+    {
+      "item": "L09",
+      "split": "tuning",
+      "run_folder": "2026-10-18_022123_golden_set_v1_judge_agentic",
+      "run": 1,
+      "tutor": "agentic",
+      "case_id": "GS-17"
+    },
+    {
+      "item": "L10",
+      "split": "held-out",
+      "run_folder": "2026-10-18_020503_golden_set_v1_judge_routed",
+      "run": 2,
+      "tutor": "routed",
+      "case_id": "GS-10"
+    },
+    {
+      "item": "L11",
+      "split": "held-out",
+      "run_folder": "2026-10-18_020503_golden_set_v1_judge_routed",
+      "run": 1,
+      "tutor": "routed",
+      "case_id": "GS-27"
+    },
+    {
+      "item": "L12",
+      "split": "tuning",
+      "run_folder": "2026-10-18_020503_golden_set_v1_judge_routed",
+      "run": 2,
+      "tutor": "routed",
+      "case_id": "GS-21"
+    },
+    {
+      "item": "L13",
+      "split": "tuning",
+      "run_folder": "2026-10-18_022123_golden_set_v1_judge_agentic",
+      "run": 2,
+      "tutor": "agentic",
+      "case_id": "GS-27"
+    },
+    {
+      "item": "L14",
+      "split": "held-out",
+      "run_folder": "2026-10-18_022123_golden_set_v1_judge_agentic",
+      "run": 1,
+      "tutor": "agentic",
+      "case_id": "GS-14"
+    },
+    {
+      "item": "L15",
+      "split": "held-out",
+      "run_folder": "2026-10-18_020503_golden_set_v1_judge_routed",
+      "run": 1,
+      "tutor": "routed",
+      "case_id": "GS-25"
+    },
+    {
+      "item": "L16",
+      "split": "held-out",
+      "run_folder": "2026-10-18_020503_golden_set_v1_judge_routed",
+      "run": 3,
+      "tutor": "routed",
+      "case_id": "GS-27"
+    },
+    {
+      "item": "L17",
+      "split": "held-out",
+      "run_folder": "2026-10-18_022123_golden_set_v1_judge_agentic",
+      "run": 1,
+      "tutor": "agentic",
+      "case_id": "GS-01"
+    },
+    {
+      "item": "L18",
+      "split": "held-out",
+      "run_folder": "2026-10-18_020503_golden_set_v1_judge_routed",
+      "run": 1,
+      "tutor": "routed",
+      "case_id": "GS-28"
+    },
+    {
+      "item": "L19",
+      "split": "tuning",
+      "run_folder": "2026-10-18_022123_golden_set_v1_judge_agentic",
+      "run": 2,
+      "tutor": "agentic",
+      "case_id": "GS-19"
+    },
+    {
+      "item": "L20",
+      "split": "held-out",
+      "run_folder": "2026-10-18_022123_golden_set_v1_judge_agentic",
+      "run": 1,
+      "tutor": "agentic",
+      "case_id": "GS-24"
+    },
+    {
+      "item": "L21",
+      "split": "tuning",
+      "run_folder": "2026-10-18_020503_golden_set_v1_judge_routed",
+      "run": 1,
+      "tutor": "routed",
+      "case_id": "GS-03"
+    },
+    {
+      "item": "L22",
+      "split": "held-out",
+      "run_folder": "2026-10-18_022123_golden_set_v1_judge_agentic",
+      "run": 3,
+      "tutor": "agentic",
+      "case_id": "GS-26"
+    },
+    {
+      "item": "L23",
+      "split": "held-out",
+      "run_folder": "2026-10-18_020503_golden_set_v1_judge_routed",
+      "run": 1,
+      "tutor": "routed",
+      "case_id": "GS-13"
+    },
+    {
+      "item": "L24",
+      "split": "held-out",
+      "run_folder": "2026-10-18_020503_golden_set_v1_judge_routed",
+      "run": 2,
+      "tutor": "routed",
+      "case_id": "GS-24"
+    },
+    {
+      "item": "L25",
+      "split": "tuning",
+      "run_folder": "2026-10-18_022123_golden_set_v1_judge_agentic",
+      "run": 3,
+      "tutor": "agentic",
+      "case_id": "GS-02"
+    },
+    {
+      "item": "L26",
+      "split": "tuning",
+      "run_folder": "2026-10-18_022123_golden_set_v1_judge_agentic",
+      "run": 2,
+      "tutor": "agentic",
+      "case_id": "GS-24"
+    },
+    {
+      "item": "L27",
+      "split": "held-out",
+      "run_folder": "2026-10-18_020503_golden_set_v1_judge_routed",
+      "run": 3,
+      "tutor": "routed",
+      "case_id": "GS-25"
+    },
+    {
+      "item": "L28",
+      "split": "held-out",
+      "run_folder": "2026-10-18_022123_golden_set_v1_judge_agentic",
+      "run": 1,
+      "tutor": "agentic",
+      "case_id": "GS-13"
+    }
+  ]
+}

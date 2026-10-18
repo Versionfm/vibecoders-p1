@@ -1,0 +1,20 @@
+{
+  "commit": "8f939a5",
+  "branch": "agent-tutor-chat",
+  "code_clean_before_run": true,
+  "case_file": "evaluation/golden_set_candidates.json",
+  "case_sha256": "2054b2d452c1f36a10e2930db86d1c6a13e012bde30112ae6350cd4c09ffc4d0",
+  "pilot_not_frozen_golden_set": true,
+  "workers": 3,
+  "previous_same_tutor_run_folder": "evaluation/runs/2026-10-14_120227_pilot_deepseek_agentic",
+  "model": "deepseek-flash",
+  "thinking": false,
+  "prompt_versions": {
+    "agentic_tutor": "agentic_tutor_v1"
+  },
+  "probe_failure_folder": "evaluation/runs/2026-10-14_172957_chat_refactor_responsiveness_probe",
+  "probe_success_folder": "evaluation/runs/2026-10-14_173145_chat_refactor_responsiveness_probe",
+  "configuration_issue": "Local endpoint typo api.deepseek.comz corrected by main session to api.deepseek.com before evaluation; model/thinking unchanged.",
+  "judge_metrics": "Supported rate and Responsive rate pending",
+  "scope": "Single-message evaluation; conversation history quality not evaluated"
+}

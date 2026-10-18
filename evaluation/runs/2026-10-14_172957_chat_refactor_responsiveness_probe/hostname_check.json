@@ -1,0 +1,11 @@
+{
+  "configured_hostname": "api.deepseek.comz",
+  "expected_official_hostname": "api.deepseek.com",
+  "environment_and_file_endpoint_match": true,
+  "dns": {
+    "configured_endpoint": "gaierror: [Errno -2] Name or service not known",
+    "official_deepseek": "resolved",
+    "public_control_example_com": "resolved"
+  },
+  "conclusion": "Configured endpoint hostname has an extra trailing z. Endpoint correction is outside evaluator's measurement-only role. No full evaluations launched."
+}

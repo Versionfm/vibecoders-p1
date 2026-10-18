@@ -1,0 +1,1445 @@
+{
+  "run": 2,
+  "timestamp": "2026-10-14T11:30:27+00:00",
+  "tutor": "routed",
+  "case_file": "evaluation/golden_set_candidates.json",
+  "prompt_versions": {
+    "router": "router_v2",
+    "tutor": "tutor_v2"
+  },
+  "models": {
+    "app": "nvidia/nemotron-3-super-120b-a12b",
+    "judge": null
+  },
+  "thinking": false,
+  "metrics": {
+    "Search Step": 0.1111111111111111,
+    "Path Step": 0.0,
+    "Answer Step": 0.0,
+    "End-to-end Success": 0.0,
+    "Routing accuracy": 0.0,
+    "Recall GAIF": 0.0,
+    "Recall PEID": 0.0,
+    "Recall AITB": 0.0,
+    "Recall DTGS": 0.0,
+    "Recall OUT_OF_SCOPE": 0.0,
+    "Recall (macro average)": 0.0,
+    "Citation correctness": null,
+    "Refusal correctness": 0.0,
+    "Out of scope correctness": 0.0
+  },
+  "outputs": [
+    {
+      "case_id": "GS-01",
+      "type": "in_material",
+      "accepted_courses": [
+        "GAIF"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-02",
+      "type": "in_material",
+      "accepted_courses": [
+        "GAIF"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-03",
+      "type": "in_material",
+      "accepted_courses": [
+        "GAIF"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-04",
+      "type": "near_miss",
+      "accepted_courses": [
+        "GAIF"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-05",
+      "type": "near_miss",
+      "accepted_courses": [
+        "GAIF"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-06",
+      "type": "in_material",
+      "accepted_courses": [
+        "PEID"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-07",
+      "type": "in_material",
+      "accepted_courses": [
+        "PEID"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-08",
+      "type": "in_material",
+      "accepted_courses": [
+        "PEID"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-09",
+      "type": "in_material",
+      "accepted_courses": [
+        "PEID"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-10",
+      "type": "near_miss",
+      "accepted_courses": [
+        "PEID"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-11",
+      "type": "in_material",
+      "accepted_courses": [
+        "DTGS"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-12",
+      "type": "in_material",
+      "accepted_courses": [
+        "DTGS"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-13",
+      "type": "in_material",
+      "accepted_courses": [
+        "DTGS"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-14",
+      "type": "in_material",
+      "accepted_courses": [
+        "DTGS"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-15",
+      "type": "near_miss",
+      "accepted_courses": [
+        "DTGS"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-16",
+      "type": "in_material",
+      "accepted_courses": [
+        "AITB"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-17",
+      "type": "in_material",
+      "accepted_courses": [
+        "AITB"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-18",
+      "type": "in_material",
+      "accepted_courses": [
+        "AITB"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-19",
+      "type": "in_material",
+      "accepted_courses": [
+        "AITB"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-20",
+      "type": "in_material",
+      "accepted_courses": [
+        "AITB"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-21",
+      "type": "overlap",
+      "accepted_courses": [
+        "PEID",
+        "AITB"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-22",
+      "type": "overlap",
+      "accepted_courses": [
+        "PEID",
+        "AITB"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-23",
+      "type": "overlap",
+      "accepted_courses": [
+        "PEID",
+        "AITB"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-24",
+      "type": "overlap",
+      "accepted_courses": [
+        "PEID",
+        "AITB"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-25",
+      "type": "overlap",
+      "accepted_courses": [
+        "PEID",
+        "AITB"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-26",
+      "type": "overlap",
+      "accepted_courses": [
+        "PEID",
+        "AITB"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-27",
+      "type": "overlap",
+      "accepted_courses": [
+        "AITB",
+        "DTGS"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-28",
+      "type": "overlap",
+      "accepted_courses": [
+        "AITB",
+        "DTGS"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-29",
+      "type": "out_of_scope",
+      "accepted_courses": [
+        "OUT_OF_SCOPE"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": null,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-30",
+      "type": "out_of_scope",
+      "accepted_courses": [
+        "OUT_OF_SCOPE"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": null,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-31",
+      "type": "out_of_scope",
+      "accepted_courses": [
+        "OUT_OF_SCOPE"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": null,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-32",
+      "type": "out_of_scope",
+      "accepted_courses": [
+        "OUT_OF_SCOPE"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": true,
+          "reason": "",
+          "recall": null,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-33",
+      "type": "refusal",
+      "accepted_courses": [
+        "GAIF"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-34",
+      "type": "refusal",
+      "accepted_courses": [
+        "PEID"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-35",
+      "type": "refusal",
+      "accepted_courses": [
+        "AITB"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    },
+    {
+      "case_id": "GS-36",
+      "type": "refusal",
+      "accepted_courses": [
+        "DTGS"
+      ],
+      "course": null,
+      "evidence": "",
+      "answer": "",
+      "citations": [],
+      "is_refusal": false,
+      "invalid_citations": [],
+      "error": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}",
+      "materials_read": [],
+      "read_arguments": [],
+      "read_count": 0,
+      "read_limit_hit": false,
+      "steps": {
+        "search": {
+          "passed": false,
+          "reason": "no Course Material read (Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'})",
+          "recall": 0.0,
+          "extra_reads": []
+        },
+        "path": {
+          "passed": false,
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        },
+        "answer": {
+          "passed": false,
+          "reason": "no answer"
+        },
+        "end_to_end_success": false,
+        "earliest_failing_step": {
+          "step": "Path",
+          "reason": "Router model call failed: RateLimitError: Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}"
+        }
+      }
+    }
+  ]
+}

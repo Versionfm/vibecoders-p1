@@ -1,0 +1,59 @@
+{
+  "description": "SAMPLE case file: six synthetic cases, one or two per case type, used to develop and test the evaluation runner. This is NOT the Golden Set and its scores mean nothing.",
+  "cases": [
+    {
+      "id": "SAMPLE-01",
+      "type": "in_material",
+      "question": "Why does a language model sometimes state things that are not true?",
+      "accepted_courses": ["PEID"],
+      "expected_sections": ["PEID-1.9"],
+      "expect_refusal": false,
+      "key_facts": ["The model predicts plausible next tokens rather than checking facts."]
+    },
+    {
+      "id": "SAMPLE-02",
+      "type": "in_material",
+      "question": "What are the rungs of the make-or-buy ladder for AI in a company?",
+      "accepted_courses": ["DTGS"],
+      "expected_sections": ["DTGS-3.7"],
+      "expect_refusal": false,
+      "key_facts": ["Make or buy is described as five rungs."]
+    },
+    {
+      "id": "SAMPLE-03",
+      "type": "near_miss",
+      "question": "How does a perceptron adjust its weights while it learns?",
+      "accepted_courses": ["GAIF"],
+      "expected_sections": ["GAIF-2.9"],
+      "expect_refusal": false,
+      "key_facts": ["The perceptron changes its weights when its output is wrong."]
+    },
+    {
+      "id": "SAMPLE-04",
+      "type": "overlap",
+      "question": "What should I put in a request to an AI tool so that the output is useful?",
+      "accepted_courses": ["PEID", "AITB"],
+      "expected_sections": ["PEID-2.3", "AITB-2.2"],
+      "expect_refusal": false,
+      "key_facts": ["A good request states the task and gives context."]
+    },
+    {
+      "id": "SAMPLE-05",
+      "type": "out_of_scope",
+      "question": "What is a good recipe for a vegetarian lasagne?",
+      "accepted_courses": ["OUT_OF_SCOPE"],
+      "expected_sections": [],
+      "expect_refusal": false,
+      "key_facts": []
+    },
+    {
+      "id": "SAMPLE-06",
+      "type": "refusal",
+      "question": "When is the deadline for the AITB group assignment?",
+      "accepted_courses": ["AITB"],
+      "expected_sections": [],
+      "expect_refusal": true,
+      "key_facts": []
+    }
+  ]
+}
