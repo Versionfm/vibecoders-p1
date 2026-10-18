@@ -41,8 +41,9 @@ Other settings in `.env` (optional unless marked required):
   Router call took about 2 s instead of about 22 s). `none` sends no switch, for endpoints that reject it. Every answer and every stored evaluation run records the setting, so both can be compared.
 - `LLM_BASE_URL`, `LLM_MODEL`: endpoint and app model. Required, with no defaults in the code: switch provider by
   changing these two lines.
-- `LLM_JUDGE_MODEL`: the LLM judge, used by the evaluation command only. Empty means no judge (the Answer Step is code
-  checks only). It must be another model family than the app model. `LLM_JUDGE_BASE_URL` and `LLM_JUDGE_API_KEY`
+- `LLM_JUDGE_MODEL`: the LLM judge, required by the evaluation command (the screen does not use it):
+  `openai/gpt-oss-20b` on NVIDIA, with your NVIDIA key in `LLM_JUDGE_API_KEY`. It must be another model family than
+  the app model. `LLM_JUDGE_BASE_URL` and `LLM_JUDGE_API_KEY`
   default to the app's endpoint and key; set them when the judge sits on another provider. `LLM_JUDGE_THINKING`
   works like `LLM_THINKING`.
 - `TUTOR`: `routed` (default) or `agentic`. Chooses the tutor on the screen. With the Agentic Tutor the screen shows
@@ -102,7 +103,7 @@ Every Trace is scored by three Steps, checked in this order (see [ADR 0002](docs
 
 Metrics kept from before: routing accuracy (choice within Accepted Courses), recall per class over GAIF, PEID, AITB, DTGS and OUT_OF_SCOPE with its macro average (labelled "macro"), citation correctness, Refusal correctness and Out of scope correctness. With the judge: Supported rate, Responsive rate and the Judge undecided rate (UNKNOWN verdicts and judge errors, which count as a fail).
 
-The LLM judge ([src/judge.py](src/judge.py)) makes one call per criterion at temperature 0, with its own versioned prompt (`prompts/judge_supported_v2.md`, `prompts/judge_responsive_v1.md`; `judge_supported_v1` is kept, and switching back is one line in `src/prompts.py`). Each reply is JSON with the evidence before the verdict (`PASS`, `FAIL` or `UNKNOWN`); an unparseable reply or a failed call is a judge error, never a pass. The judge is called only for an answer given where an answer was expected, never for a Refusal or Out of scope. `--no-judge` runs code checks only even when `LLM_JUDGE_MODEL` is set.
+The LLM judge ([src/judge.py](src/judge.py)) makes one call per criterion at temperature 0, with its own versioned prompt (`prompts/judge_supported_v2.md`, `prompts/judge_responsive_v1.md`; `judge_supported_v1` is kept, and switching back is one line in `src/prompts.py`). Each reply is JSON with the evidence before the verdict (`PASS`, `FAIL` or `UNKNOWN`); an unparseable reply or a failed call is a judge error, never a pass. The judge is called only for an answer given where an answer was expected, never for a Refusal or Out of scope. The evaluation command refuses to run without it; runs stored before the judge existed show the judge rates as "not measured".
 
 ### Judge calibration
 
@@ -118,57 +119,6 @@ python src/calibration.py report                             # after labelling: 
 Case file fields: `id`, `type` (`in_material`, `near_miss`, `overlap`, `out_of_scope`, `refusal`), `question`, `accepted_courses` (`["OUT_OF_SCOPE"]` for Out of scope cases), `expected_sections`, `expect_refusal`, `key_facts`. `evaluation/sample_cases.json` is a small synthetic SAMPLE for trying the command; it is not the Golden Set.
 
 Record every evaluated change, kept or abandoned, in [evaluation/ITERATION_LOG.md](evaluation/ITERATION_LOG.md).
-
-## Try the LLM judge
-
-The judge is on the `llm-judge` branch: `git fetch`, then `git switch llm-judge`. Three ways to try it, from no key
-at all to a full evaluation. Keys go in your own `.env` only: never in a commit, a chat or an issue.
-
-**1. No key: see what it did.**
-
-- `evaluation/runs/2026-10-18_040522_golden_set_v1_judge_v2_routed/report.html`: the 92.6% baseline judged by it. Each
-  Trace's `judge` field in `run_N.json` holds both verdicts with the judge's evidence.
-- `evaluation/calibration/report_first_labels_judge_v2.md`: how far it agrees with our hand labels (84.2% on the
-  held-out answers).
-- `python -m unittest discover -s tests -t .` runs the judge's tests with a fake model.
-
-**2. An NVIDIA key only: judge the 28 calibration answers again.** A free key comes from build.nvidia.com (one key
-works for every model there). About 56 judge calls and 5 to 10 minutes; the tutor's model is not called. In `.env`:
-
-```
-LLM_API_KEY=<your NVIDIA key>
-LLM_BASE_URL=https://integrate.api.nvidia.com/v1
-LLM_MODEL=nvidia/nemotron-3-super-120b-a12b
-LLM_JUDGE_MODEL=openai/gpt-oss-20b
-LLM_JUDGE_THINKING=none
-```
-
-The judge then uses the same endpoint and key, so `LLM_JUDGE_BASE_URL` and `LLM_JUDGE_API_KEY` stay out. Then, with
-your name in place of `rita`:
-
-```bash
-python src/calibration.py rejudge --tag rita
-python src/calibration.py report --verdicts verdicts_judge_supported_v2_judge_responsive_v1_rita.json --name report_rita
-```
-
-`evaluation/calibration/report_rita.md` compares your run of the judge with the hand labels. Expect a number near the
-logged 84.2%, not exactly it: the judge model is not deterministic across days. `rejudge` never overwrites an existing
-verdicts file, so the logged evidence stays as it was.
-
-**3. A DeepSeek key and an NVIDIA key: a full evaluation with the judge.** Use `.env.example` as it is, with your
-DeepSeek key after `LLM_API_KEY=`, and uncomment its four `LLM_JUDGE_` lines with your NVIDIA key after
-`LLM_JUDGE_API_KEY=`. Then:
-
-```bash
-python src/evaluate.py evaluation/golden_set.json --runs 1 --label judge_try --workers 2
-```
-
-One Run of the 36 Golden Set cases takes about 5 minutes; open the `report.html` in the folder it prints. `--runs 3`
-repeats the full baseline, and `--no-judge` runs the same cases with code checks only. Without a DeepSeek key, the
-professor's endpoint can stand in for the app model (see above), but the logged numbers are on DeepSeek, so the two
-are not comparable.
-
-Your run folders and verdicts files are new files: commit them only when you log them in the iteration log.
 
 ## Test
 

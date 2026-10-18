@@ -4,6 +4,7 @@ import io
 import json
 import tempfile
 import unittest
+from unittest import mock
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -256,12 +257,17 @@ class EvaluationCommandTest(unittest.TestCase):
         self.assertIn("| Supported rate | not measured | no judge model set |", report)
         self.assertIn("code checks only", report)
 
-    def test_no_judge_switches_the_judge_off(self):
-        judge = FakeChatModel([], name="fake/judge-model")
-        run_dir = self.run_command(well_behaved_script(), ["--runs", "1", "--no-judge"], judge=judge)
-        run = json.loads((run_dir / "run_1.json").read_text(encoding="utf-8"))
-        self.assertEqual(judge.calls, [])
-        self.assertIsNone(run["models"]["judge"])
+    def test_the_command_refuses_to_run_without_a_judge_in_the_settings(self):
+        app_model = QuestionScriptedModel(well_behaved_script(), name="fake/app-model")
+        with (
+            tempfile.TemporaryDirectory() as folder,
+            mock.patch("llm.get_chat_model", return_value=app_model),
+            mock.patch("llm.get_judge_model", return_value=None),
+            contextlib.redirect_stdout(io.StringIO()),
+            self.assertRaisesRegex(SystemExit, "LLM_JUDGE_MODEL"),
+        ):
+            main([str(SAMPLE_CASE_FILE), "--out", folder], clock=FIXED_CLOCK)
+        self.assertEqual(app_model.calls_for(QUESTIONS["SAMPLE-01"]), 0)  # refused before any question was asked
 
 
 if __name__ == "__main__":

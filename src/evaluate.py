@@ -3,10 +3,9 @@
     python src/evaluate.py evaluation/sample_cases.json            # 3 runs, results under evaluation/runs/
     python src/evaluate.py <case file> --runs 3 --out evaluation/runs --label tutor_v3 --workers 4
     python src/evaluate.py <case file> --tutor agentic            # the Agentic Tutor instead of the Routed Tutor
-    python src/evaluate.py <case file> --no-judge                 # code checks only, even with LLM_JUDGE_MODEL set
 
-The LLM judge runs whenever `LLM_JUDGE_MODEL` is set (see .env.example). Each run is stored as soon as it finishes,
-so an interrupted evaluation keeps the runs that completed.
+Every evaluation is judged by the LLM judge set in .env (`LLM_JUDGE_MODEL`, see .env.example); the command refuses to
+run without it. Each run is stored as soon as it finishes, so an interrupted evaluation keeps the runs that completed.
 """
 import argparse
 import itertools
@@ -283,7 +282,6 @@ def main(
         choices=TUTORS,
         help=f"which tutor answers (default {ROUTED_TUTOR}); when given, it is added to the run folder name",
     )
-    parser.add_argument("--no-judge", action="store_true", help="code checks only, even with LLM_JUDGE_MODEL set")
     args = parser.parse_args(argv)
 
     cases = load_cases(args.case_file)
@@ -292,8 +290,8 @@ def main(
 
         model = get_chat_model()
         judge = judge or get_judge_model()
-    if args.no_judge:
-        judge = None
+        if judge is None:
+            raise SystemExit("LLM_JUDGE_MODEL is not set: the evaluation needs the LLM judge. Check your .env file.")
     print(f"Judge: {judge.name if judge else 'none, code checks only'}")
     clock = clock or (lambda: datetime.now(timezone.utc))
     run_dir = create_run_folder(args.out, clock(), "_".join(p for p in (args.label, args.tutor) if p))
