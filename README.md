@@ -28,11 +28,11 @@ LLM_API_KEY=<the group key from the professor's e-mail>
 LLM_BASE_URL=https://llm-proxy-obfzuamujq-ew.a.run.app/v1
 LLM_MODEL=course-chat
 LLM_THINKING=none
-TUTOR=routed
 ```
 
-The Routed Tutor works there (2 to 6 s per question). The Agentic Tutor does not: the endpoint has no native tool
-calls. The first question after a quiet period can take 30 to 60 s while the service wakes up.
+The Routed Tutor works there (2 to 6 s per question). Since the professor's proxy fix on 18 October 2026, native tool
+calls work too, so the Agentic Tutor runs there as well. The first question after a quiet period can take 30 to 60 s
+while the service wakes up. The evaluations in the iteration log were run on DeepSeek, not on this endpoint.
 
 Other settings in `.env` (optional unless marked required):
 
@@ -102,7 +102,7 @@ Every Trace is scored by three Steps, checked in this order (see [ADR 0002](docs
 
 Metrics kept from before: routing accuracy (choice within Accepted Courses), recall per class over GAIF, PEID, AITB, DTGS and OUT_OF_SCOPE with its macro average (labelled "macro"), citation correctness, Refusal correctness and Out of scope correctness. With the judge: Supported rate, Responsive rate and the Judge undecided rate (UNKNOWN verdicts and judge errors, which count as a fail).
 
-The LLM judge ([src/judge.py](src/judge.py)) makes one call per criterion at temperature 0, with its own versioned prompt (`prompts/judge_supported_v1.md`, `prompts/judge_responsive_v1.md`). Each reply is JSON with the evidence before the verdict (`PASS`, `FAIL` or `UNKNOWN`); an unparseable reply or a failed call is a judge error, never a pass. The judge is called only for an answer given where an answer was expected, never for a Refusal or Out of scope. `--no-judge` runs code checks only even when `LLM_JUDGE_MODEL` is set.
+The LLM judge ([src/judge.py](src/judge.py)) makes one call per criterion at temperature 0, with its own versioned prompt (`prompts/judge_supported_v2.md`, `prompts/judge_responsive_v1.md`; `judge_supported_v1` is kept, and switching back is one line in `src/prompts.py`). Each reply is JSON with the evidence before the verdict (`PASS`, `FAIL` or `UNKNOWN`); an unparseable reply or a failed call is a judge error, never a pass. The judge is called only for an answer given where an answer was expected, never for a Refusal or Out of scope. `--no-judge` runs code checks only even when `LLM_JUDGE_MODEL` is set.
 
 ### Judge calibration
 
