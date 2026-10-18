@@ -22,7 +22,7 @@ Last checked: 2026-10-18, branch `golden-set` (judge baselines and the #17 decis
 | App: one-sentence problem statement; the product disappears without the LLM call; demo fits in 90 s | Done | [README.md](../README.md), first paragraph. Without the model there is no routing and no cited answer. |
 | App: repo from project-starter, group key in `.env`, the app answers | Done | `streamlit run src/app.py` ([README.md](../README.md#run)); key in `.env`, names only in [.env.example](../.env.example). Report which key and provider (DeepSeek) were used. |
 | Copilot: always-on rules file at the repo root | Done (as `CLAUDE.md`) | [CLAUDE.md](../CLAUDE.md), with the vocabulary in [CONTEXT.md](../CONTEXT.md). Not named `AGENTS.md`; explain in the report. |
-| Copilot: before/after evidence for the rules file (same request without and with it) | Missing | Run one request twice, without and with `CLAUDE.md`, and screenshot the difference (e.g. a second model client vs reuse of `chat()` in `src/llm.py`). |
+| Copilot: before/after evidence for the rules file (same request without and with it) | Done (screenshots to take) | [WORKFLOW_ITERATIONS.md](WORKFLOW_ITERATIONS.md#steering-evidence-2026-10-18): the same request in fresh sessions at the same commit, without and with `CLAUDE.md`. Small difference: only the session with it applied the one-screen rule and kept `CLAUDE.md` current; the other conventions were already in the code. Screenshots: the final messages of sessions A and B2. |
 
 ## M2 · Running skeleton
 
@@ -32,7 +32,7 @@ Last checked: 2026-10-18, branch `golden-set` (judge baselines and the #17 decis
 | App: the working prompt in its own versioned file, with label definitions and boundaries, 2–3 examples, fixed JSON output and an "unknown" exit | Partial | [prompts/](../prompts/): `router_v1` → `router_v2`, `tutor_v1` → `tutor_v2`, `agentic_tutor_v1`. The Router has label definitions with boundaries, JSON output and `OUT_OF_SCOPE` as the exit; the Course Tutor has the Refusal. **No worked examples** in any prompt (examples must not be Golden Set questions). |
 | [Optional] App: data in an internal database or RAG | Done (files, not a database) | Course Material in [data/courses/](../data/courses/), loaded by Section ([src/course_material.py](../src/course_material.py)); the Agentic Tutor reads it with `read_file(course)` ([ADR 0001](adr/0001-agentic-tutor-without-router.md)). |
 | App: evaluation traces with input, output, prompt version and latency | Partial | Every Trace is stored in `evaluation/runs/<folder>/run_N.json` with output, prompt versions, model, Reads and Steps ([ADR 0002](adr/0002-trace-steps-and-html-report.md)). **Latency is not recorded.** |
-| Copilot: at least one skill for a repeated procedure, which fires without being named | Partial | [.claude/skills/evaluate-course-tutor/SKILL.md](../.claude/skills/evaluate-course-tutor/SKILL.md). Still to collect: a screenshot of it firing on a request that does not name it (e.g. "how are we doing on the Golden Set?"). |
+| Copilot: at least one skill for a repeated procedure, which fires without being named | Done (screenshot to take) | [.claude/skills/evaluate-course-tutor/SKILL.md](../.claude/skills/evaluate-course-tutor/SKILL.md). It did not fire on "How are we doing on the Golden Set? Measure the Routed Tutor again."; after its description named such requests (`3f66605`) it did, in a fresh session ([WORKFLOW_ITERATIONS.md](WORKFLOW_ITERATIONS.md#steering-evidence-2026-10-18)). Screenshot: session D2's skill call. |
 | [Optional] Copilot: a sub-agent or an MCP server | Done | [.claude/agents/evaluator.md](../.claude/agents/evaluator.md) (measures and logs; leaves code, prompts and labels unchanged). |
 
 ## M3 · Evaluation
@@ -65,7 +65,7 @@ Last checked: 2026-10-18, branch `golden-set` (judge baselines and the #17 decis
 ## Open work, in order
 
 1. Confirm or rename the categories in `evaluation/FAILURE_TAXONOMY.md`.
-2. Steering evidence: before/after for `CLAUDE.md`, the skill firing unnamed.
+2. Screenshots of the steering evidence (sessions A, B2 and D2).
 3. Merge into `main`, make the repo public, check the secrets scan.
 4. Report, deck, rehearsal and backup recording.
 
