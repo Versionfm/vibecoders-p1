@@ -119,6 +119,57 @@ Case file fields: `id`, `type` (`in_material`, `near_miss`, `overlap`, `out_of_s
 
 Record every evaluated change, kept or abandoned, in [evaluation/ITERATION_LOG.md](evaluation/ITERATION_LOG.md).
 
+## Try the LLM judge
+
+The judge is on the `llm-judge` branch: `git fetch`, then `git switch llm-judge`. Three ways to try it, from no key
+at all to a full evaluation. Keys go in your own `.env` only: never in a commit, a chat or an issue.
+
+**1. No key: see what it did.**
+
+- `evaluation/runs/2026-10-18_040522_golden_set_v1_judge_v2_routed/report.html`: the 92.6% baseline judged by it. Each
+  Trace's `judge` field in `run_N.json` holds both verdicts with the judge's evidence.
+- `evaluation/calibration/report_first_labels_judge_v2.md`: how far it agrees with our hand labels (84.2% on the
+  held-out answers).
+- `python -m unittest discover -s tests -t .` runs the judge's tests with a fake model.
+
+**2. An NVIDIA key only: judge the 28 calibration answers again.** A free key comes from build.nvidia.com (one key
+works for every model there). About 56 judge calls and 5 to 10 minutes; the tutor's model is not called. In `.env`:
+
+```
+LLM_API_KEY=<your NVIDIA key>
+LLM_BASE_URL=https://integrate.api.nvidia.com/v1
+LLM_MODEL=nvidia/nemotron-3-super-120b-a12b
+LLM_JUDGE_MODEL=openai/gpt-oss-20b
+LLM_JUDGE_THINKING=none
+```
+
+The judge then uses the same endpoint and key, so `LLM_JUDGE_BASE_URL` and `LLM_JUDGE_API_KEY` stay out. Then, with
+your name in place of `rita`:
+
+```bash
+python src/calibration.py rejudge --tag rita
+python src/calibration.py report --verdicts verdicts_judge_supported_v2_judge_responsive_v1_rita.json --name report_rita
+```
+
+`evaluation/calibration/report_rita.md` compares your run of the judge with the hand labels. Expect a number near the
+logged 84.2%, not exactly it: the judge model is not deterministic across days. `rejudge` never overwrites an existing
+verdicts file, so the logged evidence stays as it was.
+
+**3. A DeepSeek key and an NVIDIA key: a full evaluation with the judge.** Use `.env.example` as it is, with your
+DeepSeek key after `LLM_API_KEY=`, and uncomment its four `LLM_JUDGE_` lines with your NVIDIA key after
+`LLM_JUDGE_API_KEY=`. Then:
+
+```bash
+python src/evaluate.py evaluation/golden_set.json --runs 1 --label judge_try --workers 2
+```
+
+One Run of the 36 Golden Set cases takes about 5 minutes; open the `report.html` in the folder it prints. `--runs 3`
+repeats the full baseline, and `--no-judge` runs the same cases with code checks only. Without a DeepSeek key, the
+professor's endpoint can stand in for the app model (see above), but the logged numbers are on DeepSeek, so the two
+are not comparable.
+
+Your run folders and verdicts files are new files: commit them only when you log them in the iteration log.
+
 ## Test
 
 ```bash

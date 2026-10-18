@@ -132,6 +132,10 @@ class ExportAndReportTest(unittest.TestCase):
         for n in range(len(items)):
             replies += [json.dumps({"evidence": "e", "verdict": F if n == 0 else P}), json.dumps({"verdict": P})]
         path = rejudge(FakeChatModel(replies, name="fake/judge"), self.out, self.runs)
+        with self.assertRaisesRegex(FileExistsError, "--tag"):  # stored verdicts are never overwritten
+            rejudge(FakeChatModel([], name="fake/judge"), self.out, self.runs)
+        tagged = rejudge(FakeChatModel(replies, name="fake/judge"), self.out, self.runs, tag="rita")
+        self.assertTrue(tagged.name.endswith("_rita.json"))
         stored = json.loads(path.read_text(encoding="utf-8"))
         self.assertEqual(stored["judge_model"], "fake/judge")
         self.assertEqual(stored["items"][items[0]]["supported"]["verdict"], F)

@@ -234,10 +234,17 @@ def parse_labels(text: str, item_ids: list[str]) -> dict[str, dict]:
     return labels
 
 
-def rejudge(judge: ChatModel, out_dir: Path = CALIBRATION_DIR, runs_dir: Path | None = None) -> Path:
-    """Judge every sampled answer again with the current judge prompts; store the verdicts beside the sample."""
+def rejudge(judge: ChatModel, out_dir: Path = CALIBRATION_DIR, runs_dir: Path | None = None, tag: str = "") -> Path:
+    """Judge every sampled answer again with the current judge prompts; store the verdicts beside the sample.
+
+    The file is named after the prompt versions, plus `tag` when given. An existing file is never overwritten: the
+    verdicts behind a logged result stay as they were, so a second try needs its own tag."""
     out_dir = Path(out_dir)
     runs_dir = runs_dir or out_dir.parent / "runs"
+    name = "_".join(["verdicts", *JUDGE_PROMPT_VERSIONS.values(), *([tag] if tag else [])])
+    path = out_dir / f"{name}.json"
+    if path.exists():
+        raise FileExistsError(f"{path.name} exists; give this try its own name with --tag")
     record = json.loads((out_dir / "items.json").read_text(encoding="utf-8"))
     cases = {c.id: c for c in load_cases(REPO / record["case_file"])}
     materials = default_course_materials()
@@ -249,7 +256,6 @@ def rejudge(judge: ChatModel, out_dir: Path = CALIBRATION_DIR, runs_dir: Path | 
         verdicts[key["item"]] = {
             c: {"verdict": getattr(judgement, c).verdict, "evidence": getattr(judgement, c).evidence} for c in CRITERIA
         }
-    path = out_dir / f"verdicts_{'_'.join(JUDGE_PROMPT_VERSIONS.values())}.json"
     stored = {"judge_model": judge.name, "prompt_versions": JUDGE_PROMPT_VERSIONS, "items": verdicts}
     path.write_text(json.dumps(stored, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     return path
@@ -373,6 +379,7 @@ def main(argv: list[str] | None = None) -> int:
     report_parser.add_argument("--name", default="report", help="report file name, without .md")
     rejudge_parser = sub.add_parser("rejudge", help="judge the sample again with the current judge prompts")
     rejudge_parser.add_argument("--out", type=Path, default=CALIBRATION_DIR)
+    rejudge_parser.add_argument("--tag", default="", help="added to the verdicts file name, e.g. your name")
     args = parser.parse_args(argv)
     if args.command == "export":
         items = export(args.run_folders, args.out)
@@ -383,7 +390,7 @@ def main(argv: list[str] | None = None) -> int:
         judge = get_judge_model()
         if judge is None:
             raise SystemExit("LLM_JUDGE_MODEL is not set. Check your .env file.")
-        print(f"Verdicts: {rejudge(judge, args.out)}")
+        print(f"Verdicts: {rejudge(judge, args.out, tag=args.tag)}")
     else:
         report(args.out, labels_file=args.labels, verdicts_file=args.verdicts, name=args.name)
         print(f"Report: {args.out / (args.name + '.md')}")
