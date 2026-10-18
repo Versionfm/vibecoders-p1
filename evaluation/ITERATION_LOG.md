@@ -579,7 +579,8 @@ Copy this block for each entry:
   85.2% (83.3% to 86.1%) -> 87.0%; Search Step 92.6% (91.7% to 94.4%) -> 91.7%; Answer Step 89.8% (88.9% to 91.7%)
   -> 92.6%; Supported rate 90.1% (88.9% to 92.6%) -> 93.8%; Routing accuracy 95.4% (94.4% to 97.2%) -> 94.4%; GS-26
   1/3 -> 3/3, GS-27 0/3 -> 1/3, GS-24 1/3 -> 2/3, GS-15 1/3 -> 2/3, GS-13 3/3 -> 1/3.
-- **Decision:** pending.
+- **Decision:** abandoned again (#17 stands): the Routed Tutor stays the app's tutor and the screen default
+  (`TUTOR=routed`); the Agentic Tutor, chat version included, stays in the code as the measured alternative.
 - **Reason:** for keeping the Routed Tutor as the app's tutor (the #17 decision): with the calibrated judge, the same
   day, model and judge, it still leads by about two cases per Run (92.6% vs 87.0% End-to-end Success; the ranges
   touch only at 88.9%), and the gap is almost all in the Search Step: 6 of the Agentic Tutor's 14 failing Traces are
