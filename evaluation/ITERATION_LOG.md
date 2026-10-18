@@ -358,3 +358,61 @@ Copy this block for each entry:
   out by choosing exactly one Course. In its favour: Responsive rate 100.0% and GS-25 3/3. The four-day shift in which
   Agentic Traces fail, with nothing changed on our side, shows that a run on one day is a sample of a model that can
   change behind the same name; this comparison is like for like because both tutors ran the same day.
+
+## 2026-10-18 Judge calibration, first result (judge_supported_v1, judge_responsive_v1)
+
+- **Change:** none to the app or the judge; the first check of the judge against our own labels (#8).
+- **Configuration:** `python src/calibration.py export` on the two 2026-10-18 judge runs (seed 8): 28 distinct
+  answers, 13 the judge failed on a criterion and 15 it passed on both; 19 held-out and 9 tuning, split committed
+  before labelling (`316950c`). One labeller (Gonçalo Augusto), alone, without the judge's verdicts, in
+  `evaluation/calibration/labels.md`. Judge `openai/gpt-oss-20b`, verdicts as stored in the runs.
+- **Run folder:** `evaluation/calibration` (`items.json`, `labels.md`, `report.md`).
+- **Result:** held-out (19): Supported accuracy 63.2%, Cohen's kappa 0.13, TPR 66.7%, TNR 50.0% (2 of 4 human FAILs
+  caught); Responsive accuracy 84.2%, kappa 0.00, TPR 84.2%, no human FAIL (TNR not measurable). Tuning (9):
+  Supported 55.6% (kappa 0.05), Responsive 100.0%. The 28 answers cover only 15 Golden Set questions: GS-27 6 times,
+  GS-24 4, GS-25 3, because the judge's FAILs cluster on a few questions and the sample was drawn per distinct answer.
+  Two patterns in the 14 disagreements: (1) 6 of the 8 answers the judge failed on Supported and the labeller passed
+  were failed for an uncited summary or lead-in sentence ("Short answer: not reliably...", "To stop the model
+  inventing facts...:") or a sentence about what the material does not say; (2) the labeller's Supported FAILs give
+  reasons about how the answer is written or whether it answers ("overexplains and shouldn't mention the course
+  name", "it doesn't actually answer"), not about a claim missing from its Section, and no answer was labelled not
+  Responsive.
+- **Decision:** pending.
+- **Reason:** Supported is below the 80% threshold, so the protocol calls for a new judge prompt version revised on
+  the tuning set. Before that, the labels and the judge must apply the same definition: pattern (1) points at a
+  judge rubric that is stricter than the labeller about summary sentences; pattern (2) at labels that put answer
+  quality and style under Supported. The sample's repetition of a few questions is a limitation to report.
+
+## 2026-10-18 Judge calibration: judge_supported_v1 -> judge_supported_v2
+
+- **Change:** new judge prompt `judge_supported_v2` (the Responsive prompt stays `judge_responsive_v1`), revised from
+  the disagreements in the 9 tuning items of the first calibration result above: a lead-in, summary or concluding
+  sentence is supported when its content is in the Sections the answer cites, even without its own citation; a
+  sentence about the Course Material itself fails only when the cited Sections contradict it; style and
+  responsiveness are explicitly outside Supported. Also tried and abandoned: moving five of the labeller's six
+  Supported FAILs to the criterion their written reason described (`labels_corrected.md`,
+  `label_corrections.md`), done by the coding assistant at the labeller's request after the judge's verdicts had
+  been seen.
+- **Configuration:** the same 28 answers, split and judge model (`openai/gpt-oss-20b`) as the first result; the 28
+  answers judged again on both criteria (`python src/calibration.py rejudge`,
+  `evaluation/calibration/verdicts_judge_supported_v2_judge_responsive_v1.json`). One Supported call timed out
+  (L10, a judge error, counted as FAIL).
+- **Run folder:** `evaluation/calibration` (`report_first_labels_judge_v2.md`, `report_corrected_judge_v1.md`,
+  `report_corrected_judge_v2.md`).
+- **Result:** held-out (19), first labels: Supported accuracy 63.2% -> 84.2%, Cohen's kappa 0.13 -> 0.56, TPR 66.7% ->
+  86.7%, TNR 50.0% -> 75.0% (3 of 4 human FAILs caught); Responsive 84.2% -> 84.2% (same prompt; still no human
+  FAIL, so TNR is not measurable). Tuning (9), first labels: Supported 55.6% -> 44.4%. With the corrected labels,
+  held-out Supported was 57.9% with v1 and 68.4% with v2. With v2 the judge failed L07, L18 and L20 for concrete
+  claims (a claim about how the material "frames" shadow AI that DTGS-3.2 does not make; Klarna claims cited to
+  DTGS-3.21 but stated in DTGS-3.20; "six elements" not in the cited AITB-2.4): three of the four answers the
+  correction had moved from FAIL to PASS.
+- **Decision:** `judge_supported_v2` kept (the code points at it); the label corrections abandoned. The official
+  labels are the first labels, unchanged.
+- **Reason:** with the labels as first given, blind to the judge, v2 passes the 80% threshold on the held-out set
+  for both criteria, and its Supported FAILs name checkable claims. The corrections lowered agreement and v2's
+  evidence showed that the labeller's first FAILs on L07, L18 and L20 were right, so they are kept only as a record.
+  Limits to report: one labeller; 28 answers from 15 questions (GS-27 6 times); the held-out disagreements were
+  visible in the first report when v2 was written, so the held-out set is not fully unseen; v2 did not improve the
+  tuning items (44.4%), where it still fails sentences that add a word such as "grounding" to what the Section
+  says; Responsive has no human FAIL on held-out, so the judge's ability to catch an unresponsive answer is
+  untested. The Golden Set baselines above were judged with v1 and must be judged again with v2.

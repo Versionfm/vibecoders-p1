@@ -1,11 +1,12 @@
-"""Judge calibration (#8): agreement metrics on a hand-computed example (Seam B), and export -> labels -> report."""
-import csv
+"""Judge calibration (#8): agreement metrics on a hand-computed example (Seam B), and export -> labels.md -> report."""
 import json
+import re
 import tempfile
 import unittest
 from pathlib import Path
 
-from calibration import AGREED, LABELLERS, LabelFileError, agreement, draw_sample, export, report
+from calibration import LabelFileError, agreement, draw_sample, export, rejudge, report
+from tests.fakes import FakeChatModel
 
 P, F = "PASS", "FAIL"
 GOLDEN_CASES = ["GS-01", "GS-02", "GS-03", "GS-04", "GS-06", "GS-07"]
@@ -40,9 +41,7 @@ class AgreementTest(unittest.TestCase):
 
 
 def fake_answer(case_id, flagged):
-    verdict = F if flagged else P
-    return {"case_id": case_id, "answer": f"answer to {case_id}", "citations": ["GAIF-1.3"],
-            "judge": {"supported": verdict, "responsive": P}}
+    return {"case_id": case_id, "judge": {"supported": F if flagged else P, "responsive": P}}
 
 
 class SampleTest(unittest.TestCase):
@@ -65,83 +64,94 @@ class ExportAndReportTest(unittest.TestCase):
         self.addCleanup(self.folder.cleanup)
         root = Path(self.folder.name)
         self.runs, self.out = root / "runs", root / "calibration"
-        run_dir = self.runs / "2026-10-18_000000_fake_routed"
-        run_dir.mkdir(parents=True)
+        self.run_dir = self.runs / "2026-10-18_000000_fake_routed"
+        self.run_dir.mkdir(parents=True)
         outputs = []
         for n, case_id in enumerate(GOLDEN_CASES):
-            flagged = n < 3
             outputs.append({
                 "case_id": case_id, "answer": f"Answer {n} [GAIF-1.3].", "citations": ["GAIF-1.3"],
-                "judge": {"supported": {"verdict": F if flagged else P, "evidence": f"JUDGE-EVIDENCE-{n}"},
+                "judge": {"supported": {"verdict": F if n < 3 else P, "evidence": f"JUDGE-EVIDENCE-{n}"},
                           "responsive": {"verdict": P, "evidence": "ok"}},
             })
         run = {"run": 1, "tutor": "routed", "case_file": "evaluation/golden_set.json", "outputs": outputs}
-        (run_dir / "run_1.json").write_text(json.dumps(run), encoding="utf-8")
-        self.items = export([run_dir], self.out)
-        self.ids = [i["item"] for i in self.items]
-
-    def write_labels(self, name, supported, reasons=None):
-        reasons = reasons or {}
-        with open(self.out / f"labels_{name}.csv", "w", newline="", encoding="utf-8") as f:
-            writer = csv.writer(f)
-            writer.writerow(["item", "supported", "supported_reason", "responsive", "responsive_reason"])
-            for item, label in supported.items():
-                writer.writerow([item, label, reasons.get(item, "not in the Section" if label == F else ""), P, ""])
-
-    def judge_supported(self):
+        (self.run_dir / "run_1.json").write_text(json.dumps(run), encoding="utf-8")
+        export([self.run_dir], self.out)
         record = json.loads((self.out / "items.json").read_text(encoding="utf-8"))
-        case_to_n = {c: n for n, c in enumerate(GOLDEN_CASES)}
-        return {k["item"]: F if case_to_n[k["case_id"]] < 3 else P for k in record["items"]}
+        self.case_of = {k["item"]: k["case_id"] for k in record["items"]}
 
-    def test_the_sheet_shows_question_answer_and_cited_section_but_not_the_judge(self):
-        sheet = (self.out / "sheet.html").read_text(encoding="utf-8")
-        self.assertIn("Searle", sheet)  # GS-01's question
-        self.assertIn("Answer 0 [GAIF-1.3].", sheet)
-        self.assertIn("Chinese Room", sheet)  # text of the cited Section GAIF-1.3
-        self.assertNotIn("JUDGE-EVIDENCE", sheet)
-        self.assertNotIn("verdict", json.dumps(json.loads((self.out / "items.json").read_text(encoding="utf-8"))))
-        for name in (*LABELLERS, AGREED):
-            self.assertTrue((self.out / f"labels_{name}.csv").exists())
+    def judge_supported(self, item):
+        return F if GOLDEN_CASES.index(self.case_of[item]) < 3 else P
+
+    def fill(self, supported, reasons=None):
+        """Fill labels.md the way the labeller does: type after each field's colon."""
+        reasons = reasons or {}
+        path = self.out / "labels.md"
+        text = path.read_text(encoding="utf-8")
+        for item, label in supported.items():
+            block = re.search(rf"^## {item}$.*?^Responsive reason: $", text, re.MULTILINE | re.DOTALL)
+            reason = reasons.get(item, "not in it" if label in (F, "f") else "")
+            filled = (
+                block.group(0)
+                .replace("Supported: \n", f"Supported: {label}\n")
+                .replace("Supported reason: \n", f"Supported reason: {reason}\n")
+                .replace("Responsive: \n", "Responsive: PASS\n")
+            )
+            text = text.replace(block.group(0), filled)
+        path.write_text(text, encoding="utf-8")
+
+    def test_the_label_file_shows_question_answer_and_cited_section_but_not_the_judge(self):
+        text = (self.out / "labels.md").read_text(encoding="utf-8")
+        self.assertIn("Searle", text)  # GS-01's question
+        self.assertIn("Answer 0 [GAIF-1.3].", text)
+        self.assertIn("Chinese Room", text)  # text of the cited Section GAIF-1.3
+        self.assertNotIn("JUDGE-EVIDENCE", text)
+        self.assertEqual(text.count("\nSupported: \n"), len(GOLDEN_CASES))
+        self.assertNotIn("verdict", (self.out / "items.json").read_text(encoding="utf-8"))
 
     def test_the_sample_and_split_cannot_be_drawn_again_over_the_first(self):
         with self.assertRaises(FileExistsError):
-            export([self.runs / "2026-10-18_000000_fake_routed"], self.out)
+            export([self.run_dir], self.out)
 
-    def test_the_report_compares_the_agreed_labels_with_the_judge_and_records_disagreements(self):
-        judge = self.judge_supported()
-        first = dict(judge)
-        second = dict(judge)
-        flipped = self.ids[0]
-        second[flipped] = P if judge[flipped] == F else F
-        self.write_labels(LABELLERS[0], first)
-        self.write_labels(LABELLERS[1], second)
-        self.write_labels(AGREED, first, {flipped: "resolved together: the claim is in the Section"})
+    def test_the_report_compares_the_labels_with_the_judge(self):
+        labels = {item: self.judge_supported(item) for item in self.case_of}
+        disagree = next(iter(self.case_of))
+        labels[disagree] = P if labels[disagree] == F else F
+        labels = {i: ("p" if v == P else "f") if i == disagree else v for i, v in labels.items()}  # short forms
+        self.fill(labels, {disagree: "the claim is not in the Section"})
 
         text = report(self.out, self.runs)
-        self.assertIn("Disagreements: 1.", text)
-        self.assertIn("resolved together", text)
-        self.assertIn("| Supported | 100.0% | 1.00 |", text)  # agreed labels equal the judge's verdicts
+        self.assertIn("Items where the judge and the labels differ", text)
+        self.assertIn(f"| {disagree} |", text)
+        self.assertIn("Labeller: Gonçalo Augusto", text)
+        self.assertIn("FAIL reasons", text)
 
-    def test_a_disagreement_without_a_resolution_is_refused(self):
-        judge = self.judge_supported()
-        second = dict(judge)
-        second[self.ids[0]] = P if judge[self.ids[0]] == F else F
-        self.write_labels(LABELLERS[0], judge)
-        self.write_labels(LABELLERS[1], second)
-        self.write_labels(AGREED, {i: P for i in self.ids})
-        with self.assertRaisesRegex(LabelFileError, "resolved"):
+    def test_rejudged_verdicts_are_stored_and_a_report_can_use_them_and_another_label_file(self):
+        items = list(self.case_of)
+        # every sampled answer judged again: Supported FAIL for the first item only, PASS for the rest
+        replies = []
+        for n in range(len(items)):
+            replies += [json.dumps({"evidence": "e", "verdict": F if n == 0 else P}), json.dumps({"verdict": P})]
+        path = rejudge(FakeChatModel(replies, name="fake/judge"), self.out, self.runs)
+        stored = json.loads(path.read_text(encoding="utf-8"))
+        self.assertEqual(stored["judge_model"], "fake/judge")
+        self.assertEqual(stored["items"][items[0]]["supported"]["verdict"], F)
+
+        self.fill({i: F if i == items[0] else P for i in items})
+        (self.out / "labels.md").rename(self.out / "labels_filled.md")
+
+        text = report(self.out, self.runs, labels_file="labels_filled.md", verdicts_file=path.name, name="v2")
+        self.assertTrue((self.out / "v2.md").exists())
+        self.assertIn("`labels_filled.md`", text)
+        self.assertIn("fake/judge", text)
+        self.assertIn("| Supported | 100.0% |", text)  # the rejudged verdicts equal the labels
+
+    def test_a_missing_label_or_a_fail_without_a_reason_is_refused(self):
+        items = list(self.case_of)
+        self.fill({i: P for i in items[1:]})
+        with self.assertRaisesRegex(LabelFileError, items[0]):
             report(self.out, self.runs)
-
-    def test_a_fail_without_a_reason_or_a_missing_item_is_refused(self):
-        labels = {i: P for i in self.ids}
-        labels[self.ids[0]] = F
-        self.write_labels(LABELLERS[0], labels, {self.ids[0]: ""})
-        self.write_labels(LABELLERS[1], {i: P for i in self.ids})
-        self.write_labels(AGREED, {i: P for i in self.ids})
+        self.fill({items[0]: F}, {items[0]: ""})
         with self.assertRaisesRegex(LabelFileError, "needs a reason"):
-            report(self.out, self.runs)
-        self.write_labels(LABELLERS[0], {i: P for i in self.ids[1:]})
-        with self.assertRaisesRegex(LabelFileError, "missing items"):
             report(self.out, self.runs)
 
 

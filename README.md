@@ -106,14 +106,14 @@ The LLM judge ([src/judge.py](src/judge.py)) makes one call per criterion at tem
 
 ### Judge calibration
 
-The judge is checked against the group's own labels (#8):
+The judge is checked against our own labels (#8):
 
 ```bash
-python src/calibration.py export <run folder> <run folder>   # once: sample, split and labelling sheet
+python src/calibration.py export <run folder> <run folder>   # once: sample, split and labels.md
 python src/calibration.py report                             # after labelling: evaluation/calibration/report.md
 ```
 
-`export` writes `evaluation/calibration/`: `items.json` (the sample and its held-out/tuning split, fixed before anyone labels), `sheet.html` (question, key facts, answer and cited Section text, without the judge's verdicts) and blank `labels_goncalo.csv`, `labels_rodrigo.csv` and `labels_agreed.csv`. Each labeller fills their own file alone (PASS or FAIL for Supported and Responsive, one sentence for every FAIL); the agreed file holds the labels after comparing, with the resolution written as the reason wherever the two disagreed. `report` gives the agreement between the labellers and, per criterion and per set, the judge's accuracy, Cohen's kappa, TPR and TNR (PASS is the positive class). Below 80% accuracy on the held-out set, the judge prompt gets a new version, revised on the tuning set only.
+`export` writes `evaluation/calibration/items.json` (the sample and its held-out/tuning split, fixed before labelling) and `labels.md`, one file to read and fill in: for each answer, the question, key facts, answer and cited Section text, then four lines to complete (`Supported:`, `Supported reason:`, `Responsive:`, `Responsive reason:`; PASS or FAIL, or P or F, and one sentence for every FAIL). The judge's verdicts are not in it. One labeller (Gonçalo Augusto) labels. `report` gives, per criterion and per set, the judge's accuracy, Cohen's kappa, TPR and TNR (PASS is the positive class), the items where the judge and the labels differ, and the FAIL reasons for the failure taxonomy. Below 80% accuracy on the held-out set, the judge prompt gets a new version, revised on the tuning set only.
 
 Case file fields: `id`, `type` (`in_material`, `near_miss`, `overlap`, `out_of_scope`, `refusal`), `question`, `accepted_courses` (`["OUT_OF_SCOPE"]` for Out of scope cases), `expected_sections`, `expect_refusal`, `key_facts`. `evaluation/sample_cases.json` is a small synthetic SAMPLE for trying the command; it is not the Golden Set.
 

@@ -1,5 +1,6 @@
 {
   "seed": 8,
+  "case_file": "evaluation/golden_set.json",
   "run_folders": [
     "2026-10-18_020503_golden_set_v1_judge_routed",
     "2026-10-18_022123_golden_set_v1_judge_agentic"
