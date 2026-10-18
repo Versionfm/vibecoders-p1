@@ -416,3 +416,31 @@ Copy this block for each entry:
   tuning items (44.4%), where it still fails sentences that add a word such as "grounding" to what the Section
   says; Responsive has no human FAIL on held-out, so the judge's ability to catch an unresponsive answer is
   untested. The Golden Set baselines above were judged with v1 and must be judged again with v2.
+
+## 2026-10-18 Routed Tutor on Golden Set v1 with the calibrated judge (judge_supported_v2)
+
+- **Change:** none to the app; the Routed Tutor baseline judged again with `judge_supported_v2`, the version kept
+  after calibration. Compared with the baseline judged by `judge_supported_v1`
+  (`2026-10-18_020503_golden_set_v1_judge_routed`): same app, model and case file, so the before -> after changes
+  only the judge's Supported prompt (and the app's answers, which are generated again).
+- **Configuration:** Routed Tutor, Router `router_v2`, Course Tutor `tutor_v2`, app model `deepseek-flash`, thinking
+  off, judge `openai/gpt-oss-20b` with `judge_supported_v2` and `judge_responsive_v1`, `--workers 2`, commit
+  `dcee50a`, case file `evaluation/golden_set.json`. 3 of 3 Runs and 108 of 108 Traces finished; no Trace recorded
+  an error; 81 answers judged; one judge call timed out (GS-10, Run 1), a judge error counted as a fail.
+- **Run folder:** `evaluation/runs/2026-10-18_040522_golden_set_v1_judge_v2_routed` (with `failures.md` and
+  `compare.html` against the v1-judge baseline).
+- **Result:** judge v1 -> judge v2, mean (range): End-to-end Success 90.7% (88.9% to 91.7%) -> 92.6% (88.9% to
+  94.4%); Answer Step 90.7% (88.9% to 91.7%) -> 92.6% (88.9% to 94.4%); Supported rate 93.8% (92.6% to 96.3%) ->
+  97.5% (92.6% to 100.0%); Responsive rate 96.3% -> 96.3%; Judge undecided rate 0.0% -> 0.6% (0.0% to 1.9%). Search
+  Step 97.2%, Path Step 100.0%, Routing accuracy 97.2%, Citation correctness 100.0% and Refusal correctness 100.0%
+  unchanged. Failing cases: GS-05 3/3 (Search: routed to AITB, the AITB Refusal), GS-27 3/3 (Answer: judged not
+  Responsive, the answer says the material does not cover what is asked), GS-06 1/3 (Answer: judged not Supported,
+  "the prefix is no longer byte-identical" is not in PEID-3.13), GS-10 1/3 (Answer: judge error, timeout). GS-24 and
+  GS-25, failed by the v1 judge for uncited summary sentences, now pass 3/3.
+- **Decision:** kept as the baseline: the number to defend is 92.6% End-to-end Success, Routed Tutor, calibrated
+  judge.
+- **Reason:** the judge behind it now agrees with our labels on 84.2% of held-out answers on both criteria, and the
+  drop from 97.2% (code checks only) is explained case by case: GS-05 is a routing failure, GS-27 a partial answer
+  that ends with the Refusal sentence, GS-06 one extra claim. GS-10 failed on a judge timeout, not on the answer, so
+  1 of the 3 failing Traces in Run 1 says nothing about the tutor. The judge's ability to catch an unresponsive answer
+  is untested (no human Responsive FAIL in the held-out set).
