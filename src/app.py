@@ -15,6 +15,7 @@ OUT_OF_SCOPE_MESSAGE = (
     "Try a question about one of those Courses."
 )
 RETRY_MESSAGE = "Something went wrong while preparing your answer. Please try again in a moment."
+REFUSAL_MESSAGE = "The Course Material does not cover this question, so there is no answer to show."
 
 load_dotenv()
 TUTOR = tutor_setting()
@@ -41,6 +42,9 @@ if st.button("Ask") and question.strip():
         if result.evidence:
             st.markdown(f"**Why:** “{markdown_safe(result.evidence)}”")
         st.info(OUT_OF_SCOPE_MESSAGE, icon=":material/explore_off:")
+    elif result.is_refusal:
+        # No answer from the Course Material, so no Course is named: the Refusal stands alone.
+        st.warning(f"**Refusal.** {REFUSAL_MESSAGE}", icon=":material/block:")
     else:
         if result.tutor == AGENTIC_TUTOR:
             read = ", ".join(course_label(c) for c in dict.fromkeys(result.materials_read)) or "none"
@@ -48,16 +52,13 @@ if st.button("Ask") and question.strip():
         else:
             st.markdown(f"**Course:** {course_label(result.course)}")
             st.markdown(f"**Why this Course:** “{markdown_safe(result.evidence)}”")
-        if result.is_refusal:
-            st.warning(f"**Refusal.** {markdown_safe(result.answer.strip())}", icon=":material/block:")
-        else:
-            st.markdown("**Answer**")
-            st.markdown(markdown_safe(result.answer))
-            if result.citations:
-                st.caption("Cited Sections: " + ", ".join(result.citations))
-            if result.invalid_citations:
-                st.warning(
-                    "These cited Sections are not Sections of the Course Material read: "
-                    + ", ".join(result.invalid_citations),
-                    icon=":material/warning:",
-                )
+        st.markdown("**Answer**")
+        st.markdown(markdown_safe(result.answer))
+        if result.citations:
+            st.caption("Cited Sections: " + ", ".join(result.citations))
+        if result.invalid_citations:
+            st.warning(
+                "These cited Sections are not Sections of the Course Material read: "
+                + ", ".join(result.invalid_citations),
+                icon=":material/warning:",
+            )
