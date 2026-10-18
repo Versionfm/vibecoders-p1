@@ -39,7 +39,7 @@ Last checked: 2026-10-18, branch `golden-set` (judge baselines and the #17 decis
 
 | Item | Status | Evidence or what is left |
 | --- | --- | --- |
-| App: 20+ realistic outputs read; failure taxonomy named in our own words | Partial | Observed facts per failing case, with the judge: [routed failures.md](../evaluation/runs/2026-10-18_020503_golden_set_v1_judge_routed/failures.md), [agentic failures.md](../evaluation/runs/2026-10-18_022123_golden_set_v1_judge_agentic/failures.md); code checks only: [routed](../evaluation/runs/2026-10-14_193513_golden_set_v1_routed/failures.md), [agentic](../evaluation/runs/2026-10-14_195710_golden_set_v1_agentic/failures.md). **`evaluation/FAILURE_TAXONOMY.md` does not exist**: the group still has to name the categories and count them (e.g. "extra Read of a non-Accepted Course", "refuses in its own words without reading", "Out of scope instead of the Refusal"). |
+| App: 20+ realistic outputs read; failure taxonomy named in our own words | Done (names to confirm) | [FAILURE_TAXONOMY.md](../evaluation/FAILURE_TAXONOMY.md): 8 categories from 52 failing Traces and 28 hand-labelled answers, with counts per evaluation and example cases, plus the labeller's style notes. The names were drafted from the labeller's reasons: the group confirms or renames them. |
 | App: Golden Set of 20+ cases, labelled before seeing a score | Done | [evaluation/golden_set.json](../evaluation/golden_set.json): 36 cases, version 1, frozen 2026-10-14; review in [golden_set_review.md](../evaluation/golden_set_review.md); checks in [tests/test_golden_set.py](../tests/test_golden_set.py). Limitation to report: the pilots on the candidates were seen before the freeze ([ITERATION_LOG](../evaluation/ITERATION_LOG.md)). |
 | App: deterministic checks in code for everything with a right answer | Done | [src/scoring.py](../src/scoring.py): routing accuracy, recall per Course and macro, citation correctness, Refusal and Out of scope correctness, Search/Path/Answer Steps and End-to-end Success; tested in [tests/test_scoring.py](../tests/test_scoring.py) and [tests/test_steps.py](../tests/test_steps.py). |
 | App: LLM-as-a-judge for what code cannot check (one criterion per call, evidence before PASS/FAIL, an "unknown" exit) | Done | [src/judge.py](../src/judge.py), prompts `judge_supported_v1` and `judge_responsive_v1`: one call per criterion, JSON with the evidence before PASS/FAIL/UNKNOWN; a failed call or unparseable reply is a judge error and never a pass. Judge `openai/gpt-oss-20b` on NVIDIA, chosen by [a probe](../evaluation/probes/judge_probe.py) (iteration log, 2026-10-17). |
@@ -64,7 +64,7 @@ Last checked: 2026-10-18, branch `golden-set` (judge baselines and the #17 decis
 
 ## Open work, in order
 
-1. `evaluation/FAILURE_TAXONOMY.md` in the group's words, from the `failures.md` files.
+1. Confirm or rename the categories in `evaluation/FAILURE_TAXONOMY.md`.
 2. Steering evidence: before/after for `CLAUDE.md`, the skill firing unnamed.
 3. Merge into `main`, make the repo public, check the secrets scan.
 4. Report, deck, rehearsal and backup recording.
