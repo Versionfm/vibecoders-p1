@@ -1,0 +1,6 @@
+# False positives of gitleaks' generic-api-key rule, checked by hand on 2026-10-18. In both commits the line in
+# .env.example is `LLM_JUDGE_API_KEY=` with no value; the rule read on into the next line (`LLM_JUDGE_THINKING=none`)
+# and took that for the key. .env.example now puts a comment line after the empty key, as it does after LLM_API_KEY=.
+# Never add a fingerprint here without opening the commit and checking that no real key is in it.
+683608f12ade5dba373a6f8177d13462ae9ef97f:.env.example:generic-api-key:22
+0e293b5ad6c76ced2d5a708837d695a2cfd60a3b:.env.example:generic-api-key:21
