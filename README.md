@@ -104,6 +104,17 @@ Metrics kept from before: routing accuracy (choice within Accepted Courses), rec
 
 The LLM judge ([src/judge.py](src/judge.py)) makes one call per criterion at temperature 0, with its own versioned prompt (`prompts/judge_supported_v1.md`, `prompts/judge_responsive_v1.md`). Each reply is JSON with the evidence before the verdict (`PASS`, `FAIL` or `UNKNOWN`); an unparseable reply or a failed call is a judge error, never a pass. The judge is called only for an answer given where an answer was expected, never for a Refusal or Out of scope. `--no-judge` runs code checks only even when `LLM_JUDGE_MODEL` is set.
 
+### Judge calibration
+
+The judge is checked against the group's own labels (#8):
+
+```bash
+python src/calibration.py export <run folder> <run folder>   # once: sample, split and labelling sheet
+python src/calibration.py report                             # after labelling: evaluation/calibration/report.md
+```
+
+`export` writes `evaluation/calibration/`: `items.json` (the sample and its held-out/tuning split, fixed before anyone labels), `sheet.html` (question, key facts, answer and cited Section text, without the judge's verdicts) and blank `labels_goncalo.csv`, `labels_rodrigo.csv` and `labels_agreed.csv`. Each labeller fills their own file alone (PASS or FAIL for Supported and Responsive, one sentence for every FAIL); the agreed file holds the labels after comparing, with the resolution written as the reason wherever the two disagreed. `report` gives the agreement between the labellers and, per criterion and per set, the judge's accuracy, Cohen's kappa, TPR and TNR (PASS is the positive class). Below 80% accuracy on the held-out set, the judge prompt gets a new version, revised on the tuning set only.
+
 Case file fields: `id`, `type` (`in_material`, `near_miss`, `overlap`, `out_of_scope`, `refusal`), `question`, `accepted_courses` (`["OUT_OF_SCOPE"]` for Out of scope cases), `expected_sections`, `expect_refusal`, `key_facts`. `evaluation/sample_cases.json` is a small synthetic SAMPLE for trying the command; it is not the Golden Set.
 
 Record every evaluated change, kept or abandoned, in [evaluation/ITERATION_LOG.md](evaluation/ITERATION_LOG.md).
