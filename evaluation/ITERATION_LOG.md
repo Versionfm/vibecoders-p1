@@ -622,12 +622,22 @@ Copy this block for each entry:
   screens with fake models, follow-up and rerender behavior, raw conversation context, invalid references,
   Refusal, Out of scope, retry, citation formatting, multiline and nested links, bullet and nested emphasis, hard breaks,
   lists and dollar amounts. `git diff --check` passes.
-- **Acceptance still pending:** the implemented helper's offline preservation check over all 216 saved Traces
-  and local visual inspection of the screens. These checks must finish before marking the ticket complete.
+- **Offline preservation check:** all 216 saved Traces of the two calibrated-judge runs
+  (`2026-10-18_040522_golden_set_v1_judge_v2_routed`, `2026-10-18_113506_golden_set_v1_judge_v2_agentic`), read-only,
+  in memory. Rendering each answer for display left the answer result and citation metadata unchanged; the judge
+  prompts (Supported and Responsive, 162 judged answers) were identical before and after; recomputed Steps matched
+  the stored Steps; regenerated `report.html` matched the saved file byte for byte; the run folders were unchanged.
+  162 displayed answers differ from their raw answer. Recorded verdicts were reused only to rescore the unchanged
+  originals.
+- **Visual check:** the local app (both tutors) run with a deterministic fixture model, no model calls. Checked:
+  sentence punctuation, bullets and a nested bullet, bold labels, a citation-only line, a grouped and an adjacent
+  marker, ordinary brackets, a Markdown link with a Section-like text, `$50` and `$5`, the Cited Sections footer
+  below the answer, the invalid-citation warning, the first chat answer still clean after a follow-up, and
+  New conversation clearing the chat.
 - **Result:** no new tutor score or measured improvement in readability or learning. Existing single-question
   End-to-end Success figures (87.0% Agentic Tutor, 92.6% Routed Tutor) describe the original underlying tutors,
-  not this display. A new Golden Set run or judge calibration is unnecessary if the pending check confirms raw
-  answers, judge inputs and scoring remain unchanged; crossing that boundary requires reassessing evaluation.
+  not this display. No new Golden Set run or judge calibration is needed: raw answers, judge inputs, prompts and
+  scoring are unchanged.
 - **Project report wording:** “The screen consolidates references under Cited Sections; evaluation and saved
   Traces retain the original answer with citations beside its claims. This presentation change does not establish
   improved readability or learning.” No project report is present in the repository; the group can use this wording.
