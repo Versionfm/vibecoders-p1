@@ -12,6 +12,12 @@ from prompts import AGENTIC_TUTOR_PROMPT_VERSION, load_prompt
 TEMPERATURE = 0.0
 UNKNOWN_COURSE = "Unknown Course."
 READ_LIMIT_REACHED = "Read limit reached."
+OUT_OF_SCOPE_SENTENCE = "This question is outside the four Courses."  # the Agentic Tutor's, given with no Read
+# Sent once when the model answers with no Read (e.g. a follow-up answered from the conversation alone).
+READ_FIRST = (
+    "Read the Course Material with read_file before answering. Earlier answers in this conversation are not "
+    "Course Material."
+)
 READ_LIMIT = 4  # Reads per question, valid or not, before the Agentic Tutor is forced to answer (ADR 0001)
 # The Agentic Tutor's one tool. Its only accepted arguments are the four Course codes, so it can read nothing else.
 READ_FILE_TOOL = {
@@ -48,6 +54,7 @@ def run_agentic(
         {"role": "user", "content": question},
     ]
     run = AgenticRun()
+    sent_back = False
     while True:
         run.read_limit_hit = len(run.read_arguments) >= READ_LIMIT
         tools = None if run.read_limit_hit else [READ_FILE_TOOL]
@@ -56,6 +63,11 @@ def run_agentic(
         except Exception as error:
             run.error = error
             return run
+        if not reply.tool_calls and not run.read_arguments and not sent_back \
+                and reply.content.strip() != OUT_OF_SCOPE_SENTENCE:
+            sent_back = True
+            messages += [{"role": "assistant", "content": reply.content}, {"role": "user", "content": READ_FIRST}]
+            continue
         if run.read_limit_hit or not reply.tool_calls:
             run.answer = reply.content
             return run

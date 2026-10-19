@@ -4,9 +4,11 @@ import re
 import sys
 from collections.abc import Callable, Mapping
 
-from tutor import ROUTED_TUTOR, ChatModel, TutorResult, answer_question
+from tutor import BRACKET, CITATION_LIKE, ROUTED_TUTOR, ChatModel, TutorResult, answer_question
 
 _UNESCAPED_DOLLAR = re.compile(r"(?<!\\)\$")
+_REFERENCE_SUFFIX = re.compile(r"\[([^\]\n]*)\]")
+_LINK_DEFINITION = re.compile(r"(?m)^ {0,3}\[([^\]\n]+)\]:[ \t]+\S[^\n]*")
 
 
 def tutor_setting(env: Mapping[str, str] | None = None) -> str:
@@ -18,6 +20,87 @@ def tutor_setting(env: Mapping[str, str] | None = None) -> str:
 def markdown_safe(text: str) -> str:
     """Escape `$` so Streamlit's Markdown shows amounts like $0.50 as text, not as LaTeX."""
     return _UNESCAPED_DOLLAR.sub(r"\\$", text)
+
+
+def answer_for_display(answer: str) -> str:
+    """Hide inline Section markers in a display copy, keeping the original answer as evidence."""
+    definitions = list(_LINK_DEFINITION.finditer(answer))
+    labels = {definition.group(1).casefold() for definition in definitions}
+    protected = [definition.span() for definition in definitions]
+    openings = []
+    for bracket in re.finditer(r"\\.|[\[\]]", answer):
+        if bracket.group() == "[":
+            openings.append(bracket.start())
+        if bracket.group() != "]" or not openings:
+            continue
+        start = openings.pop()
+        end = _inline_link_end(answer, bracket.end())
+        if end is not None:
+            protected.append((start, end))
+            continue
+        suffix = _REFERENCE_SUFFIX.match(answer, bracket.end())
+        if suffix is None:
+            continue
+        reference = suffix.group(1)
+        if (
+            reference.casefold() in labels
+            or not (_citation_only(answer[start + 1:bracket.start()]) and _citation_only(reference))
+        ):
+            protected.append((start, suffix.end()))
+    for bracket in reversed(list(BRACKET.finditer(answer))):
+        if (
+            _citation_only(bracket.group(1)) and bracket.group(1).casefold() not in labels
+            and not any(start <= bracket.start() < end for start, end in protected)
+        ):
+            start, end = bracket.span()
+            if start > 0 and answer[start - 1] == "\\":
+                start -= 1
+            marker_start = start
+            while start > 0 and answer[start - 1] in " \t":
+                start -= 1
+            while end < len(answer) and answer[end] in " \t":
+                end += 1
+            left, right = answer[:start], answer[end:]
+            space = " " if left and right and left[-1] not in "\r\n([{" and right[0] not in "\r\n.,;:!?)]}" else ""
+            emphasis = re.match(r"\*+|_+", right)
+            if emphasis and (emphasis.end() == len(right) or not right[emphasis.end()].isalnum()):
+                space = ""
+            if (not left or left[-1] in "\r\n") and right and right[0] not in "\r\n":
+                space = answer[start:marker_start]
+            if right.startswith(("\n", "\r\n")):
+                space = answer[bracket.end():end]
+            answer = left + space + right
+    return answer
+
+
+def _citation_only(text: str) -> bool:
+    return all(CITATION_LIKE.fullmatch(part.strip()) for part in re.split(r"[,;]", text.removesuffix("\\")))
+
+
+def _inline_link_end(text: str, start: int) -> int | None:
+    if text[start:start + 1] != "(":
+        return None
+    depth, cursor, quote = 1, start + 1, ""
+    while cursor < len(text):
+        char = text[cursor]
+        if char == "\\":
+            cursor += 2
+            continue
+        if quote:
+            if char == quote:
+                quote = ""
+        elif char == "<":
+            quote = ">"
+        elif char in "\"'" and text[cursor - 1].isspace():
+            quote = char
+        elif char == "(":
+            depth += 1
+        elif char == ")":
+            depth -= 1
+            if depth == 0:
+                return cursor + 1
+        cursor += 1
+    return None
 
 
 def ask(

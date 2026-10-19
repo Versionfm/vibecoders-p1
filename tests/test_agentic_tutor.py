@@ -204,5 +204,34 @@ class ConversationProtocolTest(unittest.TestCase):
         self.assertEqual(result.invalid_citations, ["PEID-2.3"])
 
 
+class ReadBeforeAnswerTest(unittest.TestCase):
+    HISTORY = [{"role": "user", "content": QUESTION}, {"role": "assistant", "content": ANSWER}]
+
+    def test_a_follow_up_answered_without_a_read_is_sent_back_to_read_first(self):
+        model = FakeChatModel(["From memory [PEID-2.3].", reads("PEID"), ANSWER])
+        result = answer_question("Explain the second part.", model, tutor="agentic", history=self.HISTORY)
+        self.assertEqual(len(model.calls), 3)
+        sent_back = model.calls[1]["messages"]
+        self.assertEqual(sent_back[-2], {"role": "assistant", "content": "From memory [PEID-2.3]."})
+        self.assertEqual(sent_back[-1]["role"], "user")
+        self.assertEqual(model.calls[1]["tools"], model.calls[0]["tools"])
+        self.assertEqual(result.answer, ANSWER)
+        self.assertEqual(result.materials_read, ["PEID"])
+        self.assertEqual(result.invalid_citations, [])
+
+    def test_it_is_sent_back_only_once(self):
+        model = FakeChatModel(["From memory [PEID-2.3].", "Still from memory [PEID-2.3]."])
+        result = answer_question(QUESTION, model, tutor="agentic")
+        self.assertEqual(len(model.calls), 2)
+        self.assertEqual(result.answer, "Still from memory [PEID-2.3].")
+        self.assertEqual(result.invalid_citations, ["PEID-2.3"])
+
+    def test_out_of_scope_without_a_read_is_not_sent_back(self):
+        model = FakeChatModel([OUT_OF_SCOPE_SENTENCE])
+        result = answer_question("How do I bake bread?", model, tutor="agentic", history=self.HISTORY)
+        self.assertEqual(len(model.calls), 1)
+        self.assertEqual(result.course, "OUT_OF_SCOPE")
+
+
 if __name__ == "__main__":
     unittest.main()

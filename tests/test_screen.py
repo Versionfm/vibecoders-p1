@@ -4,7 +4,7 @@ import io
 import json
 import unittest
 
-from screen import ask, markdown_safe, tutor_setting
+from screen import answer_for_display, ask, markdown_safe, tutor_setting
 from tests.fakes import FakeChatModel, reads
 
 
@@ -52,6 +52,137 @@ class AskWithTheAgenticTutorTest(unittest.TestCase):
             result = ask("What is a prompt?", lambda: FakeChatModel([]), tutor="hybrid")
         self.assertIsNone(result)
         self.assertIn("hybrid", console.getvalue())
+
+
+class AnswerForDisplayTest(unittest.TestCase):
+    def test_individual_repeated_adjacent_and_grouped_citations_are_hidden(self):
+        for marker in (
+            "[PEID-2.3]", "[PEID-2.3] [PEID-2.3]", "[PEID-2.3][PEID-2.5]",
+            "[PEID-2.3, PEID-2.5]", "[PEID-2.3; PEID-2.5]", "[ UNKNOWN-999; GAIF-1 ]",
+        ):
+            with self.subTest(marker=marker):
+                self.assertEqual(answer_for_display(f"A fact {marker}."), "A fact.")
+
+    def test_ordinary_brackets_mixed_references_and_markdown_links_are_preserved(self):
+        text = (
+            "Keep [in simple terms], [1], [gaif-2.4], [GAIF 2.3] and [PEID-2.3, note].\n"
+            "Read [PEID-2.3](https://example.test/course) and [course](https://example.test/).\n"
+            "The fact [PEID-2.3]."
+        )
+        self.assertEqual(answer_for_display(text), text.replace("The fact [PEID-2.3].", "The fact."))
+
+    def test_removed_markers_keep_word_separation_punctuation_and_list_structure(self):
+        self.assertEqual(
+            answer_for_display(
+                "First [PEID-2.3] sentence [PEID-2.5] .\n\n"
+                "  - Item [PEID-2.3].\n"
+                "    [PEID-2.3]\n"
+                "next[PEID-2.3]word; then [PEID-2.3] , done.\n"
+                "Keep  these spaces."
+            ),
+            "First sentence.\n\n  - Item.\n\nnext word; then, done.\nKeep  these spaces.",
+        )
+
+    def test_escaped_markers_leave_no_stray_markdown_escapes(self):
+        self.assertEqual(
+            answer_for_display(r"A fact \[PEID-2.3\]; another \[PEID-2.3, PEID-2.5\]."),
+            "A fact; another.",
+        )
+
+    def test_reference_links_and_citation_like_link_destinations_are_preserved(self):
+        for text in (
+            "Read [PEID-2.3][notes].\n\n[notes]: https://example.test/[PEID-2.5]",
+            "Read [PEID-2.3][].\n\n[PEID-2.3]: https://example.test/course",
+            "Read [PEID-2.3].\n\n[PEID-2.3]: https://example.test/course",
+            "Read [PEID-2.3][PEID-2.5].\n\n[PEID-2.5]: https://example.test/course",
+            "Read [notes][PEID-2.3].\n\n[PEID-2.3]: https://example.test/course",
+            "Read [course](https://example.test/[PEID-2.3]) [PEID-2.5].",
+        ):
+            with self.subTest(text=text):
+                expected = text.replace(
+                    "(https://example.test/[PEID-2.3]) [PEID-2.5].",
+                    "(https://example.test/[PEID-2.3]).",
+                )
+                self.assertEqual(answer_for_display(text), expected)
+
+    def test_a_marker_before_indented_content_preserves_its_indentation(self):
+        self.assertEqual(
+            answer_for_display("    [PEID-2.3] - Nested item.\n  [PEID-2.5] Explanation."),
+            "    - Nested item.\n  Explanation.",
+        )
+
+    def test_empty_and_uncited_text_is_unchanged(self):
+        for text in ("", "Plain answer.\n\n  - A list with [an explanation].", "$5 and \\$6"):
+            with self.subTest(text=text):
+                self.assertEqual(answer_for_display(text), text)
+
+    def test_display_citations_are_removed_before_dollar_escaping(self):
+        self.assertEqual(
+            markdown_safe(answer_for_display(r"It costs $5 and \$6 [DTGS-3.15].")),
+            r"It costs \$5 and \$6.",
+        )
+
+    def test_removing_a_citation_preserves_surrounding_markdown_emphasis(self):
+        for text, expected in (
+            ("**A fact [PEID-2.3]**", "**A fact**"),
+            ("*A fact [PEID-2.3]*", "*A fact*"),
+            ("_A fact [PEID-2.3]_", "_A fact_"),
+            ("A fact[PEID-2.3]**then emphasis**", "A fact **then emphasis**"),
+        ):
+            with self.subTest(text=text):
+                self.assertEqual(answer_for_display(text), expected)
+
+    def test_emphasis_in_star_bullets_ignores_bullets_and_earlier_paragraphs(self):
+        for text, expected in (
+            ("* *A fact [PEID-2.3]*", "* *A fact*"),
+            ("* An earlier bullet.\n* *A fact [PEID-2.3]*", "* An earlier bullet.\n* *A fact*"),
+            ("An earlier * mark.\n\n*A fact [PEID-2.3]*", "An earlier * mark.\n\n*A fact*"),
+            ("*An earlier paragraph.*\n\n**A fact [PEID-2.3]**", "*An earlier paragraph.*\n\n**A fact**"),
+        ):
+            with self.subTest(text=text):
+                self.assertEqual(answer_for_display(text), expected)
+
+    def test_multiline_and_nested_markdown_links_keep_their_entire_content(self):
+        for link in (
+            '[PEID-2.3](https://example.test/course\n "Course title")',
+            '[See [PEID-2.3]](https://example.test/course)',
+            '[See [nested [PEID-2.3]]](https://example.test/[PEID-2.5])',
+            '[See [PEID-2.3]][notes]\n\n[notes]: https://example.test/course',
+        ):
+            with self.subTest(link=link):
+                self.assertEqual(answer_for_display(f"{link}\nA fact [PEID-2.3]."), f"{link}\nA fact.")
+
+    def test_markdown_hard_breaks_after_removed_markers_remain_hard_breaks(self):
+        for text, expected in (
+            ("A fact [PEID-2.3]  \nnext line", "A fact  \nnext line"),
+            ("A fact [PEID-2.3][PEID-2.5]  \r\nnext line", "A fact  \r\nnext line"),
+            ("A fact [PEID-2.3]\nnext line", "A fact\nnext line"),
+            ("A fact  [PEID-2.3]\nnext line", "A fact\nnext line"),
+        ):
+            with self.subTest(text=text):
+                self.assertEqual(answer_for_display(text), expected)
+
+    def test_markdown_link_destinations_preserve_arbitrarily_nested_parentheses(self):
+        for destination in (
+            "https://example.test/(nested(deep(deeper)))",
+            "<https://example.test/(nested(deep))>",
+            "<https://example.test/(unbalanced>",
+            '<https://example.test/(nested(deep))>\n "Course title"',
+            'https://example.test/course "Course title (part one"',
+            r"https://example.test/(nested\(escaped\)(deep))",
+        ):
+            with self.subTest(destination=destination):
+                link = f"[PEID-2.3]({destination})"
+                self.assertEqual(answer_for_display(f"{link} A fact [PEID-2.5]."), f"{link} A fact.")
+
+    def test_nested_emphasis_closing_runs_remain_attached_to_the_text(self):
+        for text, expected in (
+            ("**bold *italic [PEID-2.3]***", "**bold *italic***"),
+            ("*italic **bold [PEID-2.3]***, then text.", "*italic **bold***, then text."),
+            ("__bold _italic [PEID-2.3]___ then text.", "__bold _italic___ then text."),
+        ):
+            with self.subTest(text=text):
+                self.assertEqual(answer_for_display(text), expected)
 
 
 class MarkdownSafeTest(unittest.TestCase):

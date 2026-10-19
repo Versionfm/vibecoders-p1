@@ -590,3 +590,84 @@ Copy this block for each entry:
   Routed Tutor (+1.8 and +1.9 points). Not covered: the difference between commits `dcee50a` and `3b7125c` and the
   conversation history of the chat screen (each Golden Set case is a single question); one labeller behind the judge
   calibration; 36 cases and three Runs.
+
+## 2026-10-19 Keep the Agentic Tutor chat for teaching
+
+- **Change:** product decision, not a new implementation or evaluation. The group chooses the existing Agentic
+  Tutor chat for the teaching experience and demo because it enables follow-up questions and clarification in
+  context. This supersedes the 18 October decisions to abandon it under #17; those entries remain historical.
+- **Configuration:** unchanged from the latest recorded comparison: app model `deepseek-flash`, thinking off,
+  Golden Set v1 (36 cases), judge `openai/gpt-oss-20b`, `judge_supported_v2` and `judge_responsive_v1`.
+- **Run folders:** existing evidence only: `evaluation/runs/2026-10-18_040522_golden_set_v1_judge_v2_routed` and
+  `evaluation/runs/2026-10-18_113506_golden_set_v1_judge_v2_agentic`. No new Runs performed for this decision.
+- **Result:** unchanged: Routed Tutor -> Agentic Tutor, End-to-end Success 92.6% (88.9% to 94.4%) -> 87.0%
+  (83.3% to 88.9%); Search Step 97.2% -> 91.7%; Path Step 100.0% -> 100.0%; Answer Step 92.6% -> 92.6%.
+- **Decision:** kept for teaching and presentation, despite the lower measured single-question result. Use
+  `TUTOR=agentic` explicitly; the code fallback remains `routed`. The Routed Tutor remains available for comparison.
+- **Reason:** conversation is a better fit for the group's teaching purpose: students can clarify an explanation
+  and build on earlier exchanges. This is a design rationale, not demonstrated improvement in learning. The current
+  evaluator supplies no conversation history; multi-turn quality and learning outcomes remain unmeasured. The
+  next evaluation should cover them without changing Golden Set v1 or its scoring rules. See
+  [ADR 0003](../docs/adr/0003-keep-agentic-chat-for-teaching.md) for the tradeoff, limitations and presentation wording.
+
+## 2026-10-19 Consolidate displayed citations under Cited Sections
+
+- **Change:** presentation only (#21, spec #20). Both tutor screens hide standalone inline Section markers in a
+  display copy and retain the existing Cited Sections footer and invalid-citation warnings. Ordinary brackets and
+  Markdown links stay intact. Original answers and citation metadata remain in conversation history, follow-up
+  requests, evaluation, saved Traces and reports.
+- **Configuration:** no changes to tutor selection, prompts, model settings, the Golden Set, Course Material,
+  judge calibration, scoring, human labels, stored Runs or report renderers. No new model evaluation was run.
+- **Checks completed:** 206 deterministic tests pass (188 existing plus 18 new), including both real Streamlit
+  screens with fake models, follow-up and rerender behavior, raw conversation context, invalid references,
+  Refusal, Out of scope, retry, citation formatting, multiline and nested links, bullet and nested emphasis, hard breaks,
+  lists and dollar amounts. `git diff --check` passes.
+- **Offline preservation check:** all 216 saved Traces of the two calibrated-judge runs
+  (`2026-10-18_040522_golden_set_v1_judge_v2_routed`, `2026-10-18_113506_golden_set_v1_judge_v2_agentic`), read-only,
+  in memory. Rendering each answer for display left the answer result and citation metadata unchanged; the judge
+  prompts (Supported and Responsive, 162 judged answers) were identical before and after; recomputed Steps matched
+  the stored Steps; regenerated `report.html` matched the saved file byte for byte; the run folders were unchanged.
+  162 displayed answers differ from their raw answer. Recorded verdicts were reused only to rescore the unchanged
+  originals.
+- **Visual check:** the local app (both tutors) run with a deterministic fixture model, no model calls. Checked:
+  sentence punctuation, bullets and a nested bullet, bold labels, a citation-only line, a grouped and an adjacent
+  marker, ordinary brackets, a Markdown link with a Section-like text, `$50` and `$5`, the Cited Sections footer
+  below the answer, the invalid-citation warning, the first chat answer still clean after a follow-up, and
+  New conversation clearing the chat.
+- **Result:** no new tutor score or measured improvement in readability or learning. Existing single-question
+  End-to-end Success figures (87.0% Agentic Tutor, 92.6% Routed Tutor) describe the original underlying tutors,
+  not this display. No new Golden Set run or judge calibration is needed: raw answers, judge inputs, prompts and
+  scoring are unchanged.
+- **Project report wording:** “The screen consolidates references under Cited Sections; evaluation and saved
+  Traces retain the original answer with citations beside its claims. This presentation change does not establish
+  improved readability or learning.” No project report is present in the repository; the group can use this wording.
+
+## 2026-10-19 Agentic Tutor: an answer with no Read is sent back once to read first
+
+- **Change:** `run_agentic` sends a reply that has no tool calls, comes before any Read and is not the Out of scope
+  sentence back to the model once, with a short instruction to read the Course Material first (earlier answers in the
+  conversation are not Course Material). Prompts unchanged. Found in the chat: a follow-up answered from the
+  conversation alone, with no Read, had every citation listed as invalid (the warning was right: no Course Material
+  was read for that answer). Regression tests at the answer function: sent back once, only once, never for Out of
+  scope. Previous entry, same tutor and case file: 2026-10-18 Agentic Tutor (chat version) with the calibrated judge
+  (`2026-10-18_113506_golden_set_v1_judge_v2_agentic`, commit `3b7125c`).
+- **Configuration:** Agentic Tutor `agentic_tutor_v1`, app model `deepseek-flash`, thinking off, judge
+  `openai/gpt-oss-20b` with `judge_supported_v2` and `judge_responsive_v1`, `--workers 4`, commit `5ae0257`, case file
+  `evaluation/golden_set.json`. 3 of 3 Runs and 108 of 108 Traces finished; no error, no Read limit reached; 81
+  answers judged, no UNKNOWN verdict or judge error. 209 tests passed before the run.
+- **Run folder:** `evaluation/runs/2026-10-19_205545_golden_set_v1_judge_v2_read_first_agentic` (with `failures.md`).
+- **Result:** before -> after, mean (range): End-to-end Success 87.0% (83.3% to 88.9%) -> 85.2% (83.3% to 86.1%);
+  Search Step 91.7% (88.9% to 94.4%) -> 91.7% (91.7% to 91.7%); Path Step 100.0% -> 100.0%; Answer Step 92.6% (91.7%
+  to 94.4%) -> 90.7% (88.9% to 91.7%); Supported rate 93.8% (92.6% to 96.3%) -> 92.6% (88.9% to 96.3%); Responsive
+  rate 100.0% -> 98.8% (96.3% to 100.0%); Judge undecided rate 0.0% -> 0.0%; Routing accuracy 94.4% -> 94.4%; Recall
+  (macro average) 93.3% -> 93.3%; Citation, Refusal and Out of scope correctness 100.0% -> 100.0%. Failing Traces 14
+  -> 16, in 7 cases: GS-02 3/3 and GS-05 3/3 (unchanged), GS-15 1/3 -> 3/3 and GS-13 2/3 -> 0/3 (extra Read of a
+  second Course), GS-27 2/3 -> 3/3, GS-24 1/3 -> 2/3, GS-06 1/3 and GS-28 1/3 (unchanged). No in-scope answer came
+  without a Read in either evaluation, so on these single questions the guard had nothing to send back; the
+  differences are the run-to-run variation of the same Reads and judge verdicts, and the ranges overlap.
+- **Decision:** kept: the read-first guard stays in `run_agentic`.
+- **Reason:** kept because it removes the invalid-citation answers of chat follow-ups without touching a prompt, and
+  the Golden Set shows no effect it could have caused (no Trace without a Read before or after). For abandoning: none
+  measured; End-to-end Success is 1.8 points lower, inside the variation of three Runs. Not covered: the Golden Set
+  has no conversation history, so how often follow-ups skipped the Read, and how often the guard now fixes it, is
+  shown only by the tests with fake models; 36 cases and three Runs; one labeller behind the judge calibration.

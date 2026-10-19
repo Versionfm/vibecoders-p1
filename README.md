@@ -1,6 +1,6 @@
 # Course Tutor
 
-A single-screen tutor for four Courses (GAIF, PEID, AITB, DTGS). A Router picks the Course for your question, and the Course Tutor answers only from that Course's Course Material, citing the Section behind every claim (e.g. `[PEID-2.3]`). This is the Routed Tutor. An experimental Agentic Tutor has no Router: one model reads the Course Materials it needs through a `read_file(course)` tool and answers from them ([ADR 0001](docs/adr/0001-agentic-tutor-without-router.md), prompt `prompts/agentic_tutor_v1.md`). Vocabulary: [CONTEXT.md](CONTEXT.md).
+A single-screen tutor for four Courses (GAIF, PEID, AITB, DTGS), answering from Course Material with Section citations (e.g. `[PEID-2.3]`). The chosen teaching experience is the Agentic Tutor chat: one model reads the Course Materials it needs through a `read_file(course)` tool and keeps conversation context for follow-up questions. The Routed Tutor remains available for comparison: a Router picks one Course, then the Course Tutor answers from its Course Material. We kept the chat for its conversational teaching format despite lower measured single-question End-to-end Success (87.0% versus 92.6%); improved learning has not been measured. See [the decision and evidence](docs/adr/0003-keep-agentic-chat-for-teaching.md), [the Agentic Tutor design](docs/adr/0001-agentic-tutor-without-router.md) and [CONTEXT.md](CONTEXT.md) for vocabulary.
 
 ## Setup
 
@@ -46,9 +46,9 @@ Other settings in `.env` (optional unless marked required):
   the app model. `LLM_JUDGE_BASE_URL` and `LLM_JUDGE_API_KEY`
   default to the app's endpoint and key; set them when the judge sits on another provider. `LLM_JUDGE_THINKING`
   works like `LLM_THINKING`.
-- `TUTOR`: `routed` (default) or `agentic`. Chooses the tutor on the screen. With the Agentic Tutor the screen shows
-  a conversation with the Course Materials read alongside each answer. Keep `routed` for
-  the demo until the Agentic Tutor wins on the Golden Set.
+- `TUTOR`: `routed` (the code's fallback when unset) or `agentic`. Use `agentic` for the chosen teaching experience
+  and demo: a conversation with the Course Materials read alongside each answer. The choice prioritises conversation
+  despite the lower single-question score; see [ADR 0003](docs/adr/0003-keep-agentic-chat-for-teaching.md).
 
 Each model call times out after 60 s and is retried at most once, so one call fails after about 2 minutes at worst
 and the screen then asks you to try again.
@@ -56,13 +56,23 @@ and the screen then asks you to try again.
 ## Run
 
 ```bash
-streamlit run src/app.py
+TUTOR=agentic streamlit run src/app.py
 ```
 
-For the Agentic Tutor conversation screen, run `TUTOR=agentic streamlit run src/app.py`
-(or set `TUTOR=agentic` in `.env`). The chat keeps prior questions and answers in the browser
+Alternatively, set `TUTOR=agentic` in `.env` and run `streamlit run src/app.py`. For the Routed Tutor comparison,
+set `TUTOR=routed`. The chat keeps prior questions and answers in the browser
 session and sends them with each follow-up. Each answer reads its own Course Material; prior
 answers are conversation context, not source material. **New conversation** clears the history.
+
+Both tutor screens consolidate standalone Section markers under **Cited Sections** instead of repeating them
+beside each claim. Invalid citations still appear in the footer and warning. Only the displayed answer is cleaned:
+follow-up context, evaluation, saved Traces and reports retain the original cited answer, so the Golden Set and
+judge criteria are unchanged. No new model evaluation was run for this presentation change.
+
+Wording for the group's project report:
+
+> The screen consolidates references under Cited Sections; evaluation and saved Traces retain the original answer
+> with citations beside its claims. This presentation change does not establish improved readability or learning.
 
 ## How the Agentic Tutor works
 

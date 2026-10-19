@@ -4,6 +4,10 @@ status: accepted
 
 # Agentic Tutor: no Router, whole-file Reads, a plain Python loop
 
+**Tutor-selection rule superseded on 2026-10-19:** [ADR 0003](0003-keep-agentic-chat-for-teaching.md) chooses the
+Agentic Tutor chat for its teaching format despite its lower single-question score. The design below remains;
+the original benchmark-winner selection rule and demo recommendation are historical.
+
 We are building the Agentic Tutor as a variant next to the Routed Tutor, not as a replacement, and measuring both on the
 same Golden Set; the loser is logged as abandoned in the iteration log. The Agentic Tutor has no Router: one model,
 given the four Course Descriptions, asks for Course Material through a single `read_file(course)` tool whose only
