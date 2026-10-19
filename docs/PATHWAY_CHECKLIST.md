@@ -14,6 +14,10 @@ Claude Code, so the same steering files live where Claude Code reads them: `CLAU
 
 Last checked: 2026-10-18, branch `golden-set` (judge baselines and the #17 decision).
 
+Tutor choice updated on 2026-10-19: [ADR 0003](adr/0003-keep-agentic-chat-for-teaching.md) selects the Agentic Tutor
+chat for teaching, superseding the earlier decision to abandon it. Other checklist statuses retain their previous
+check date.
+
 ## M1 · Foundations
 
 | Item | Status | Evidence or what is left |
@@ -28,7 +32,7 @@ Last checked: 2026-10-18, branch `golden-set` (judge baselines and the #17 decis
 
 | Item | Status | Evidence or what is left |
 | --- | --- | --- |
-| App: input → LLM call → output, end to end on one screen | Done | [src/app.py](../src/app.py), [src/screen.py](../src/screen.py); one text box, one button. |
+| App: input → LLM call → output, end to end on one screen | Done | [src/app.py](../src/app.py), [src/screen.py](../src/screen.py); the chosen Agentic Tutor has chat input, conversation history and New conversation on one screen. |
 | App: the working prompt in its own versioned file, with label definitions and boundaries, 2–3 examples, fixed JSON output and an "unknown" exit | Partial | [prompts/](../prompts/): `router_v1` → `router_v2`, `tutor_v1` → `tutor_v2`, `agentic_tutor_v1`. The Router has label definitions with boundaries, JSON output and `OUT_OF_SCOPE` as the exit; the Course Tutor has the Refusal. **No worked examples** in any prompt (examples must not be Golden Set questions). |
 | [Optional] App: data in an internal database or RAG | Done (files, not a database) | Course Material in [data/courses/](../data/courses/), loaded by Section ([src/course_material.py](../src/course_material.py)); the Agentic Tutor reads it with `read_file(course)` ([ADR 0001](adr/0001-agentic-tutor-without-router.md)). |
 | App: evaluation traces with input, output, prompt version and latency | Partial | Every Trace is stored in `evaluation/runs/<folder>/run_N.json` with output, prompt versions, model, Reads and Steps ([ADR 0002](adr/0002-trace-steps-and-html-report.md)). **Latency is not recorded.** |
@@ -49,8 +53,8 @@ Last checked: 2026-10-18, branch `golden-set` (judge baselines and the #17 decis
 
 | Item | Status | Evidence or what is left |
 | --- | --- | --- |
-| App: one number we can defend (the metric, why, what it does not cover) | Partial | End-to-end Success on Golden Set v1 with the calibrated judge: Routed Tutor 92.6% (88.9% to 94.4%) over 3 Runs ([report](../evaluation/runs/2026-10-18_040522_golden_set_v1_judge_v2_routed/report.md)); 97.2% with code checks only. Still to write in the report: the "why this one / what it misses" sentence. |
-| App: one change tried, measured, and kept or abandoned with a reason | Done | [ITERATION_LOG.md](../evaluation/ITERATION_LOG.md): Lightning → Super (Lightning abandoned: no citations), the professor's `course-chat` endpoint (abandoned), Nemotron → DeepSeek (kept), the professor's endpoint re-tested after his proxy fix (not adopted), and the Agentic Tutor (abandoned, #17): 85.2% vs 90.7% End-to-end Success with the judge, same day ([compare.html](../evaluation/runs/2026-10-18_022123_golden_set_v1_judge_agentic/compare.html)). |
+| App: one number we can defend (the metric, why, what it does not cover) | Partial | Selected Agentic Tutor: 87.0% End-to-end Success (83.3% to 88.9%) over 3 Runs ([report](../evaluation/runs/2026-10-18_113506_golden_set_v1_judge_v2_agentic/report.md)); Routed Tutor comparison: 92.6%. [ADR 0003](adr/0003-keep-agentic-chat-for-teaching.md) explains the teaching rationale and the unmeasured conversational benefit. Still to include this distinction in the report. |
+| App: one change tried, measured, and kept or abandoned with a reason | Done | [ITERATION_LOG.md](../evaluation/ITERATION_LOG.md): Lightning → Super (Lightning abandoned: no citations), the professor's endpoint (not adopted), Nemotron → DeepSeek (kept). The Agentic Tutor was initially abandoned under #17, then selected for conversation on 2026-10-19 ([ADR 0003](adr/0003-keep-agentic-chat-for-teaching.md)); do not present the earlier abandonment as the current decision. |
 | Copilot: evidence for every steering file, at least two in the report | Partial | Commits that show the files changing: `9f83b7a` (evaluator skill and agent), `b4f8482` (both learn the Agentic Tutor). Still to collect: what changed *because of* `CLAUDE.md` and the skill (screenshots or before/after outputs). Context in [WORKFLOW_ITERATIONS.md](WORKFLOW_ITERATIONS.md). |
 
 ## M5 · Submit
@@ -60,7 +64,7 @@ Last checked: 2026-10-18, branch `golden-set` (judge baselines and the #17 decis
 | Deck: at most 6 slides, in order: idea · prompt · how we steered the coding assistant · failure taxonomy and Golden Set · our number · what we abandoned | Missing | Not started. |
 | Report: at most 5 pages, no appendices: screenshots, actual prompts, dataset, evaluation method and result, what did not work, repo link | Missing | Notes to draw on: [WORKFLOW_ITERATIONS.md](WORKFLOW_ITERATIONS.md), [ITERATION_LOG.md](../evaluation/ITERATION_LOG.md), the run reports. |
 | Repo: public at submission, link in the report, no commits after the deadline; secrets scan green; `.env` never in history | Partial | [secrets-scan.yml](../.github/workflows/secrets-scan.yml) exists; `.env` is not in the history of any branch (checked 2026-10-17). **The repository is private**, and `main` has only the first two commits: the work on `golden-set`, `course-tutor` and `agent-tutor` must be merged into `main` before it is made public. |
-| Demo: rehearsed with a timer (8 min: about 4 slides, 4 live, plus 2 for questions) and a backup recording | Outside the repo | Not done. Demo with `TUTOR=routed` (#17 decided for the Routed Tutor). |
+| Demo: rehearsed with a timer (8 min: about 4 slides, 4 live, plus 2 for questions) and a backup recording | Outside the repo | Rehearsal and recording not verified. Demo with `TUTOR=agentic` ([ADR 0003](adr/0003-keep-agentic-chat-for-teaching.md)); configure it explicitly because the code still falls back to `routed` when unset. |
 
 ## Open work, in order
 

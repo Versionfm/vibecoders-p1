@@ -590,3 +590,22 @@ Copy this block for each entry:
   Routed Tutor (+1.8 and +1.9 points). Not covered: the difference between commits `dcee50a` and `3b7125c` and the
   conversation history of the chat screen (each Golden Set case is a single question); one labeller behind the judge
   calibration; 36 cases and three Runs.
+
+## 2026-10-19 Keep the Agentic Tutor chat for teaching
+
+- **Change:** product decision, not a new implementation or evaluation. The group chooses the existing Agentic
+  Tutor chat for the teaching experience and demo because it enables follow-up questions and clarification in
+  context. This supersedes the 18 October decisions to abandon it under #17; those entries remain historical.
+- **Configuration:** unchanged from the latest recorded comparison: app model `deepseek-flash`, thinking off,
+  Golden Set v1 (36 cases), judge `openai/gpt-oss-20b`, `judge_supported_v2` and `judge_responsive_v1`.
+- **Run folders:** existing evidence only: `evaluation/runs/2026-10-18_040522_golden_set_v1_judge_v2_routed` and
+  `evaluation/runs/2026-10-18_113506_golden_set_v1_judge_v2_agentic`. No new Runs performed for this decision.
+- **Result:** unchanged: Routed Tutor -> Agentic Tutor, End-to-end Success 92.6% (88.9% to 94.4%) -> 87.0%
+  (83.3% to 88.9%); Search Step 97.2% -> 91.7%; Path Step 100.0% -> 100.0%; Answer Step 92.6% -> 92.6%.
+- **Decision:** kept for teaching and presentation, despite the lower measured single-question result. Use
+  `TUTOR=agentic` explicitly; the code fallback remains `routed`. The Routed Tutor remains available for comparison.
+- **Reason:** conversation is a better fit for the group's teaching purpose: students can clarify an explanation
+  and build on earlier exchanges. This is a design rationale, not demonstrated improvement in learning. The current
+  evaluator supplies no conversation history; multi-turn quality and learning outcomes remain unmeasured. The
+  next evaluation should cover them without changing Golden Set v1 or its scoring rules. See
+  [ADR 0003](../docs/adr/0003-keep-agentic-chat-for-teaching.md) for the tradeoff, limitations and presentation wording.
