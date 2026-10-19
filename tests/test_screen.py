@@ -162,6 +162,28 @@ class AnswerForDisplayTest(unittest.TestCase):
             with self.subTest(text=text):
                 self.assertEqual(answer_for_display(text), expected)
 
+    def test_markdown_link_destinations_preserve_arbitrarily_nested_parentheses(self):
+        for destination in (
+            "https://example.test/(nested(deep(deeper)))",
+            "<https://example.test/(nested(deep))>",
+            "<https://example.test/(unbalanced>",
+            '<https://example.test/(nested(deep))>\n "Course title"',
+            'https://example.test/course "Course title (part one"',
+            r"https://example.test/(nested\(escaped\)(deep))",
+        ):
+            with self.subTest(destination=destination):
+                link = f"[PEID-2.3]({destination})"
+                self.assertEqual(answer_for_display(f"{link} A fact [PEID-2.5]."), f"{link} A fact.")
+
+    def test_nested_emphasis_closing_runs_remain_attached_to_the_text(self):
+        for text, expected in (
+            ("**bold *italic [PEID-2.3]***", "**bold *italic***"),
+            ("*italic **bold [PEID-2.3]***, then text.", "*italic **bold***, then text."),
+            ("__bold _italic [PEID-2.3]___ then text.", "__bold _italic___ then text."),
+        ):
+            with self.subTest(text=text):
+                self.assertEqual(answer_for_display(text), expected)
+
 
 class MarkdownSafeTest(unittest.TestCase):
     def test_dollar_amounts_are_escaped_so_they_are_not_read_as_latex(self):
