@@ -665,8 +665,8 @@ Copy this block for each entry:
   second Course), GS-27 2/3 -> 3/3, GS-24 1/3 -> 2/3, GS-06 1/3 and GS-28 1/3 (unchanged). No in-scope answer came
   without a Read in either evaluation, so on these single questions the guard had nothing to send back; the
   differences are the run-to-run variation of the same Reads and judge verdicts, and the ranges overlap.
-- **Decision:** pending.
-- **Reason:** for keeping: it removes the invalid-citation answers of chat follow-ups without touching a prompt, and
+- **Decision:** kept: the read-first guard stays in `run_agentic`.
+- **Reason:** kept because it removes the invalid-citation answers of chat follow-ups without touching a prompt, and
   the Golden Set shows no effect it could have caused (no Trace without a Read before or after). For abandoning: none
   measured; End-to-end Success is 1.8 points lower, inside the variation of three Runs. Not covered: the Golden Set
   has no conversation history, so how often follow-ups skipped the Read, and how often the guard now fixes it, is
