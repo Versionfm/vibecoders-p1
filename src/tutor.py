@@ -7,13 +7,12 @@ import json
 import re
 from dataclasses import dataclass, field
 
-from agentic import run_agentic
+from agentic import OUT_OF_SCOPE_SENTENCE, run_agentic
 from course_material import CourseMaterial, default_course_materials
 from llm import ChatModel
 from prompts import AGENTIC_TUTOR_PROMPT_VERSION, ROUTER_PROMPT_VERSION, TUTOR_PROMPT_VERSION, fill, load_prompt
 
 OUT_OF_SCOPE = "OUT_OF_SCOPE"
-OUT_OF_SCOPE_SENTENCE = "This question is outside the four Courses."  # the Agentic Tutor's, given with no Read
 # A bracket holds one Section identifier or several separated by "," or ";". Any ID-shaped token in a bracket
 # (upper-case code, hyphen, numbers) counts as a citation, so malformed or unknown ones can be reported as invalid.
 BRACKET = re.compile(r"\[([^\[\]\n]{1,200})\]")
