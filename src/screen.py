@@ -7,9 +7,9 @@ from collections.abc import Callable, Mapping
 from tutor import BRACKET, CITATION_LIKE, ROUTED_TUTOR, ChatModel, TutorResult, answer_question
 
 _UNESCAPED_DOLLAR = re.compile(r"(?<!\\)\$")
-_MARKDOWN_LINK = re.compile(
-    r"\[[^\]\n]*\]\((?:\\.|[^()\\\n]|\([^()\n]*\))*\)"
-    r"|\[(?P<label>[^\]\n]*)\]\[(?P<reference>[^\]\n]*)\]"
+_LINK_SUFFIX = re.compile(
+    r"\((?:\\.|[^()\\]|\([^()]*\))*\)"
+    r"|\[(?P<reference>[^\]\n]*)\]"
 )
 _LINK_DEFINITION = re.compile(r"(?m)^ {0,3}\[([^\]\n]+)\]:[ \t]+\S[^\n]*")
 
@@ -30,13 +30,22 @@ def answer_for_display(answer: str) -> str:
     definitions = list(_LINK_DEFINITION.finditer(answer))
     labels = {definition.group(1).casefold() for definition in definitions}
     protected = [definition.span() for definition in definitions]
-    for link in _MARKDOWN_LINK.finditer(answer):
-        reference = link.group("reference")
+    openings = []
+    for bracket in re.finditer(r"\\.|[\[\]]", answer):
+        if bracket.group() == "[":
+            openings.append(bracket.start())
+        if bracket.group() != "]" or not openings:
+            continue
+        start = openings.pop()
+        suffix = _LINK_SUFFIX.match(answer, bracket.end())
+        if suffix is None:
+            continue
+        reference = suffix.group("reference")
         if (
             reference is None or reference.casefold() in labels
-            or not (_citation_only(link.group("label")) and _citation_only(reference))
+            or not (_citation_only(answer[start + 1:bracket.start()]) and _citation_only(reference))
         ):
-            protected.append(link.span())
+            protected.append((start, suffix.end()))
     for bracket in reversed(list(BRACKET.finditer(answer))):
         if (
             _citation_only(bracket.group(1)) and bracket.group(1).casefold() not in labels
@@ -53,10 +62,14 @@ def answer_for_display(answer: str) -> str:
             left, right = answer[:start], answer[end:]
             space = " " if left and right and left[-1] not in "\r\n([{" and right[0] not in "\r\n.,;:!?)]}" else ""
             emphasis = re.match(r"\*+|_+", right)
-            if emphasis and left.count(emphasis.group()) % 2:
+            paragraph = re.split(r"\n[ \t]*\n", left)[-1]
+            paragraph = re.sub(r"(?m)^[ \t]*(?:[-+*]|\d+[.)])[ \t]+", "", paragraph)
+            if emphasis and paragraph.count(emphasis.group()) % 2:
                 space = ""
             if (not left or left[-1] in "\r\n") and right and right[0] not in "\r\n":
                 space = answer[start:marker_start]
+            if right.startswith(("\n", "\r\n")):
+                space = answer[bracket.end():end]
             answer = left + space + right
     return answer
 

@@ -132,6 +132,36 @@ class AnswerForDisplayTest(unittest.TestCase):
             with self.subTest(text=text):
                 self.assertEqual(answer_for_display(text), expected)
 
+    def test_emphasis_in_star_bullets_ignores_bullets_and_earlier_paragraphs(self):
+        for text, expected in (
+            ("* *A fact [PEID-2.3]*", "* *A fact*"),
+            ("* An earlier bullet.\n* *A fact [PEID-2.3]*", "* An earlier bullet.\n* *A fact*"),
+            ("An earlier * mark.\n\n*A fact [PEID-2.3]*", "An earlier * mark.\n\n*A fact*"),
+            ("*An earlier paragraph.*\n\n**A fact [PEID-2.3]**", "*An earlier paragraph.*\n\n**A fact**"),
+        ):
+            with self.subTest(text=text):
+                self.assertEqual(answer_for_display(text), expected)
+
+    def test_multiline_and_nested_markdown_links_keep_their_entire_content(self):
+        for link in (
+            '[PEID-2.3](https://example.test/course\n "Course title")',
+            '[See [PEID-2.3]](https://example.test/course)',
+            '[See [nested [PEID-2.3]]](https://example.test/[PEID-2.5])',
+            '[See [PEID-2.3]][notes]\n\n[notes]: https://example.test/course',
+        ):
+            with self.subTest(link=link):
+                self.assertEqual(answer_for_display(f"{link}\nA fact [PEID-2.3]."), f"{link}\nA fact.")
+
+    def test_markdown_hard_breaks_after_removed_markers_remain_hard_breaks(self):
+        for text, expected in (
+            ("A fact [PEID-2.3]  \nnext line", "A fact  \nnext line"),
+            ("A fact [PEID-2.3][PEID-2.5]  \r\nnext line", "A fact  \r\nnext line"),
+            ("A fact [PEID-2.3]\nnext line", "A fact\nnext line"),
+            ("A fact  [PEID-2.3]\nnext line", "A fact\nnext line"),
+        ):
+            with self.subTest(text=text):
+                self.assertEqual(answer_for_display(text), expected)
+
 
 class MarkdownSafeTest(unittest.TestCase):
     def test_dollar_amounts_are_escaped_so_they_are_not_read_as_latex(self):

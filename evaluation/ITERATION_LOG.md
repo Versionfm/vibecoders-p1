@@ -618,9 +618,10 @@ Copy this block for each entry:
   requests, evaluation, saved Traces and reports.
 - **Configuration:** no changes to tutor selection, prompts, model settings, the Golden Set, Course Material,
   judge calibration, scoring, human labels, stored Runs or report renderers. No new model evaluation was run.
-- **Checks completed:** 201 deterministic tests pass (188 existing plus 13 new), including both real Streamlit
+- **Checks completed:** 204 deterministic tests pass (188 existing plus 16 new), including both real Streamlit
   screens with fake models, follow-up and rerender behavior, raw conversation context, invalid references,
-  Refusal, Out of scope, retry, citation formatting, links, emphasis, lists and dollar amounts. `git diff --check` passes.
+  Refusal, Out of scope, retry, citation formatting, multiline and nested links, bullet emphasis, hard breaks,
+  lists and dollar amounts. `git diff --check` passes.
 - **Acceptance still pending:** the implemented helper's offline preservation check over all 216 saved Traces
   and local visual inspection of the screens. These checks must finish before marking the ticket complete.
 - **Result:** no new tutor score or measured improvement in readability or learning. Existing single-question
