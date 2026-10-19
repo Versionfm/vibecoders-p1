@@ -64,6 +64,16 @@ set `TUTOR=routed`. The chat keeps prior questions and answers in the browser
 session and sends them with each follow-up. Each answer reads its own Course Material; prior
 answers are conversation context, not source material. **New conversation** clears the history.
 
+Both tutor screens consolidate standalone Section markers under **Cited Sections** instead of repeating them
+beside each claim. Invalid citations still appear in the footer and warning. Only the displayed answer is cleaned:
+follow-up context, evaluation, saved Traces and reports retain the original cited answer, so the Golden Set and
+judge criteria are unchanged. No new model evaluation was run for this presentation change.
+
+Wording for the group's project report:
+
+> The screen consolidates references under Cited Sections; evaluation and saved Traces retain the original answer
+> with citations beside its claims. This presentation change does not establish improved readability or learning.
+
 ## How the Agentic Tutor works
 
 Student message → LLM requests Course Material → Python reads it → LLM answers.

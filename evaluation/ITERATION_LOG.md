@@ -609,3 +609,24 @@ Copy this block for each entry:
   evaluator supplies no conversation history; multi-turn quality and learning outcomes remain unmeasured. The
   next evaluation should cover them without changing Golden Set v1 or its scoring rules. See
   [ADR 0003](../docs/adr/0003-keep-agentic-chat-for-teaching.md) for the tradeoff, limitations and presentation wording.
+
+## 2026-10-19 Consolidate displayed citations under Cited Sections
+
+- **Change:** presentation only (#21, spec #20). Both tutor screens hide standalone inline Section markers in a
+  display copy and retain the existing Cited Sections footer and invalid-citation warnings. Ordinary brackets and
+  Markdown links stay intact. Original answers and citation metadata remain in conversation history, follow-up
+  requests, evaluation, saved Traces and reports.
+- **Configuration:** no changes to tutor selection, prompts, model settings, the Golden Set, Course Material,
+  judge calibration, scoring, human labels, stored Runs or report renderers. No new model evaluation was run.
+- **Checks completed:** 201 deterministic tests pass (188 existing plus 13 new), including both real Streamlit
+  screens with fake models, follow-up and rerender behavior, raw conversation context, invalid references,
+  Refusal, Out of scope, retry, citation formatting, links, emphasis, lists and dollar amounts. `git diff --check` passes.
+- **Acceptance still pending:** the implemented helper's offline preservation check over all 216 saved Traces
+  and local visual inspection of the screens. These checks must finish before marking the ticket complete.
+- **Result:** no new tutor score or measured improvement in readability or learning. Existing single-question
+  End-to-end Success figures (87.0% Agentic Tutor, 92.6% Routed Tutor) describe the original underlying tutors,
+  not this display. A new Golden Set run or judge calibration is unnecessary if the pending check confirms raw
+  answers, judge inputs and scoring remain unchanged; crossing that boundary requires reassessing evaluation.
+- **Project report wording:** “The screen consolidates references under Cited Sections; evaluation and saved
+  Traces retain the original answer with citations beside its claims. This presentation change does not establish
+  improved readability or learning.” No project report is present in the repository; the group can use this wording.

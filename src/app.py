@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 
 from course_material import COURSE_NAMES
 from llm import get_chat_model
-from screen import ask, markdown_safe, tutor_setting
+from screen import answer_for_display, ask, markdown_safe, tutor_setting
 from tutor import AGENTIC_TUTOR, OUT_OF_SCOPE
 
 OUT_OF_SCOPE_MESSAGE = (
@@ -48,7 +48,7 @@ def render_result(result):
             st.markdown(f"**Course:** {course_label(result.course)}")
             st.markdown(f"**Why this Course:** “{markdown_safe(result.evidence)}”")
         st.markdown("**Answer**")
-        st.markdown(markdown_safe(result.answer))
+        st.markdown(markdown_safe(answer_for_display(result.answer)))
         if result.citations:
             st.caption("Cited Sections: " + ", ".join(result.citations))
         if result.invalid_citations:
