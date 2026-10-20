@@ -27,12 +27,13 @@ Source: [docs/PATHWAY_CHECKLIST.md](../docs/PATHWAY_CHECKLIST.md) (the professor
 | 5 Our number | [05_our_number.md](05_our_number.md) | Evaluation method and result |
 | 6 What we abandoned | [06_abandoned.md](06_abandoned.md) | What did not work; next steps |
 
-Screenshots of the app (real answers from `deepseek-flash`, taken 2026-10-19 on the current code):
+Screenshots of the app (real answers from `deepseek-flash`; the answer screens taken 2026-10-19 with `agentic_tutor_v1`, the Out of scope screen 2026-10-20 with `agentic_tutor_v3`; the answer path did not change between them):
 
 | File | Shows |
 | --- | --- |
 | [agentic_chat_1_answer.jpg](screenshots/agentic_chat_1_answer.jpg) | Agentic Tutor chat: "What does temperature do when a model samples its next token?" → "Course Materials read: PEID", the answer, Cited Sections: PEID-1.3; the follow-up question below |
 | [agentic_chat_2_follow_up.png](screenshots/agentic_chat_2_follow_up.png) | The follow-up "And top-p, which you mentioned, how is it different?" answered from a new Read of PEID |
+| [agentic_out_of_scope.png](screenshots/agentic_out_of_scope.png) | "Who are you?" on the Agentic chat (2026-10-20, `agentic_tutor_v3`): Course: Out of scope and the purpose notice, no Answer, no Read |
 | [routed_screen.png](screenshots/routed_screen.png) | Routed Tutor screen, same question: the Router's Course and evidence phrase, the answer, Cited Sections |
 
 ## Facts only the report needs
@@ -62,4 +63,4 @@ Screenshots of the app (real answers from `deepseek-flash`, taken 2026-10-19 on 
 - [ ] **Make the repo public** and check that the secrets scan is green (`.env` is not in the history).
 - [ ] **Rehearse with a timer** and record a backup of the demo. Run the demo with `TUTOR=agentic` in `.env` (the
       code falls back to `routed` when unset).
-- [ ] **Pick the screenshots** for the report from [screenshots/](screenshots/) (three app captures).
+- [ ] **Pick the screenshots** for the report from [screenshots/](screenshots/) (four app captures).

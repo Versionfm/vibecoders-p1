@@ -1,0 +1,220 @@
+{
+  "method": "Only Traces whose stored judge verdict was ERROR (a timed-out judge call) are judged again with the same judge model and prompts; every other stored verdict and every stored Run file is unchanged. Supplementary: the recorded result is the report.md of this folder.",
+  "judge_model": "openai/gpt-oss-20b",
+  "rejudged": [
+    {
+      "run": 1,
+      "case_id": "GS-01",
+      "stored": {
+        "supported": {
+          "verdict": "PASS",
+          "evidence": "All claims in the answer are directly stated in the cited section GAIF-1.3, which describes the Chinese Room setup, the external appearance of understanding, Searle’s point about syntax vs semantics, and the argument against strong AI."
+        },
+        "responsive": {
+          "verdict": "ERROR",
+          "evidence": "judge model call failed: APITimeoutError: Request timed out."
+        }
+      },
+      "rejudged": {
+        "supported": {
+          "verdict": "PASS",
+          "evidence": "All claims in the answer are directly stated in GAIF-1.3, which describes the Chinese Room scenario, the distinction between syntax and semantics, and the argument against strong AI."
+        },
+        "responsive": {
+          "verdict": "PASS",
+          "evidence": "The question asks what the Chinese Room is meant to show; the answer explains that it demonstrates that syntactic manipulation of symbols does not entail semantic understanding, thereby arguing against strong AI. The answer directly addresses the question."
+        }
+      },
+      "end_to_end_success": true,
+      "earliest_failing_step": null
+    },
+    {
+      "run": 1,
+      "case_id": "GS-07",
+      "stored": {
+        "supported": {
+          "verdict": "ERROR",
+          "evidence": "judge model call failed: APITimeoutError: Request timed out."
+        },
+        "responsive": {
+          "verdict": "PASS",
+          "evidence": "The answer defines precision and recall and explains their difference, and it explains that accuracy can be misleading on imbalanced data, directly addressing both parts of the question."
+        }
+      },
+      "rejudged": {
+        "supported": {
+          "verdict": "PASS",
+          "evidence": "All claims in the answer are directly supported by the cited sections: the precision, recall, and accuracy definitions and example are in [PEID-5.6], and the guidance on which metric to favor and the role of F1 are in [PEID-5.8]."
+        },
+        "responsive": {
+          "verdict": "PASS",
+          "evidence": "The answer defines precision and recall and explains why accuracy can be misleading due to class imbalance, directly addressing the question."
+        }
+      },
+      "end_to_end_success": true,
+      "earliest_failing_step": null
+    },
+    {
+      "run": 1,
+      "case_id": "GS-08",
+      "stored": {
+        "supported": {
+          "verdict": "PASS",
+          "evidence": "All claims in the answer are directly supported by the cited sections: the definition of workflow and agent, the agent loop details, and the composition pattern distinctions and recommended approach are all stated in [PEID-4.1] and [PEID-4.2]."
+        },
+        "responsive": {
+          "verdict": "ERROR",
+          "evidence": "judge model call failed: APITimeoutError: Request timed out."
+        }
+      },
+      "rejudged": {
+        "supported": {
+          "verdict": "PASS",
+          "evidence": "All claims in the answer are directly supported by the cited sections [PEID-4.1] and [PEID-4.2]."
+        },
+        "responsive": {
+          "verdict": "PASS",
+          "evidence": "The question asks for the difference between an LLM workflow and an LLM agent, and the answer explicitly states that the difference is who decides the next step, describing workflows as developer‑written code paths and agents as LLM‑directed runtime decisions."
+        }
+      },
+      "end_to_end_success": true,
+      "earliest_failing_step": null
+    },
+    {
+      "run": 1,
+      "case_id": "GS-14",
+      "stored": {
+        "supported": {
+          "verdict": "PASS",
+          "evidence": "Both claims – the five phases and the supporting tools – are explicitly listed in section DTGS-1.7."
+        },
+        "responsive": {
+          "verdict": "ERROR",
+          "evidence": "judge model call failed: APITimeoutError: Request timed out."
+        }
+      },
+      "rejudged": {
+        "supported": {
+          "verdict": "PASS",
+          "evidence": "Both the list of phases (Awareness, Desire, Knowledge, Ability, Reinforcement) and the supporting tools (communication, sponsorship, roadmaps, coaching, training, resistance management) are explicitly stated in the cited section DTGS-1.7."
+        },
+        "responsive": {
+          "verdict": "PASS",
+          "evidence": "The question asks for the meanings of the letters in ADKAR; the answer lists Awareness, Desire, Knowledge, Ability, Reinforcement, directly addressing the question."
+        }
+      },
+      "end_to_end_success": true,
+      "earliest_failing_step": null
+    },
+    {
+      "run": 1,
+      "case_id": "GS-25",
+      "stored": {
+        "supported": {
+          "verdict": "ERROR",
+          "evidence": "judge model call failed: APITimeoutError: Request timed out."
+        },
+        "responsive": {
+          "verdict": "PASS",
+          "evidence": "The question asks for ways to prevent an AI from inventing facts not present in supplied material, and the answer lists concrete methods such as supplying source, delimiting material, providing an escape hatch, requiring quoted evidence, and checking retrieval quality—all directly addressing the question."
+        }
+      },
+      "rejudged": {
+        "supported": {
+          "verdict": "PASS",
+          "evidence": "All claims in the answer are supported by the cited sections: PEID-1.9, PEID-1.8, PEID-3.1, PEID-2.4, PEID-3.10, PEID-3.12, PEID-2.7, PEID-2.15, PEID-3.8, PEID-3.9, PEID-4.10, and PEID-5.13."
+        },
+        "responsive": {
+          "verdict": "PASS",
+          "evidence": "The answer lists concrete steps—providing the source, delimiting material, adding an escape hatch, requiring quoted evidence, and checking retrieval quality—to prevent the AI from inventing facts, directly addressing the question."
+        }
+      },
+      "end_to_end_success": true,
+      "earliest_failing_step": null
+    },
+    {
+      "run": 1,
+      "case_id": "GS-26",
+      "stored": {
+        "supported": {
+          "verdict": "ERROR",
+          "evidence": "judge model call failed: APITimeoutError: Request timed out."
+        },
+        "responsive": {
+          "verdict": "PASS",
+          "evidence": "The question asks whether one can rely on an AI to review and correct its own answer; the answer directly states that this is not reliable and explains why, addressing the question directly."
+        }
+      },
+      "rejudged": {
+        "supported": {
+          "verdict": "PASS",
+          "evidence": "All claims in the answer are supported by the cited sections: 4.10, 4.2, 2.11, and 5.13."
+        },
+        "responsive": {
+          "verdict": "PASS",
+          "evidence": "The question asks whether one can rely on an AI to review and correct its own answer; the answer directly states that this is not reliable and explains why, addressing the question."
+        }
+      },
+      "end_to_end_success": true,
+      "earliest_failing_step": null
+    },
+    {
+      "run": 1,
+      "case_id": "GS-28",
+      "stored": {
+        "supported": {
+          "verdict": "ERROR",
+          "evidence": "judge model call failed: APITimeoutError: Request timed out."
+        },
+        "responsive": {
+          "verdict": "PASS",
+          "evidence": "The question asks for potential problems when a company uses AI to answer customers; the answer lists multiple failure modes such as liability, trust collapse, quality issues, lack of action, automation bias, unverified outcomes, weak governance, and regulatory exposure, directly addressing what can go wrong."
+        }
+      },
+      "rejudged": {
+        "supported": {
+          "verdict": "PASS",
+          "evidence": "All claims are supported by the cited sections: liability by DTGS-3.21, trust by DTGS-3.11, quality by DTGS-3.20, channel work by DTGS-3.11, automation bias by DTGS-3.21, unverified outcomes by DTGS-3.9, weak governance by DTGS-3.2, regulatory exposure by DTGS-3.19, and the final control by DTGS-3.21."
+        },
+        "responsive": {
+          "verdict": "PASS",
+          "evidence": "The question asks for potential problems that can arise when a company uses AI to answer customers; the answer lists multiple failure modes such as liability, trust collapse, quality issues, automation bias, unverified outcomes, governance gaps, and regulatory exposure, directly addressing what can go wrong."
+        }
+      },
+      "end_to_end_success": true,
+      "earliest_failing_step": null
+    },
+    {
+      "run": 2,
+      "case_id": "GS-11",
+      "stored": {
+        "supported": {
+          "verdict": "PASS",
+          "evidence": "All four claims in the answer are directly stated in the cited section [DTGS-1.4] and match its wording."
+        },
+        "responsive": {
+          "verdict": "ERROR",
+          "evidence": "judge model call failed: APITimeoutError: Request timed out."
+        }
+      },
+      "rejudged": {
+        "supported": {
+          "verdict": "PASS",
+          "evidence": "All four claims match the content of section [DTGS-1.4] as quoted, so each claim is supported."
+        },
+        "responsive": {
+          "verdict": "PASS",
+          "evidence": "The question asks for the reasons Kotter and Schlesinger give for resistance to organisational change; the answer lists the four reasons—parochial self‑interest, misunderstanding and lack of trust, different assessments of costs and benefits, and low tolerance for change—directly addressing the question."
+        }
+      },
+      "end_to_end_success": true,
+      "earliest_failing_step": null
+    }
+  ],
+  "end_to_end_success": {
+    "run_1": 88.9,
+    "run_2": 94.4,
+    "run_3": 91.7,
+    "mean": 91.7
+  }
+}

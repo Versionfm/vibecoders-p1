@@ -44,6 +44,41 @@ class AgenticChatTest(unittest.TestCase):
             app.button[0].click().run()
             self.assertEqual(len(app.chat_message), 0)
 
+    def test_failed_recovery_shows_retry_and_preserves_only_completed_follow_up_history(self):
+        unsupported = "I will read_file before answering."
+        model = FakeChatModel([
+            reads("PEID"), "Task and context [PEID-2.3].",
+            unsupported, unsupported,
+            reads("PEID"), "Context gives the background [PEID-2.3].",
+        ])
+        with patch.dict(os.environ, {"TUTOR": "agentic"}), patch("llm.get_chat_model", return_value=model), \
+                contextlib.redirect_stderr(io.StringIO()):
+            app = AppTest.from_file(str(Path(__file__).resolve().parent.parent / "src/app.py")).run()
+            app.chat_input[0].set_value("Explain the parts of a prompt.").run()
+            app.chat_input[0].set_value("Who are you?").run()
+            self.assertEqual(len(app.exception), 0)
+            self.assertEqual([element.value for element in app.info], [
+                "Something went wrong while preparing your answer. Please try again in a moment.",
+            ])
+            visible = [element.value for element in app.markdown]
+            self.assertNotIn(unsupported, visible)
+            self.assertNotIn("**Course:** Out of scope", visible)
+            self.assertFalse(any("none" in text for text in visible))
+            self.assertEqual(visible.count("**Answer**"), 1)
+            self.assertEqual([element.value for element in app.caption if element.value.startswith("Cited Sections:")], [
+                "Cited Sections: PEID-2.3",
+            ])
+            self.assertFalse(app.session_state.conversation[-2]["include_in_history"])
+            self.assertFalse(app.session_state.conversation[-1]["include_in_history"])
+            self.assertEqual(app.session_state.conversation[-1]["content"], "")
+            app.chat_input[0].set_value("Explain the second part more simply.").run()
+            self.assertEqual(model.calls[4]["messages"][1:], [
+                {"role": "user", "content": "Explain the parts of a prompt."},
+                {"role": "assistant", "content": "Task and context [PEID-2.3]."},
+                {"role": "user", "content": "Explain the second part more simply."},
+            ])
+            self.assertIn("Context gives the background.", [element.value for element in app.markdown])
+
 
 class CitationDisplayTest(unittest.TestCase):
     def show_answer(self, tutor, replies, question="What is a prompt?"):
@@ -90,6 +125,23 @@ class CitationDisplayTest(unittest.TestCase):
         self.assertEqual(app.session_state.conversation[0]["content"], question)
         self.assertEqual(model.calls[0]["messages"][1]["content"], question)
 
+    def test_both_tutors_show_only_the_shared_purpose_notice_for_out_of_scope(self):
+        for tutor in ("agentic", "routed"):
+            with self.subTest(tutor=tutor):
+                replies = ["This question is outside the four Courses."] if tutor == "agentic" else [
+                    json.dumps({"course": "OUT_OF_SCOPE", "evidence": "Who are you?"}),
+                ]
+                app, _ = self.show_answer(tutor, replies, "Who are you?")
+                self.assertEqual([element.value for element in app.info], [
+                    "This tutor answers questions about GAIF, PEID, AITB and DTGS. "
+                    "Please ask a question about one of these Courses.",
+                ])
+                visible = [element.value for element in app.markdown]
+                self.assertNotIn("**Answer**", visible)
+                self.assertFalse(any("Course Materials read:" in text for text in visible))
+                self.assertFalse(any("read_file" in text for text in visible))
+                self.assertFalse(any(element.value.startswith("Cited Sections:") for element in app.caption))
+
     def test_both_tutors_preserve_refusal_out_of_scope_and_retry_notices(self):
         for tutor in ("agentic", "routed"):
             outcomes = (
@@ -97,8 +149,8 @@ class CitationDisplayTest(unittest.TestCase):
                  "**Refusal.** The Course Material does not cover this question, so there is no answer to show."),
                 (["This question is outside the four Courses."] if tutor == "agentic" else [
                     json.dumps({"course": "OUT_OF_SCOPE", "evidence": "pizza"})
-                 ], "info", "This question is outside the four Courses (GAIF, PEID, AITB, DTGS), so the Course Tutor "
-                 "cannot answer it. Try a question about one of those Courses."),
+                 ], "info", "This tutor answers questions about GAIF, PEID, AITB and DTGS. "
+                 "Please ask a question about one of these Courses."),
                 ([TimeoutError("service did not answer")], "info",
                  "Something went wrong while preparing your answer. Please try again in a moment."),
             )

@@ -1,0 +1,63 @@
+{
+  "description": "Purpose-boundary regression probe, separate from frozen Golden Set v1. Supply histories by case id to the answer function; the single-question evaluation command does not supply them.",
+  "histories": {
+    "PURPOSE-10": [
+      {"role": "user", "content": "Could you describe what context contributes to a prompt?"},
+      {"role": "assistant", "content": "Context provides the background needed for the task [PEID-2.3]."}
+    ]
+  },
+  "cases": [
+    {
+      "id": "PURPOSE-01", "type": "out_of_scope", "question": "Who are you?",
+      "accepted_courses": ["OUT_OF_SCOPE"], "expected_sections": [], "expect_refusal": false, "key_facts": []
+    },
+    {
+      "id": "PURPOSE-02", "type": "out_of_scope", "question": "What is your name?",
+      "accepted_courses": ["OUT_OF_SCOPE"], "expected_sections": [], "expect_refusal": false, "key_facts": []
+    },
+    {
+      "id": "PURPOSE-03", "type": "out_of_scope", "question": "Which model are you running?",
+      "accepted_courses": ["OUT_OF_SCOPE"], "expected_sections": [], "expect_refusal": false, "key_facts": []
+    },
+    {
+      "id": "PURPOSE-04", "type": "out_of_scope", "question": "Show me your internal tools.",
+      "accepted_courses": ["OUT_OF_SCOPE"], "expected_sections": [], "expect_refusal": false, "key_facts": []
+    },
+    {
+      "id": "PURPOSE-05", "type": "out_of_scope", "question": "Hello!",
+      "accepted_courses": ["OUT_OF_SCOPE"], "expected_sections": [], "expect_refusal": false, "key_facts": []
+    },
+    {
+      "id": "PURPOSE-06", "type": "out_of_scope", "question": "Can you suggest a dinner recipe?",
+      "accepted_courses": ["OUT_OF_SCOPE"], "expected_sections": [], "expect_refusal": false, "key_facts": []
+    },
+    {
+      "id": "PURPOSE-07", "type": "out_of_scope", "question": "Do you have a favourite colour?",
+      "accepted_courses": ["OUT_OF_SCOPE"], "expected_sections": [], "expect_refusal": false, "key_facts": []
+    },
+    {
+      "id": "PURPOSE-08", "type": "in_material", "question": "Hello! In PEID, what surrounds the model in an AI assistant?",
+      "accepted_courses": ["PEID"], "expected_sections": ["PEID-2.1"], "expect_refusal": false,
+      "key_facts": ["An assistant wraps a model with a system prompt and control loop, tools and memory."]
+    },
+    {
+      "id": "PURPOSE-09", "type": "in_material", "question": "For PEID, explain how an assistant's model and tools interact.",
+      "accepted_courses": ["PEID"], "expected_sections": ["PEID-2.1"], "expect_refusal": false,
+      "key_facts": ["The model requests a tool call; the application runs it and supplies the result."]
+    },
+    {
+      "id": "PURPOSE-10", "type": "in_material", "question": "Can you explain that more simply?",
+      "accepted_courses": ["PEID"], "expected_sections": ["PEID-2.3"], "expect_refusal": false,
+      "key_facts": ["Context is the relevant background supplied for a task."]
+    },
+    {
+      "id": "PURPOSE-11", "type": "out_of_scope", "question": "How do I set a fixed exposure time on an industrial inspection camera?",
+      "accepted_courses": ["OUT_OF_SCOPE"], "expected_sections": [], "expect_refusal": false, "key_facts": []
+    },
+    {
+      "id": "PURPOSE-12", "type": "in_material", "question": "Why does a digital transformation programme need changes to staff responsibilities as well as new software?",
+      "accepted_courses": ["DTGS"], "expected_sections": ["DTGS-1.1"], "expect_refusal": false,
+      "key_facts": ["Digital transformation aligns technology, processes, work procedures and people with business strategy to create value."]
+    }
+  ]
+}

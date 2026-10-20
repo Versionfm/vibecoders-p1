@@ -671,3 +671,96 @@ Copy this block for each entry:
   measured; End-to-end Success is 1.8 points lower, inside the variation of three Runs. Not covered: the Golden Set
   has no conversation history, so how often follow-ups skipped the Read, and how often the guard now fixes it, is
   shown only by the tests with fake models; 36 cases and three Runs; one labeller behind the judge calibration.
+
+## 2026-10-20 Purpose-boundary candidate: prompt v2 and scope-aware recovery (#24)
+
+- **Change:** create `agentic_tutor_v2`, preserving the evaluated v1. It explicitly treats identity, personal and
+  internal-model/tool requests, greetings without a Course question and unrelated requests as Out of scope.
+  Interpretation uses the request and conversation context: mixed greeting/Course questions, technical Course
+  questions about models or tools, and contextual follow-ups retain the grounded path. The exact internal
+  Out of scope Sentence is unchanged.
+- **Recovery change:** keep one recovery attempt for a noncanonical reply with no Read or tool calls. The
+  instruction now permits the fixed Out of scope Sentence without a Read, or a grounded Course answer after a
+  Read. Repeated unsupported prose returns the existing error outcome, with the last reply in the diagnostic;
+  the screen shows its retry notice and excludes that failed exchange from successful history.
+- **Screen:** both tutors show “This tutor answers questions about GAIF, PEID, AITB and DTGS. Please ask a question
+  about one of these Courses.” for Out of scope, without an Answer heading, read-none row or citation footer.
+  Routed Tutor classification and prompts are unchanged.
+- **Deterministic checks:** 216 tests pass, with no provider calls or credentials. Red-green checks covered the
+  recorded v2 prompt, screenshot-like reply recovery, repeated no-Read failure and shared screen notice. Public
+  answer tests cover direct Out of scope without recovery, Course and contextual follow-up recovery through a
+  Read, retained conversation inputs and error scoring. Real Streamlit screen tests cover both tutors, retry
+  presentation, successful-history filtering, grounded answers and citation footers. Existing invalid/repeated
+  Read, limit, provider, Refusal, citation, scoring and judge tests pass. The ten purpose-boundary cases are kept
+  separately in `evaluation/purpose_boundary_cases.json`; scripted outcomes do not prove model classification.
+- **Evidence preserved:** Golden Set v1, frozen Course Material, human labels, earlier prompts, Run schema, judge
+  prompts/criteria and prior reports are unchanged. The last read-first baseline remains commit `5ae0257`,
+  `agentic_tutor_v1`, 85.2% End-to-end Success (83.3% to 86.1%) over three Runs of 36 cases in
+  `evaluation/runs/2026-10-19_205545_golden_set_v1_judge_v2_read_first_agentic`.
+- **Decision:** candidate implemented; real-model acceptance, Golden Set measurement and a final kept-or-abandoned
+  decision are pending #25. No candidate score or demo readiness is claimed. #25 must pin this implementation's
+  commit and recovery instruction, run the separate live purpose/context probe and three unchanged Golden Set
+  Runs, inspect regressions, compare the preserved baseline and update the report. Golden Set v1 has no prior
+  conversation, so contextual follow-ups require their separately reported probe. Improved learning remains
+  unmeasured; the Agentic Tutor selection in ADR 0003 is unchanged.
+
+## 2026-10-20 Purpose-boundary candidate: agentic_tutor_v2 -> agentic_tutor_v3 before any measurement (#24)
+
+- **Change:** `agentic_tutor_v3` replaces the candidate `agentic_tutor_v2` (commit `097adbf`). The purpose and Out of
+  scope rules move ahead of the Reading rules ("decide before any Read"), and two sentences are added: a request must
+  directly match a topic in a Course's "Covers" list, and "a general request is not in scope merely because it
+  involves digital technology". Two fixtures were added to `evaluation/purpose_boundary_cases.json`: PURPOSE-11, an
+  off-topic technical request (an industrial camera's exposure time), and PURPOSE-12, a DTGS control question.
+- **Configuration:** same recovery instruction and code as the entry above; only the prompt version changed.
+- **Run folder:** none. `agentic_tutor_v2` was never run on the Golden Set, and no probe output of v2 was stored, so
+  the reason for the change is recorded only by the commit and the two new fixtures.
+- **Result:** not measured. 216 deterministic tests pass with v3.
+- **Decision:** v2 abandoned before measurement; v3 is the candidate measured by #25.
+- **Reason:** v2 placed the Out of scope rule after the Reading rules, so the model was asked to read before deciding
+  scope; v3 asks for the scope decision first. No evidence of v2's live behaviour exists to compare.
+
+## 2026-10-20 Purpose-boundary correction measured: agentic_tutor_v3 and scope-aware recovery (#25)
+
+- **Change:** the #24 candidate: `agentic_tutor_v3` (identity, internal-model/tool requests, greetings without a Course
+  question and unrelated requests are Out of scope, decided before any Read) and the scope-aware recovery instruction
+  in `run_agentic` (one recovery: the Out of scope Sentence or a Read; a second reply with no Read is an error). The
+  screen's Out of scope notice is the shared purpose notice. Previous entry, same tutor and case file: the read-first
+  guard (`2026-10-19_205545_golden_set_v1_judge_v2_read_first_agentic`, `agentic_tutor_v1`, commit `5ae0257`), kept
+  as the pre-change evidence.
+- **Configuration:** Agentic Tutor `agentic_tutor_v3`, app model `deepseek-flash` on the DeepSeek API, thinking off,
+  judge `openai/gpt-oss-20b` on NVIDIA with `judge_supported_v2` and `judge_responsive_v1`, `--workers 4`, commit
+  `b40bb5d`, case file `evaluation/golden_set.json`: the baseline's model, thinking setting, judge and scoring. 3 of 3
+  Runs and 108 of 108 Traces finished; no tutor error, no Read limit reached. 216 deterministic tests passed.
+- **Live purpose-boundary probe:** `evaluation/probes/purpose_boundary_probe.py` on the 12 cases of
+  `evaluation/purpose_boundary_cases.json` (not Golden Set cases), 3 repetitions each, through `answer_question` with
+  the supplied history: **36 of 36 passed** (`evaluation/probes/purpose_boundary_probe.json`, every raw reply
+  recorded). The 8 identity, greeting and unrelated cases (including "Who are you?" and an off-topic technical request)
+  gave the exact Out of scope Sentence with no Read, 24 of 24; the 4 Course controls (a greeting plus a PEID question, a
+  PEID question about an assistant's model and tools, the follow-up "Can you explain that more simply?" with a supplied
+  PEID exchange, a DTGS question) read the Accepted Course and gave cited answers with valid citations, 12 of 12, and no
+  answer mentioned `read_file`. Recovery never fired: every first reply was already the Out of scope Sentence or a Read.
+  Live screen: "Who are you?" on the Agentic chat showed the purpose notice with no Answer heading, read-none row or
+  citation footer (`report/screenshots/agentic_out_of_scope.png`).
+- **Run folder:** `evaluation/runs/2026-10-20_130617_golden_set_v1_judge_v2_purpose_v3_agentic` (with `failures.md`,
+  `compare.html` against the read-first guard, and `rejudged_judge_errors.json`).
+- **Result:** read-first guard -> v3, mean (range): End-to-end Success 85.2% (83.3% to 86.1%) -> 84.3% (69.4% to
+  91.7%); Search Step 91.7% -> 97.2% (97.2% to 97.2%); Path Step 100.0% -> 100.0%; Answer Step 90.7% (88.9% to 91.7%)
+  -> 84.3% (69.4% to 91.7%); Supported rate 92.6% (88.9% to 96.3%) -> 87.7% (74.1% to 96.3%); Responsive rate 98.8%
+  (96.3% to 100.0%) -> 95.1% (88.9% to 100.0%); **Judge undecided rate 0.0% -> 4.9% (0.0% to 13.0%)**; Routing accuracy
+  94.4% -> 97.2%; Recall (macro average) 93.3% -> 96.7%; Citation, Refusal and Out of scope correctness 100.0% ->
+  100.0%. Runs 2 and 3 scored 91.7% each; Run 1 scored 69.4% because 7 of its judge calls timed out (8 in all, one in
+  Run 2), and a judge error fails the Answer Step. Failing Traces 16 -> 17 in 12 cases: 8 judge timeouts (GS-01, GS-07,
+  GS-08, GS-14, GS-25, GS-26, GS-28 in Run 1; GS-11 in Run 2), GS-05 3/3 (wrong Course, unchanged), and 6 claims beyond
+  the Section (GS-11, GS-23, GS-24, GS-25, GS-27 2). The extra Course Reads are gone: GS-02 and GS-15 3/3 -> 0/3.
+  Supplementary, stored Runs unchanged: the 8 timed-out Traces judged again with the same judge all PASS on both
+  criteria, giving End-to-end Success 91.7% (88.9% to 94.4%) (`rejudged_judge_errors.json`).
+- **Decision:** kept: `agentic_tutor_v3` with the scope-aware recovery is the Agentic Tutor of the app and the demo.
+- **Reason:** every targeted identity/off-topic case and every grounded Course control passed with the real model, and
+  the screen shows the purpose notice. On the Golden Set the Search Step rose from 91.7% to 97.2% (no extra Course
+  Reads); claims beyond the Section stayed at 6 Traces on partly different cases (new once each: GS-11, GS-23, GS-25;
+  gone: GS-06, GS-28), and GS-05 fails as before. The recorded End-to-end Success of 84.3% is lower than the baseline
+  only through the judge's timeouts in Run 1 (the other runs scored 91.7%). The number to
+  quote is the recorded 84.3% (69.4% to 91.7%) with that explanation; the re-judged 91.7% is supplementary and is not
+  a stored Run. Not covered: Golden Set v1 has single questions only, so contextual follow-ups are shown only by the
+  probe (one follow-up case, three repetitions); 36 cases and three Runs; one labeller behind the judge calibration; no
+  new judge calibration was needed (same judge model, prompts and criteria); improved learning is unmeasured.

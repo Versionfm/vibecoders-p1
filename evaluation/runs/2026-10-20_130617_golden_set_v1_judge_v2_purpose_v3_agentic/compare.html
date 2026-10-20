@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Compare 2026-10-19_205545_golden_set_v1_judge_v2_read_first_agentic and 2026-10-20_130617_golden_set_v1_judge_v2_purpose_v3_agentic</title>
+<style>
+:root { color-scheme: light dark; --bg: #faf9f6; --fg: #1d1d1b; --muted: #6b6a66; --line: #e2e0da;
+  --track: #ecebe6; --fill: #3d6fb6; --strong: #c2562d; --pass: #2f7d4f; --fail: #b3362f; --panel: #ffffff; }
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #161615; --fg: #ecebe6; --muted: #a09f99; --line: #34332f; --track: #2a2a27;
+    --fill: #6e9be0; --strong: #ee8a5f; --pass: #6cc28f; --fail: #f07a72; --panel: #1f1f1d; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.5 system-ui, sans-serif; }
+main { max-width: 960px; margin: 0 auto; padding: 32px 16px 48px; }
+h1 { font-size: 1.3rem; margin: 0 0 4px; } h2 { font-size: 1.05rem; margin: 32px 0 8px; }
+.meta, small, footer { color: var(--muted); }
+.headline { font-size: 3.2rem; font-weight: 700; line-height: 1.1; color: var(--strong); margin-top: 16px; }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; }
+.bar-row { display: grid; grid-template-columns: 11rem 1fr 11rem; gap: 12px; align-items: center; margin: 8px 0; }
+.track { position: relative; height: 18px; background: var(--track); border-radius: 4px; overflow: hidden; }
+.fill { position: absolute; inset: 0 auto 0 0; background: var(--fill); }
+.range { position: absolute; top: 0; bottom: 0; border-left: 2px solid var(--fg); border-right: 2px solid var(--fg);
+  opacity: .45; }
+.strong .fill { background: var(--strong); } .strong .label { font-weight: 700; }
+.callout { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.callout .big { font-size: 2rem; font-weight: 700; }
+.callout .matters .big { color: var(--strong); }
+.starts td { font-size: 1.6rem; font-weight: 700; }
+table { border-collapse: collapse; width: 100%; font-size: .88rem; }
+th, td { text-align: left; vertical-align: top; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+.scroll { overflow-x: auto; }
+.pass { color: var(--pass); } .fail { color: var(--fail); font-weight: 600; }
+a { color: var(--fill); }
+details summary { cursor: pointer; font-weight: 600; }
+footer { margin-top: 32px; font-size: .85rem; }
+@media (max-width: 640px) {
+  .bar-row { grid-template-columns: 1fr; gap: 4px; } .callout { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<main>
+
+<h1>Compare two evaluations</h1>
+<p class="meta">A <b>2026-10-19_205545_golden_set_v1_judge_v2_read_first_agentic</b> (3 Runs) · B <b>2026-10-20_130617_golden_set_v1_judge_v2_purpose_v3_agentic</b> (3 Runs)</p>
+
+
+<h2>Pass rate per Step</h2>
+<div class="panel" style="margin-bottom:8px"><b>Search Step</b><div class="bar-row"><span class="label">A agentic</span><span class="track"><span class="fill" style="width:91.7%"></span><span class="range" style="left:91.7%;width:0.0%"></span></span><span class="value">91.7% <small>91.7% to 91.7%</small></span></div><div class="bar-row"><span class="label">B agentic</span><span class="track"><span class="fill" style="width:97.2%"></span><span class="range" style="left:97.2%;width:0.0%"></span></span><span class="value">97.2% <small>97.2% to 97.2%</small></span></div></div><div class="panel" style="margin-bottom:8px"><b>Path Step</b><div class="bar-row"><span class="label">A agentic</span><span class="track"><span class="fill" style="width:100.0%"></span><span class="range" style="left:100.0%;width:0.0%"></span></span><span class="value">100.0% <small>100.0% to 100.0%</small></span></div><div class="bar-row"><span class="label">B agentic</span><span class="track"><span class="fill" style="width:100.0%"></span><span class="range" style="left:100.0%;width:0.0%"></span></span><span class="value">100.0% <small>100.0% to 100.0%</small></span></div></div><div class="panel" style="margin-bottom:8px"><b>Answer Step</b><div class="bar-row"><span class="label">A agentic</span><span class="track"><span class="fill" style="width:90.7%"></span><span class="range" style="left:88.9%;width:2.8%"></span></span><span class="value">90.7% <small>88.9% to 91.7%</small></span></div><div class="bar-row"><span class="label">B agentic</span><span class="track"><span class="fill" style="width:84.3%"></span><span class="range" style="left:69.4%;width:22.2%"></span></span><span class="value">84.3% <small>69.4% to 91.7%</small></span></div></div><div class="panel" style="margin-bottom:8px"><b>End-to-end Success</b><div class="bar-row strong"><span class="label">A agentic</span><span class="track"><span class="fill" style="width:85.2%"></span><span class="range" style="left:83.3%;width:2.8%"></span></span><span class="value">85.2% <small>83.3% to 86.1%</small></span></div><div class="bar-row strong"><span class="label">B agentic</span><span class="track"><span class="fill" style="width:84.3%"></span><span class="range" style="left:69.4%;width:22.2%"></span></span><span class="value">84.3% <small>69.4% to 91.7%</small></span></div></div>
+<small>Bar: mean over the Runs. Marks: lowest to highest Run.</small>
+<h2>LLM judge</h2><div class="panel" style="margin-bottom:8px"><b>Supported rate</b><div class="bar-row"><span class="label">A agentic</span><span class="track"><span class="fill" style="width:92.6%"></span><span class="range" style="left:88.9%;width:7.4%"></span></span><span class="value">92.6% <small>88.9% to 96.3%</small></span></div><div class="bar-row"><span class="label">B agentic</span><span class="track"><span class="fill" style="width:87.7%"></span><span class="range" style="left:74.1%;width:22.2%"></span></span><span class="value">87.7% <small>74.1% to 96.3%</small></span></div></div><div class="panel" style="margin-bottom:8px"><b>Responsive rate</b><div class="bar-row"><span class="label">A agentic</span><span class="track"><span class="fill" style="width:98.8%"></span><span class="range" style="left:96.3%;width:3.7%"></span></span><span class="value">98.8% <small>96.3% to 100.0%</small></span></div><div class="bar-row"><span class="label">B agentic</span><span class="track"><span class="fill" style="width:95.1%"></span><span class="range" style="left:88.9%;width:11.1%"></span></span><span class="value">95.1% <small>88.9% to 100.0%</small></span></div></div><div class="panel" style="margin-bottom:8px"><b>Judge undecided rate</b><div class="bar-row"><span class="label">A agentic</span><span class="track"><span class="fill" style="width:0.0%"></span><span class="range" style="left:0.0%;width:0.0%"></span></span><span class="value">0.0% <small>0.0% to 0.0%</small></span></div><div class="bar-row"><span class="label">B agentic</span><span class="track"><span class="fill" style="width:4.9%"></span><span class="range" style="left:0.0%;width:13.0%"></span></span><span class="value">4.9% <small>0.0% to 13.0%</small></span></div></div>
+<h2>Cases whose End-to-end Success changed</h2>
+<div class="scroll"><table><tr><th>Case</th><th>A End-to-end Success</th><th>A earliest failing Step</th><th>B End-to-end Success</th><th>B earliest failing Step</th></tr><tr class="changed" id="case-GS-01"><td>GS-01</td><td>3/3</td><td>-</td><td>2/3</td><td>Answer 1</td></tr><tr class="changed" id="case-GS-02"><td>GS-02</td><td>0/3</td><td>Search 3</td><td>3/3</td><td>-</td></tr><tr class="changed" id="case-GS-06"><td>GS-06</td><td>2/3</td><td>Answer 1</td><td>3/3</td><td>-</td></tr><tr class="changed" id="case-GS-07"><td>GS-07</td><td>3/3</td><td>-</td><td>2/3</td><td>Answer 1</td></tr><tr class="changed" id="case-GS-08"><td>GS-08</td><td>3/3</td><td>-</td><td>2/3</td><td>Answer 1</td></tr><tr class="changed" id="case-GS-11"><td>GS-11</td><td>3/3</td><td>-</td><td>1/3</td><td>Answer 2</td></tr><tr class="changed" id="case-GS-14"><td>GS-14</td><td>3/3</td><td>-</td><td>2/3</td><td>Answer 1</td></tr><tr class="changed" id="case-GS-15"><td>GS-15</td><td>0/3</td><td>Search 3</td><td>3/3</td><td>-</td></tr><tr class="changed" id="case-GS-23"><td>GS-23</td><td>3/3</td><td>-</td><td>2/3</td><td>Answer 1</td></tr><tr class="changed" id="case-GS-24"><td>GS-24</td><td>1/3</td><td>Answer 2</td><td>2/3</td><td>Answer 1</td></tr><tr class="changed" id="case-GS-25"><td>GS-25</td><td>3/3</td><td>-</td><td>1/3</td><td>Answer 2</td></tr><tr class="changed" id="case-GS-26"><td>GS-26</td><td>3/3</td><td>-</td><td>2/3</td><td>Answer 1</td></tr><tr class="changed" id="case-GS-27"><td>GS-27</td><td>0/3</td><td>Answer 3</td><td>1/3</td><td>Answer 2</td></tr></table></div><small>A is 2026-10-19_205545_golden_set_v1_judge_v2_read_first_agentic, B is 2026-10-20_130617_golden_set_v1_judge_v2_purpose_v3_agentic. Earliest failing Step: the Step and the number of Runs in which the case failed there first.</small>
+
+<footer>Every rate on this page is computed from the stored Runs (<code>run_N.json</code>) of both run folders by
+<code>src/compare.py</code>, not typed in.</footer>
+
+</main>
+</body>
+</html>

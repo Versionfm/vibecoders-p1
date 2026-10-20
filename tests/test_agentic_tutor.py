@@ -1,11 +1,15 @@
 """Seam A for the Agentic Tutor: scripted tool calls in, a Trace and a cited answer out."""
 import copy
+import json
+from pathlib import Path
 import unittest
 
+from cases import load_cases
 from course_material import COURSES, load_course_material
 from llm import ModelReply, ToolCall
 from tests.fakes import FakeChatModel, reads
 from tutor import answer_question
+from scoring import needs_judge, score_trace
 
 QUESTION = "What are the parts of a good prompt?"
 ANSWER = "A good prompt names the task and gives context [PEID-2.3]."
@@ -44,7 +48,7 @@ class OneReadThenCitedAnswerTest(unittest.TestCase):
 
     def test_the_question_is_sent_and_the_agentic_prompt_version_is_recorded(self):
         self.assertIn(QUESTION, self.model.prompt_text(0))
-        self.assertEqual(self.result.tutor_prompt_version, "agentic_tutor_v1")
+        self.assertEqual(self.result.tutor_prompt_version, "agentic_tutor_v3")
         self.assertEqual(self.result.model, "nvidia/test-model")
 
 
@@ -207,6 +211,23 @@ class ConversationProtocolTest(unittest.TestCase):
 class ReadBeforeAnswerTest(unittest.TestCase):
     HISTORY = [{"role": "user", "content": QUESTION}, {"role": "assistant", "content": ANSWER}]
 
+    def test_an_identity_reply_can_recover_to_out_of_scope_without_a_read(self):
+        unsupported = (
+            "I don't have a question to answer here. If you have one, I'll read the relevant Course Material "
+            "with read_file first and answer only from what it states, citing the Sections."
+        )
+        model = FakeChatModel([unsupported, OUT_OF_SCOPE_SENTENCE])
+        result = answer_question("Who are you?", model, tutor="agentic")
+        self.assertEqual(result.course, "OUT_OF_SCOPE")
+        self.assertEqual(result.answer, OUT_OF_SCOPE_SENTENCE)
+        self.assertEqual(result.materials_read, [])
+        self.assertIsNone(result.error)
+        self.assertEqual(len(model.calls), 2)
+        recovery = model.calls[1]["messages"]
+        self.assertEqual(recovery[1], {"role": "user", "content": "Who are you?"})
+        self.assertEqual(recovery[-2], {"role": "assistant", "content": unsupported})
+        self.assertIn(OUT_OF_SCOPE_SENTENCE, recovery[-1]["content"])
+
     def test_a_follow_up_answered_without_a_read_is_sent_back_to_read_first(self):
         model = FakeChatModel(["From memory [PEID-2.3].", reads("PEID"), ANSWER])
         result = answer_question("Explain the second part.", model, tutor="agentic", history=self.HISTORY)
@@ -219,18 +240,79 @@ class ReadBeforeAnswerTest(unittest.TestCase):
         self.assertEqual(result.materials_read, ["PEID"])
         self.assertEqual(result.invalid_citations, [])
 
-    def test_it_is_sent_back_only_once(self):
+    def test_failed_recovery_is_an_error_with_no_successful_answer_and_no_third_call(self):
         model = FakeChatModel(["From memory [PEID-2.3].", "Still from memory [PEID-2.3]."])
         result = answer_question(QUESTION, model, tutor="agentic")
         self.assertEqual(len(model.calls), 2)
-        self.assertEqual(result.answer, "Still from memory [PEID-2.3].")
-        self.assertEqual(result.invalid_citations, ["PEID-2.3"])
+        self.assertIsNotNone(result.error)
+        self.assertIn("Still from memory [PEID-2.3].", result.error)
+        self.assertIsNone(result.course)
+        self.assertEqual(result.answer, "")
+        self.assertEqual(result.materials_read, [])
+        self.assertFalse(result.is_refusal)
 
     def test_out_of_scope_without_a_read_is_not_sent_back(self):
         model = FakeChatModel([OUT_OF_SCOPE_SENTENCE])
         result = answer_question("How do I bake bread?", model, tutor="agentic", history=self.HISTORY)
         self.assertEqual(len(model.calls), 1)
         self.assertEqual(result.course, "OUT_OF_SCOPE")
+
+
+class PurposeBoundaryTest(unittest.TestCase):
+    """Scripted outcomes verify handling; real-model classification is a separate acceptance check."""
+
+    def test_boundary_cases_preserve_out_of_scope_and_grounded_course_outcomes(self):
+        fixture = Path(__file__).resolve().parent.parent / "evaluation/purpose_boundary_cases.json"
+        histories = json.loads(fixture.read_text())["histories"]
+        for case in load_cases(fixture):
+            with self.subTest(case=case.id):
+                history = histories.get(case.id, [])
+                if case.type == "out_of_scope":
+                    model = FakeChatModel([OUT_OF_SCOPE_SENTENCE])
+                else:
+                    section = case.expected_sections[0]
+                    answer = f"{case.key_facts[0]} [{section}]"
+                    model = FakeChatModel([reads(case.accepted_courses[0]), answer])
+                result = answer_question(case.question, model, tutor="agentic", history=history)
+                self.assertIsNone(result.error)
+                self.assertEqual(model.calls[0]["messages"][1:-1], history)
+                self.assertEqual(model.calls[0]["messages"][-1]["content"], case.question)
+                self.assertTrue(score_trace(case, result).success)
+                if case.type == "out_of_scope":
+                    self.assertEqual(result.answer, OUT_OF_SCOPE_SENTENCE)
+                    self.assertEqual(result.materials_read, [])
+                    self.assertFalse(needs_judge(case, result))
+                    self.assertEqual(len(model.calls), 1)
+                else:
+                    self.assertEqual(result.materials_read, case.accepted_courses)
+                    self.assertEqual(result.citations, case.expected_sections)
+
+    def test_a_course_question_recovers_to_a_grounded_answer_without_history(self):
+        model = FakeChatModel(["I can explain it.", reads("PEID"), ANSWER])
+        result = answer_question(QUESTION, model, tutor="agentic")
+        self.assertEqual(result.course, "PEID")
+        self.assertEqual(result.answer, ANSWER)
+        self.assertEqual(result.materials_read, ["PEID"])
+        self.assertEqual(result.invalid_citations, [])
+        self.assertIsNone(result.error)
+
+    def test_repeated_identity_reply_is_an_error_not_out_of_scope(self):
+        model = FakeChatModel(["I use read_file to read Courses."] * 2)
+        result = answer_question("Who are you?", model, tutor="agentic")
+        self.assertEqual(len(model.calls), 2)
+        self.assertIsNotNone(result.error)
+        self.assertIsNone(result.course)
+        self.assertEqual(result.answer, "")
+        self.assertEqual(result.read_count, 0)
+
+    def test_failed_recovery_cannot_pass_an_expected_out_of_scope_case(self):
+        fixture = Path(__file__).resolve().parent.parent / "evaluation/purpose_boundary_cases.json"
+        case = load_cases(fixture)[0]
+        result = answer_question(case.question, FakeChatModel(["No question."] * 2), tutor="agentic")
+        verdict = score_trace(case, result)
+        self.assertFalse(verdict.success)
+        self.assertEqual(verdict.earliest_failure[0], "Path")
+        self.assertFalse(needs_judge(case, result))
 
 
 if __name__ == "__main__":

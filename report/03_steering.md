@@ -39,7 +39,7 @@
   taught both the Agentic Tutor (2026-10-14); `CLAUDE.md` gained the read-first rule when the code did (2026-10-19).
 - **The rules held in practice:** every prompt change is a new version (`router_v2`, `tutor_v2`, `judge_supported_v2`);
   the Golden Set file has never changed since it was frozen; every evaluation, including abandoned ones, is in the
-  [iteration log](../evaluation/ITERATION_LOG.md) (28 entries); a label correction proposed after seeing the judge was
+  [iteration log](../evaluation/ITERATION_LOG.md) (31 entries); a label correction proposed after seeing the judge was
   recorded and **abandoned**, the first labels stayed official ([06_abandoned.md](06_abandoned.md)).
 
 **Screenshots to take (open item):** the final messages of sessions A and B2, and session D2's skill call.

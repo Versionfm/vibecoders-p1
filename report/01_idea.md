@@ -7,8 +7,9 @@
   ([README](../README.md), first paragraph.)
 - **The product:** a one-screen tutor for four Courses. Every answer comes only from the group's own Course Material
   and cites the Section behind each claim, e.g. `[PEID-2.3]`. A question the material does not cover gets a fixed
-  **Refusal** ("This is not covered in the PEID material."); a subject none of the Courses teaches gets **Out of
-  scope**.
+  **Refusal** ("This is not covered in the PEID material."); a subject none of the Courses teaches, a question about
+  the tutor itself ("Who are you?") or a greeting without a question gets **Out of scope**: "This tutor answers questions
+  about GAIF, PEID, AITB and DTGS. Please ask a question about one of these Courses."
 - **The four Courses:** GAIF (Generative AI Foundations), PEID (Prompt Engineering and Interaction Design), AITB
   (AI Tools for Business Professionals), DTGS (Digital Transformation and Generative AI Strategy).
 - **Course Material:** written by the group in its own words, about 22,500 words in 167 numbered Sections (GAIF 22,
@@ -32,9 +33,9 @@
 ## Slide
 
 - A tutor for our four Courses that answers **only from our Course Material** and cites the Section behind each claim
-- Says "not covered" instead of guessing; says "out of scope" for subjects we do not teach
+- Says "not covered" instead of guessing; points back to the four Courses for anything else, "Who are you?" included
 - A chat: the tutor reads the Course it needs, answers, and takes follow-up questions
-- Screenshots: [first answer](screenshots/agentic_chat_1_answer.jpg) and [a follow-up](screenshots/agentic_chat_2_follow_up.png)
+- Screenshots: [first answer](screenshots/agentic_chat_1_answer.jpg), [a follow-up](screenshots/agentic_chat_2_follow_up.png) and [Out of scope](screenshots/agentic_out_of_scope.png)
 
 ## Report paragraph (draft)
 
@@ -54,7 +55,7 @@
 2. Ask an in-material question, e.g. "What is a golden set?" → "Course Materials read: PEID", a cited answer, the
    Cited Sections footer.
 3. Follow up: "Where does it fail and what does it protect against?" → the tutor reads PEID again for the follow-up.
-4. Ask something no Course teaches, e.g. "How do I bake bread?" → Out of scope, no Read.
+4. Ask "Who are you?" → the Out of scope notice pointing back to the four Courses, no Read.
 5. Ask "When is the DTGS exam?" → the Refusal after reading DTGS.
 
 Use demo questions that are **not** Golden Set questions, so the demo is not mistaken for the evaluation.
