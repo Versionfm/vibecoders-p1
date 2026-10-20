@@ -49,6 +49,15 @@
       "id": "PURPOSE-10", "type": "in_material", "question": "Can you explain that more simply?",
       "accepted_courses": ["PEID"], "expected_sections": ["PEID-2.3"], "expect_refusal": false,
       "key_facts": ["Context is the relevant background supplied for a task."]
+    },
+    {
+      "id": "PURPOSE-11", "type": "out_of_scope", "question": "How do I set a fixed exposure time on an industrial inspection camera?",
+      "accepted_courses": ["OUT_OF_SCOPE"], "expected_sections": [], "expect_refusal": false, "key_facts": []
+    },
+    {
+      "id": "PURPOSE-12", "type": "in_material", "question": "Why does a digital transformation programme need changes to staff responsibilities as well as new software?",
+      "accepted_courses": ["DTGS"], "expected_sections": ["DTGS-1.1"], "expect_refusal": false,
+      "key_facts": ["Digital transformation aligns technology, processes, work procedures and people with business strategy to create value."]
     }
   ]
 }

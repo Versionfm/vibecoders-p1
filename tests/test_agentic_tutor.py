@@ -48,7 +48,7 @@ class OneReadThenCitedAnswerTest(unittest.TestCase):
 
     def test_the_question_is_sent_and_the_agentic_prompt_version_is_recorded(self):
         self.assertIn(QUESTION, self.model.prompt_text(0))
-        self.assertEqual(self.result.tutor_prompt_version, "agentic_tutor_v2")
+        self.assertEqual(self.result.tutor_prompt_version, "agentic_tutor_v3")
         self.assertEqual(self.result.model, "nvidia/test-model")
 
 
@@ -272,7 +272,7 @@ class PurposeBoundaryTest(unittest.TestCase):
                 else:
                     section = case.expected_sections[0]
                     answer = f"{case.key_facts[0]} [{section}]"
-                    model = FakeChatModel([reads("PEID"), answer])
+                    model = FakeChatModel([reads(case.accepted_courses[0]), answer])
                 result = answer_question(case.question, model, tutor="agentic", history=history)
                 self.assertIsNone(result.error)
                 self.assertEqual(model.calls[0]["messages"][1:-1], history)
@@ -284,7 +284,7 @@ class PurposeBoundaryTest(unittest.TestCase):
                     self.assertFalse(needs_judge(case, result))
                     self.assertEqual(len(model.calls), 1)
                 else:
-                    self.assertEqual(result.materials_read, ["PEID"])
+                    self.assertEqual(result.materials_read, case.accepted_courses)
                     self.assertEqual(result.citations, case.expected_sections)
 
     def test_a_course_question_recovers_to_a_grounded_answer_without_history(self):
