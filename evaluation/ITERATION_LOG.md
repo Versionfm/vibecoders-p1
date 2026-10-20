@@ -809,3 +809,20 @@ Copy this block for each entry:
   measurement. Golden Set v1 contains single questions only: this round does not test contextual follow-ups,
   student learning, general scope robustness or readability. The repeat evidence is retained alongside this entry
   and linked from the README.
+
+
+### 2026-10-20 — focused multi-turn loop instruction probe (not a Golden Set evaluation)
+
+- **Change tested:** in-memory append of “Answer the latest user message…” to the unchanged agentic_tutor_v3 system prompt. Runtime source and selected prompt unchanged.
+- **Method:** live DeepSeek deepseek-flash, thinking off, app answer function; same two-exchange seed from the user transcript, then three follow-ups independently continued for baseline and experimental variant. One continuation each, no judge or UI test.
+- **Result:** added instruction failed to stop the loop on all three follow-ups. Traces show initially responsive no-Read replies followed by READ_FIRST recovery (“Reconsider the original student request”), a GAIF Read, and a final return to gradient descent. Baseline reproduced the reset on first and third follow-ups, while the middle follow-up read immediately and answered Adaline. No application errors or invalid citations in six final results.
+- **Decision:** do not adopt the proposed instruction as a verified fix. It is insufficient with the existing recovery message. No fix applied; no general score or regression claim.
+- **Evidence:** evaluation/probes/loop_instruction_2026-10-20/README.md, baseline.json and added_instruction.json contain configuration, method, limits and full model-message traces.
+
+### 2026-10-20 — recovery bound to the current question (multi-turn loop fix; not a Golden Set evaluation)
+
+- **Change:** READ_FIRST recovery (src/agentic.py) said “Reconsider the original student request”. In a multi-turn chat the model read “original” as the first question of the conversation and answered it again (the gradient-descent loop). It now says “the current student request” and quotes that question as JSON. agentic_tutor_v3 prompt file unchanged.
+- **Diagnosis:** offline replay of the captured trace reproduced the reset; live counterfactuals (diagnosis/differential.py, first no-Read reply frozen, 3 runs each): baseline reset 3/3; current question quoted in recovery 0/3; rejected draft dropped 0/3; earlier history dropped 0/3. The question-quoting variant is the shipped wording.
+- **Result:** regression test added (recovery names the current question, not the first one in history); 218 unit tests pass. Manual check on the local Agentic Tutor screen by the group: follow-up answered, no loop.
+- **Decision:** kept. Golden Set v1 has single questions only, so recovery wording there differs only in quoting the question; a Golden Set re-run of the Agentic Tutor is still owed to confirm no regression.
+- **Evidence:** evaluation/probes/loop_instruction_2026-10-20/diagnosis/.
