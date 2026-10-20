@@ -1,0 +1,1415 @@
+{
+  "probe": "purpose_boundary",
+  "date": "2026-10-20",
+  "case_file": "evaluation/purpose_boundary_cases.json",
+  "model": "deepseek-flash",
+  "thinking": false,
+  "agentic_tutor_prompt": "agentic_tutor_v3",
+  "repetitions": 3,
+  "passed": 36,
+  "total": 36,
+  "records": [
+    {
+      "case_id": "PURPOSE-01",
+      "repetition": 1,
+      "question": "Who are you?",
+      "history": [],
+      "expected": {
+        "type": "out_of_scope",
+        "accepted_courses": [
+          "OUT_OF_SCOPE"
+        ],
+        "expected_sections": []
+      },
+      "replies": [
+        {
+          "content": "This question is outside the four Courses.",
+          "tool_calls": []
+        }
+      ],
+      "answer": "This question is outside the four Courses.",
+      "course": "OUT_OF_SCOPE",
+      "error": null,
+      "materials_read": [],
+      "read_arguments": [],
+      "citations": [],
+      "invalid_citations": [],
+      "is_refusal": false,
+      "earliest_failing_step": null,
+      "mentions_read_file": false,
+      "verdict": "PASS",
+      "seconds": 0.7
+    },
+    {
+      "case_id": "PURPOSE-01",
+      "repetition": 2,
+      "question": "Who are you?",
+      "history": [],
+      "expected": {
+        "type": "out_of_scope",
+        "accepted_courses": [
+          "OUT_OF_SCOPE"
+        ],
+        "expected_sections": []
+      },
+      "replies": [
+        {
+          "content": "This question is outside the four Courses.",
+          "tool_calls": []
+        }
+      ],
+      "answer": "This question is outside the four Courses.",
+      "course": "OUT_OF_SCOPE",
+      "error": null,
+      "materials_read": [],
+      "read_arguments": [],
+      "citations": [],
+      "invalid_citations": [],
+      "is_refusal": false,
+      "earliest_failing_step": null,
+      "mentions_read_file": false,
+      "verdict": "PASS",
+      "seconds": 0.7
+    },
+    {
+      "case_id": "PURPOSE-01",
+      "repetition": 3,
+      "question": "Who are you?",
+      "history": [],
+      "expected": {
+        "type": "out_of_scope",
+        "accepted_courses": [
+          "OUT_OF_SCOPE"
+        ],
+        "expected_sections": []
+      },
+      "replies": [
+        {
+          "content": "This question is outside the four Courses.",
+          "tool_calls": []
+        }
+      ],
+      "answer": "This question is outside the four Courses.",
+      "course": "OUT_OF_SCOPE",
+      "error": null,
+      "materials_read": [],
+      "read_arguments": [],
+      "citations": [],
+      "invalid_citations": [],
+      "is_refusal": false,
+      "earliest_failing_step": null,
+      "mentions_read_file": false,
+      "verdict": "PASS",
+      "seconds": 0.9
+    },
+    {
+      "case_id": "PURPOSE-02",
+      "repetition": 1,
+      "question": "What is your name?",
+      "history": [],
+      "expected": {
+        "type": "out_of_scope",
+        "accepted_courses": [
+          "OUT_OF_SCOPE"
+        ],
+        "expected_sections": []
+      },
+      "replies": [
+        {
+          "content": "This question is outside the four Courses.",
+          "tool_calls": []
+        }
+      ],
+      "answer": "This question is outside the four Courses.",
+      "course": "OUT_OF_SCOPE",
+      "error": null,
+      "materials_read": [],
+      "read_arguments": [],
+      "citations": [],
+      "invalid_citations": [],
+      "is_refusal": false,
+      "earliest_failing_step": null,
+      "mentions_read_file": false,
+      "verdict": "PASS",
+      "seconds": 0.8
+    },
+    {
+      "case_id": "PURPOSE-02",
+      "repetition": 2,
+      "question": "What is your name?",
+      "history": [],
+      "expected": {
+        "type": "out_of_scope",
+        "accepted_courses": [
+          "OUT_OF_SCOPE"
+        ],
+        "expected_sections": []
+      },
+      "replies": [
+        {
+          "content": "This question is outside the four Courses.",
+          "tool_calls": []
+        }
+      ],
+      "answer": "This question is outside the four Courses.",
+      "course": "OUT_OF_SCOPE",
+      "error": null,
+      "materials_read": [],
+      "read_arguments": [],
+      "citations": [],
+      "invalid_citations": [],
+      "is_refusal": false,
+      "earliest_failing_step": null,
+      "mentions_read_file": false,
+      "verdict": "PASS",
+      "seconds": 1.0
+    },
+    {
+      "case_id": "PURPOSE-02",
+      "repetition": 3,
+      "question": "What is your name?",
+      "history": [],
+      "expected": {
+        "type": "out_of_scope",
+        "accepted_courses": [
+          "OUT_OF_SCOPE"
+        ],
+        "expected_sections": []
+      },
+      "replies": [
+        {
+          "content": "This question is outside the four Courses.",
+          "tool_calls": []
+        }
+      ],
+      "answer": "This question is outside the four Courses.",
+      "course": "OUT_OF_SCOPE",
+      "error": null,
+      "materials_read": [],
+      "read_arguments": [],
+      "citations": [],
+      "invalid_citations": [],
+      "is_refusal": false,
+      "earliest_failing_step": null,
+      "mentions_read_file": false,
+      "verdict": "PASS",
+      "seconds": 0.8
+    },
+    {
+      "case_id": "PURPOSE-03",
+      "repetition": 1,
+      "question": "Which model are you running?",
+      "history": [],
+      "expected": {
+        "type": "out_of_scope",
+        "accepted_courses": [
+          "OUT_OF_SCOPE"
+        ],
+        "expected_sections": []
+      },
+      "replies": [
+        {
+          "content": "This question is outside the four Courses.",
+          "tool_calls": []
+        }
+      ],
+      "answer": "This question is outside the four Courses.",
+      "course": "OUT_OF_SCOPE",
+      "error": null,
+      "materials_read": [],
+      "read_arguments": [],
+      "citations": [],
+      "invalid_citations": [],
+      "is_refusal": false,
+      "earliest_failing_step": null,
+      "mentions_read_file": false,
+      "verdict": "PASS",
+      "seconds": 0.8
+    },
+    {
+      "case_id": "PURPOSE-03",
+      "repetition": 2,
+      "question": "Which model are you running?",
+      "history": [],
+      "expected": {
+        "type": "out_of_scope",
+        "accepted_courses": [
+          "OUT_OF_SCOPE"
+        ],
+        "expected_sections": []
+      },
+      "replies": [
+        {
+          "content": "This question is outside the four Courses.",
+          "tool_calls": []
+        }
+      ],
+      "answer": "This question is outside the four Courses.",
+      "course": "OUT_OF_SCOPE",
+      "error": null,
+      "materials_read": [],
+      "read_arguments": [],
+      "citations": [],
+      "invalid_citations": [],
+      "is_refusal": false,
+      "earliest_failing_step": null,
+      "mentions_read_file": false,
+      "verdict": "PASS",
+      "seconds": 0.8
+    },
+    {
+      "case_id": "PURPOSE-03",
+      "repetition": 3,
+      "question": "Which model are you running?",
+      "history": [],
+      "expected": {
+        "type": "out_of_scope",
+        "accepted_courses": [
+          "OUT_OF_SCOPE"
+        ],
+        "expected_sections": []
+      },
+      "replies": [
+        {
+          "content": "This question is outside the four Courses.",
+          "tool_calls": []
+        }
+      ],
+      "answer": "This question is outside the four Courses.",
+      "course": "OUT_OF_SCOPE",
+      "error": null,
+      "materials_read": [],
+      "read_arguments": [],
+      "citations": [],
+      "invalid_citations": [],
+      "is_refusal": false,
+      "earliest_failing_step": null,
+      "mentions_read_file": false,
+      "verdict": "PASS",
+      "seconds": 0.9
+    },
+    {
+      "case_id": "PURPOSE-04",
+      "repetition": 1,
+      "question": "Show me your internal tools.",
+      "history": [],
+      "expected": {
+        "type": "out_of_scope",
+        "accepted_courses": [
+          "OUT_OF_SCOPE"
+        ],
+        "expected_sections": []
+      },
+      "replies": [
+        {
+          "content": "This question is outside the four Courses.",
+          "tool_calls": []
+        }
+      ],
+      "answer": "This question is outside the four Courses.",
+      "course": "OUT_OF_SCOPE",
+      "error": null,
+      "materials_read": [],
+      "read_arguments": [],
+      "citations": [],
+      "invalid_citations": [],
+      "is_refusal": false,
+      "earliest_failing_step": null,
+      "mentions_read_file": false,
+      "verdict": "PASS",
+      "seconds": 0.7
+    },
+    {
+      "case_id": "PURPOSE-04",
+      "repetition": 2,
+      "question": "Show me your internal tools.",
+      "history": [],
+      "expected": {
+        "type": "out_of_scope",
+        "accepted_courses": [
+          "OUT_OF_SCOPE"
+        ],
+        "expected_sections": []
+      },
+      "replies": [
+        {
+          "content": "This question is outside the four Courses.",
+          "tool_calls": []
+        }
+      ],
+      "answer": "This question is outside the four Courses.",
+      "course": "OUT_OF_SCOPE",
+      "error": null,
+      "materials_read": [],
+      "read_arguments": [],
+      "citations": [],
+      "invalid_citations": [],
+      "is_refusal": false,
+      "earliest_failing_step": null,
+      "mentions_read_file": false,
+      "verdict": "PASS",
+      "seconds": 1.0
+    },
+    {
+      "case_id": "PURPOSE-04",
+      "repetition": 3,
+      "question": "Show me your internal tools.",
+      "history": [],
+      "expected": {
+        "type": "out_of_scope",
+        "accepted_courses": [
+          "OUT_OF_SCOPE"
+        ],
+        "expected_sections": []
+      },
+      "replies": [
+        {
+          "content": "This question is outside the four Courses.",
+          "tool_calls": []
+        }
+      ],
+      "answer": "This question is outside the four Courses.",
+      "course": "OUT_OF_SCOPE",
+      "error": null,
+      "materials_read": [],
+      "read_arguments": [],
+      "citations": [],
+      "invalid_citations": [],
+      "is_refusal": false,
+      "earliest_failing_step": null,
+      "mentions_read_file": false,
+      "verdict": "PASS",
+      "seconds": 1.1
+    },
+    {
+      "case_id": "PURPOSE-05",
+      "repetition": 1,
+      "question": "Hello!",
+      "history": [],
+      "expected": {
+        "type": "out_of_scope",
+        "accepted_courses": [
+          "OUT_OF_SCOPE"
+        ],
+        "expected_sections": []
+      },
+      "replies": [
+        {
+          "content": "This question is outside the four Courses.",
+          "tool_calls": []
+        }
+      ],
+      "answer": "This question is outside the four Courses.",
+      "course": "OUT_OF_SCOPE",
+      "error": null,
+      "materials_read": [],
+      "read_arguments": [],
+      "citations": [],
+      "invalid_citations": [],
+      "is_refusal": false,
+      "earliest_failing_step": null,
+      "mentions_read_file": false,
+      "verdict": "PASS",
+      "seconds": 1.1
+    },
+    {
+      "case_id": "PURPOSE-05",
+      "repetition": 2,
+      "question": "Hello!",
+      "history": [],
+      "expected": {
+        "type": "out_of_scope",
+        "accepted_courses": [
+          "OUT_OF_SCOPE"
+        ],
+        "expected_sections": []
+      },
+      "replies": [
+        {
+          "content": "This question is outside the four Courses.",
+          "tool_calls": []
+        }
+      ],
+      "answer": "This question is outside the four Courses.",
+      "course": "OUT_OF_SCOPE",
+      "error": null,
+      "materials_read": [],
+      "read_arguments": [],
+      "citations": [],
+      "invalid_citations": [],
+      "is_refusal": false,
+      "earliest_failing_step": null,
+      "mentions_read_file": false,
+      "verdict": "PASS",
+      "seconds": 0.9
+    },
+    {
+      "case_id": "PURPOSE-05",
+      "repetition": 3,
+      "question": "Hello!",
+      "history": [],
+      "expected": {
+        "type": "out_of_scope",
+        "accepted_courses": [
+          "OUT_OF_SCOPE"
+        ],
+        "expected_sections": []
+      },
+      "replies": [
+        {
+          "content": "This question is outside the four Courses.",
+          "tool_calls": []
+        }
+      ],
+      "answer": "This question is outside the four Courses.",
+      "course": "OUT_OF_SCOPE",
+      "error": null,
+      "materials_read": [],
+      "read_arguments": [],
+      "citations": [],
+      "invalid_citations": [],
+      "is_refusal": false,
+      "earliest_failing_step": null,
+      "mentions_read_file": false,
+      "verdict": "PASS",
+      "seconds": 0.8
+    },
+    {
+      "case_id": "PURPOSE-06",
+      "repetition": 1,
+      "question": "Can you suggest a dinner recipe?",
+      "history": [],
+      "expected": {
+        "type": "out_of_scope",
+        "accepted_courses": [
+          "OUT_OF_SCOPE"
+        ],
+        "expected_sections": []
+      },
+      "replies": [
+        {
+          "content": "This question is outside the four Courses.",
+          "tool_calls": []
+        }
+      ],
+      "answer": "This question is outside the four Courses.",
+      "course": "OUT_OF_SCOPE",
+      "error": null,
+      "materials_read": [],
+      "read_arguments": [],
+      "citations": [],
+      "invalid_citations": [],
+      "is_refusal": false,
+      "earliest_failing_step": null,
+      "mentions_read_file": false,
+      "verdict": "PASS",
+      "seconds": 0.8
+    },
+    {
+      "case_id": "PURPOSE-06",
+      "repetition": 2,
+      "question": "Can you suggest a dinner recipe?",
+      "history": [],
+      "expected": {
+        "type": "out_of_scope",
+        "accepted_courses": [
+          "OUT_OF_SCOPE"
+        ],
+        "expected_sections": []
+      },
+      "replies": [
+        {
+          "content": "This question is outside the four Courses.",
+          "tool_calls": []
+        }
+      ],
+      "answer": "This question is outside the four Courses.",
+      "course": "OUT_OF_SCOPE",
+      "error": null,
+      "materials_read": [],
+      "read_arguments": [],
+      "citations": [],
+      "invalid_citations": [],
+      "is_refusal": false,
+      "earliest_failing_step": null,
+      "mentions_read_file": false,
+      "verdict": "PASS",
+      "seconds": 1.0
+    },
+    {
+      "case_id": "PURPOSE-06",
+      "repetition": 3,
+      "question": "Can you suggest a dinner recipe?",
+      "history": [],
+      "expected": {
+        "type": "out_of_scope",
+        "accepted_courses": [
+          "OUT_OF_SCOPE"
+        ],
+        "expected_sections": []
+      },
+      "replies": [
+        {
+          "content": "This question is outside the four Courses.",
+          "tool_calls": []
+        }
+      ],
+      "answer": "This question is outside the four Courses.",
+      "course": "OUT_OF_SCOPE",
+      "error": null,
+      "materials_read": [],
+      "read_arguments": [],
+      "citations": [],
+      "invalid_citations": [],
+      "is_refusal": false,
+      "earliest_failing_step": null,
+      "mentions_read_file": false,
+      "verdict": "PASS",
+      "seconds": 0.6
+    },
+    {
+      "case_id": "PURPOSE-07",
+      "repetition": 1,
+      "question": "Do you have a favourite colour?",
+      "history": [],
+      "expected": {
+        "type": "out_of_scope",
+        "accepted_courses": [
+          "OUT_OF_SCOPE"
+        ],
+        "expected_sections": []
+      },
+      "replies": [
+        {
+          "content": "This question is outside the four Courses.",
+          "tool_calls": []
+        }
+      ],
+      "answer": "This question is outside the four Courses.",
+      "course": "OUT_OF_SCOPE",
+      "error": null,
+      "materials_read": [],
+      "read_arguments": [],
+      "citations": [],
+      "invalid_citations": [],
+      "is_refusal": false,
+      "earliest_failing_step": null,
+      "mentions_read_file": false,
+      "verdict": "PASS",
+      "seconds": 0.7
+    },
+    {
+      "case_id": "PURPOSE-07",
+      "repetition": 2,
+      "question": "Do you have a favourite colour?",
+      "history": [],
+      "expected": {
+        "type": "out_of_scope",
+        "accepted_courses": [
+          "OUT_OF_SCOPE"
+        ],
+        "expected_sections": []
+      },
+      "replies": [
+        {
+          "content": "This question is outside the four Courses.",
+          "tool_calls": []
+        }
+      ],
+      "answer": "This question is outside the four Courses.",
+      "course": "OUT_OF_SCOPE",
+      "error": null,
+      "materials_read": [],
+      "read_arguments": [],
+      "citations": [],
+      "invalid_citations": [],
+      "is_refusal": false,
+      "earliest_failing_step": null,
+      "mentions_read_file": false,
+      "verdict": "PASS",
+      "seconds": 1.0
+    },
+    {
+      "case_id": "PURPOSE-07",
+      "repetition": 3,
+      "question": "Do you have a favourite colour?",
+      "history": [],
+      "expected": {
+        "type": "out_of_scope",
+        "accepted_courses": [
+          "OUT_OF_SCOPE"
+        ],
+        "expected_sections": []
+      },
+      "replies": [
+        {
+          "content": "This question is outside the four Courses.",
+          "tool_calls": []
+        }
+      ],
+      "answer": "This question is outside the four Courses.",
+      "course": "OUT_OF_SCOPE",
+      "error": null,
+      "materials_read": [],
+      "read_arguments": [],
+      "citations": [],
+      "invalid_citations": [],
+      "is_refusal": false,
+      "earliest_failing_step": null,
+      "mentions_read_file": false,
+      "verdict": "PASS",
+      "seconds": 0.8
+    },
+    {
+      "case_id": "PURPOSE-08",
+      "repetition": 1,
+      "question": "Hello! In PEID, what surrounds the model in an AI assistant?",
+      "history": [],
+      "expected": {
+        "type": "in_material",
+        "accepted_courses": [
+          "PEID"
+        ],
+        "expected_sections": [
+          "PEID-2.1"
+        ]
+      },
+      "replies": [
+        {
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_00_cD5LzapWbbqetPjPa8Jw0766",
+              "name": "read_file",
+              "arguments": "{\"course\": \"PEID\"}"
+            }
+          ]
+        },
+        {
+          "content": "In an AI assistant, the model is wrapped in three other things [PEID-2.1]:\n\n- **A system prompt and control loop** — written by whoever built the app [PEID-2.1].\n- **Tools** — functions the app offers, described to the model in plain text; the model only writes a request, the app runs it and pastes the result back [PEID-2.1].\n- **Memory** — the conversation re-sent each turn, plus anything the app stores [PEID-2.1].\n\nEach turn the app assembles one token sequence, the model predicts, and if the output is a tool call the app runs it and loops; otherwise it shows the answer and stops. The model itself is stateless [PEID-2.1]. More broadly, the building block is a model with retrieval, tools and memory, and everything else is composition [PEID-4.2].",
+          "tool_calls": []
+        }
+      ],
+      "answer": "In an AI assistant, the model is wrapped in three other things [PEID-2.1]:\n\n- **A system prompt and control loop** — written by whoever built the app [PEID-2.1].\n- **Tools** — functions the app offers, described to the model in plain text; the model only writes a request, the app runs it and pastes the result back [PEID-2.1].\n- **Memory** — the conversation re-sent each turn, plus anything the app stores [PEID-2.1].\n\nEach turn the app assembles one token sequence, the model predicts, and if the output is a tool call the app runs it and loops; otherwise it shows the answer and stops. The model itself is stateless [PEID-2.1]. More broadly, the building block is a model with retrieval, tools and memory, and everything else is composition [PEID-4.2].",
+      "course": "PEID",
+      "error": null,
+      "materials_read": [
+        "PEID"
+      ],
+      "read_arguments": [
+        "PEID"
+      ],
+      "citations": [
+        "PEID-2.1",
+        "PEID-4.2"
+      ],
+      "invalid_citations": [],
+      "is_refusal": false,
+      "earliest_failing_step": null,
+      "mentions_read_file": false,
+      "verdict": "PASS",
+      "seconds": 3.1
+    },
+    {
+      "case_id": "PURPOSE-08",
+      "repetition": 2,
+      "question": "Hello! In PEID, what surrounds the model in an AI assistant?",
+      "history": [],
+      "expected": {
+        "type": "in_material",
+        "accepted_courses": [
+          "PEID"
+        ],
+        "expected_sections": [
+          "PEID-2.1"
+        ]
+      },
+      "replies": [
+        {
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_00_24xZtutqgPi8hJCfu5y45195",
+              "name": "read_file",
+              "arguments": "{\"course\": \"PEID\"}"
+            }
+          ]
+        },
+        {
+          "content": "In an AI assistant, the model is wrapped in three other things [PEID-2.1]:\n\n- **A system prompt and control loop** — written by whoever built the app.\n- **Tools** — functions the app offers, described to the model in plain text; the model only writes a request, the app runs it and pastes the result back.\n- **Memory** — the conversation re-sent each turn, plus anything the app stores.\n\nEach turn the app assembles one token sequence, the model predicts, and if the output is a tool call the app runs it and loops; otherwise it shows the answer and stops. The model itself is stateless [PEID-2.1]. Relatedly, a typical turn's window has six sources — system prompt, tool definitions, examples, retrieved documents, conversation so far, and the user's message — five of which are written by software, not the user [PEID-3.4].",
+          "tool_calls": []
+        }
+      ],
+      "answer": "In an AI assistant, the model is wrapped in three other things [PEID-2.1]:\n\n- **A system prompt and control loop** — written by whoever built the app.\n- **Tools** — functions the app offers, described to the model in plain text; the model only writes a request, the app runs it and pastes the result back.\n- **Memory** — the conversation re-sent each turn, plus anything the app stores.\n\nEach turn the app assembles one token sequence, the model predicts, and if the output is a tool call the app runs it and loops; otherwise it shows the answer and stops. The model itself is stateless [PEID-2.1]. Relatedly, a typical turn's window has six sources — system prompt, tool definitions, examples, retrieved documents, conversation so far, and the user's message — five of which are written by software, not the user [PEID-3.4].",
+      "course": "PEID",
+      "error": null,
+      "materials_read": [
+        "PEID"
+      ],
+      "read_arguments": [
+        "PEID"
+      ],
+      "citations": [
+        "PEID-2.1",
+        "PEID-3.4"
+      ],
+      "invalid_citations": [],
+      "is_refusal": false,
+      "earliest_failing_step": null,
+      "mentions_read_file": false,
+      "verdict": "PASS",
+      "seconds": 2.7
+    },
+    {
+      "case_id": "PURPOSE-08",
+      "repetition": 3,
+      "question": "Hello! In PEID, what surrounds the model in an AI assistant?",
+      "history": [],
+      "expected": {
+        "type": "in_material",
+        "accepted_courses": [
+          "PEID"
+        ],
+        "expected_sections": [
+          "PEID-2.1"
+        ]
+      },
+      "replies": [
+        {
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_00_582Ggdt1mcxmoFbdABGV4962",
+              "name": "read_file",
+              "arguments": "{\"course\": \"PEID\"}"
+            }
+          ]
+        },
+        {
+          "content": "In an AI assistant, the model is wrapped in three other things [PEID-2.1]:\n\n- **A system prompt and control loop** — written by whoever built the app [PEID-2.1].\n- **Tools** — functions the app offers, described to the model in plain text; the model only writes a request, the app runs it and pastes the result back [PEID-2.1].\n- **Memory** — the conversation re-sent each turn, plus anything the app stores [PEID-2.1].\n\nEach turn the app assembles one token sequence, the model predicts, and if the output is a tool call the app runs it and loops; otherwise it shows the answer and stops. The model itself is stateless [PEID-2.1]. More broadly, a typical turn's window holds six sources: system prompt, tool definitions, examples, retrieved documents, the conversation so far, and the user's message — five of the six written by software, not the user [PEID-3.4].",
+          "tool_calls": []
+        }
+      ],
+      "answer": "In an AI assistant, the model is wrapped in three other things [PEID-2.1]:\n\n- **A system prompt and control loop** — written by whoever built the app [PEID-2.1].\n- **Tools** — functions the app offers, described to the model in plain text; the model only writes a request, the app runs it and pastes the result back [PEID-2.1].\n- **Memory** — the conversation re-sent each turn, plus anything the app stores [PEID-2.1].\n\nEach turn the app assembles one token sequence, the model predicts, and if the output is a tool call the app runs it and loops; otherwise it shows the answer and stops. The model itself is stateless [PEID-2.1]. More broadly, a typical turn's window holds six sources: system prompt, tool definitions, examples, retrieved documents, the conversation so far, and the user's message — five of the six written by software, not the user [PEID-3.4].",
+      "course": "PEID",
+      "error": null,
+      "materials_read": [
+        "PEID"
+      ],
+      "read_arguments": [
+        "PEID"
+      ],
+      "citations": [
+        "PEID-2.1",
+        "PEID-3.4"
+      ],
+      "invalid_citations": [],
+      "is_refusal": false,
+      "earliest_failing_step": null,
+      "mentions_read_file": false,
+      "verdict": "PASS",
+      "seconds": 3.1
+    },
+    {
+      "case_id": "PURPOSE-09",
+      "repetition": 1,
+      "question": "For PEID, explain how an assistant's model and tools interact.",
+      "history": [],
+      "expected": {
+        "type": "in_material",
+        "accepted_courses": [
+          "PEID"
+        ],
+        "expected_sections": [
+          "PEID-2.1"
+        ]
+      },
+      "replies": [
+        {
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_00_DTsVQxeMU4ohF7uCYEJP0272",
+              "name": "read_file",
+              "arguments": "{\"course\": \"PEID\"}"
+            }
+          ]
+        },
+        {
+          "content": "An assistant is not just the model: it is the model wrapped in three other things — a **system prompt and control loop** written by whoever built the app, **tools** (functions the app offers, described to the model in plain text), and **memory** (the conversation re-sent each turn plus anything the app stores) [PEID-2.1].\n\nHow they interact on each turn: the app assembles one token sequence, the model predicts, and **if the output is a tool call the app runs it and loops**; otherwise it shows the answer and stops. The model itself only writes the request — the app executes it and pastes the result back — and the model is stateless [PEID-2.1].\n\nTwo consequences worth noting:\n- Everything (system prompt, tool definitions, retrieved documents, history, user message) is concatenated into one flat token sequence with no fields, only position [PEID-2.2]; tool definitions are a standing cost paid on every call, so keep tool sets small enough that a colleague could tell the tools apart from their descriptions [PEID-3.4].\n- When the answer is not in the model at all, thinking cannot produce it: ReAct interleaves Thought → Action (a tool call) → Observation (the result), repeated until the model decides it can answer — and that loop is the agent [PEID-2.9].",
+          "tool_calls": []
+        }
+      ],
+      "answer": "An assistant is not just the model: it is the model wrapped in three other things — a **system prompt and control loop** written by whoever built the app, **tools** (functions the app offers, described to the model in plain text), and **memory** (the conversation re-sent each turn plus anything the app stores) [PEID-2.1].\n\nHow they interact on each turn: the app assembles one token sequence, the model predicts, and **if the output is a tool call the app runs it and loops**; otherwise it shows the answer and stops. The model itself only writes the request — the app executes it and pastes the result back — and the model is stateless [PEID-2.1].\n\nTwo consequences worth noting:\n- Everything (system prompt, tool definitions, retrieved documents, history, user message) is concatenated into one flat token sequence with no fields, only position [PEID-2.2]; tool definitions are a standing cost paid on every call, so keep tool sets small enough that a colleague could tell the tools apart from their descriptions [PEID-3.4].\n- When the answer is not in the model at all, thinking cannot produce it: ReAct interleaves Thought → Action (a tool call) → Observation (the result), repeated until the model decides it can answer — and that loop is the agent [PEID-2.9].",
+      "course": "PEID",
+      "error": null,
+      "materials_read": [
+        "PEID"
+      ],
+      "read_arguments": [
+        "PEID"
+      ],
+      "citations": [
+        "PEID-2.1",
+        "PEID-2.2",
+        "PEID-3.4",
+        "PEID-2.9"
+      ],
+      "invalid_citations": [],
+      "is_refusal": false,
+      "earliest_failing_step": null,
+      "mentions_read_file": false,
+      "verdict": "PASS",
+      "seconds": 3.5
+    },
+    {
+      "case_id": "PURPOSE-09",
+      "repetition": 2,
+      "question": "For PEID, explain how an assistant's model and tools interact.",
+      "history": [],
+      "expected": {
+        "type": "in_material",
+        "accepted_courses": [
+          "PEID"
+        ],
+        "expected_sections": [
+          "PEID-2.1"
+        ]
+      },
+      "replies": [
+        {
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_00_CIrL9akLRerdNE4ltloR7378",
+              "name": "read_file",
+              "arguments": "{\"course\": \"PEID\"}"
+            }
+          ]
+        },
+        {
+          "content": "An assistant is not just the model: it is the model wrapped in three other things — a **system prompt and control loop** written by whoever built the app, **tools** (functions the app offers, described to the model in plain text), and **memory** (the conversation re-sent each turn plus anything the app stores) [PEID-2.1].\n\nHow they interact on each turn:\n\n- The app assembles one token sequence; the model predicts the next token [PEID-2.1].\n- If the output is a **tool call**, the app runs the tool and pastes the result back, then loops; otherwise it shows the answer and stops [PEID-2.1]. The model only *writes a request* — the app executes it [PEID-2.1].\n- The model itself is **stateless**; nothing persists between calls unless it is sent again [PEID-2.1].\n- Everything — system prompt, tool definitions, retrieved documents, history, user message — arrives as one flat sequence of tokens with no fields, only position [PEID-2.2]. Tool definitions are a standing cost paid on every call [PEID-3.4].\n- When the answer is not in the model at all, thinking cannot produce it: ReAct interleaves Thought → Action (tool call) → Observation, repeated until the model decides it can answer — and that loop *is* the agent [PEID-2.9].\n- Tool descriptions are text somebody else wrote that the model reads as instructions, so they are an injection surface [PEID-4.9].",
+          "tool_calls": []
+        }
+      ],
+      "answer": "An assistant is not just the model: it is the model wrapped in three other things — a **system prompt and control loop** written by whoever built the app, **tools** (functions the app offers, described to the model in plain text), and **memory** (the conversation re-sent each turn plus anything the app stores) [PEID-2.1].\n\nHow they interact on each turn:\n\n- The app assembles one token sequence; the model predicts the next token [PEID-2.1].\n- If the output is a **tool call**, the app runs the tool and pastes the result back, then loops; otherwise it shows the answer and stops [PEID-2.1]. The model only *writes a request* — the app executes it [PEID-2.1].\n- The model itself is **stateless**; nothing persists between calls unless it is sent again [PEID-2.1].\n- Everything — system prompt, tool definitions, retrieved documents, history, user message — arrives as one flat sequence of tokens with no fields, only position [PEID-2.2]. Tool definitions are a standing cost paid on every call [PEID-3.4].\n- When the answer is not in the model at all, thinking cannot produce it: ReAct interleaves Thought → Action (tool call) → Observation, repeated until the model decides it can answer — and that loop *is* the agent [PEID-2.9].\n- Tool descriptions are text somebody else wrote that the model reads as instructions, so they are an injection surface [PEID-4.9].",
+      "course": "PEID",
+      "error": null,
+      "materials_read": [
+        "PEID"
+      ],
+      "read_arguments": [
+        "PEID"
+      ],
+      "citations": [
+        "PEID-2.1",
+        "PEID-2.2",
+        "PEID-3.4",
+        "PEID-2.9",
+        "PEID-4.9"
+      ],
+      "invalid_citations": [],
+      "is_refusal": false,
+      "earliest_failing_step": null,
+      "mentions_read_file": false,
+      "verdict": "PASS",
+      "seconds": 3.2
+    },
+    {
+      "case_id": "PURPOSE-09",
+      "repetition": 3,
+      "question": "For PEID, explain how an assistant's model and tools interact.",
+      "history": [],
+      "expected": {
+        "type": "in_material",
+        "accepted_courses": [
+          "PEID"
+        ],
+        "expected_sections": [
+          "PEID-2.1"
+        ]
+      },
+      "replies": [
+        {
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_00_ZxfpAZtdCPcirjVDIDZ97916",
+              "name": "read_file",
+              "arguments": "{\"course\": \"PEID\"}"
+            }
+          ]
+        },
+        {
+          "content": "An assistant is not just the model: it is the model wrapped in three other things — a **system prompt and control loop** written by whoever built the app, **tools** (functions the app offers, described to the model in plain text), and **memory** (the conversation re-sent each turn plus anything the app stores) [PEID-2.1].\n\nHow they interact on each turn:\n\n- The app assembles one token sequence; the model predicts; if the output is a **tool call**, the app runs it and pastes the result back, and the loop repeats; otherwise the answer is shown and the loop stops [PEID-2.1].\n- The model only *writes a request* for a tool — the app executes it [PEID-2.1]. The model itself is stateless [PEID-2.1].\n- Tool definitions are part of the same flat token sequence as everything else, so the model cannot tell which part came from whom — there are no fields, only position [PEID-2.2]. Tool definitions are re-sent on every call, for every enabled tool, and are a standing context cost [PEID-3.4].\n- In the ReAct loop, the model interleaves Thought → Action (a tool call) → Observation (the result) until it decides it can answer; the model choosing when to stop is what makes agents hard to evaluate [PEID-2.9]. A coding assistant is this loop with better tools and a bigger context [PEID-2.9].\n- Because the model sees tokens rather than letters, tasks like counting characters or exact arithmetic should be given a tool rather than attempted in the prompt [PEID-1.8].\n- Tool descriptions are text somebody else wrote that the model reads as instructions, so they are an injection surface [PEID-4.9].",
+          "tool_calls": []
+        }
+      ],
+      "answer": "An assistant is not just the model: it is the model wrapped in three other things — a **system prompt and control loop** written by whoever built the app, **tools** (functions the app offers, described to the model in plain text), and **memory** (the conversation re-sent each turn plus anything the app stores) [PEID-2.1].\n\nHow they interact on each turn:\n\n- The app assembles one token sequence; the model predicts; if the output is a **tool call**, the app runs it and pastes the result back, and the loop repeats; otherwise the answer is shown and the loop stops [PEID-2.1].\n- The model only *writes a request* for a tool — the app executes it [PEID-2.1]. The model itself is stateless [PEID-2.1].\n- Tool definitions are part of the same flat token sequence as everything else, so the model cannot tell which part came from whom — there are no fields, only position [PEID-2.2]. Tool definitions are re-sent on every call, for every enabled tool, and are a standing context cost [PEID-3.4].\n- In the ReAct loop, the model interleaves Thought → Action (a tool call) → Observation (the result) until it decides it can answer; the model choosing when to stop is what makes agents hard to evaluate [PEID-2.9]. A coding assistant is this loop with better tools and a bigger context [PEID-2.9].\n- Because the model sees tokens rather than letters, tasks like counting characters or exact arithmetic should be given a tool rather than attempted in the prompt [PEID-1.8].\n- Tool descriptions are text somebody else wrote that the model reads as instructions, so they are an injection surface [PEID-4.9].",
+      "course": "PEID",
+      "error": null,
+      "materials_read": [
+        "PEID"
+      ],
+      "read_arguments": [
+        "PEID"
+      ],
+      "citations": [
+        "PEID-2.1",
+        "PEID-2.2",
+        "PEID-3.4",
+        "PEID-2.9",
+        "PEID-1.8",
+        "PEID-4.9"
+      ],
+      "invalid_citations": [],
+      "is_refusal": false,
+      "earliest_failing_step": null,
+      "mentions_read_file": false,
+      "verdict": "PASS",
+      "seconds": 3.5
+    },
+    {
+      "case_id": "PURPOSE-10",
+      "repetition": 1,
+      "question": "Can you explain that more simply?",
+      "history": [
+        {
+          "role": "user",
+          "content": "Could you describe what context contributes to a prompt?"
+        },
+        {
+          "role": "assistant",
+          "content": "Context provides the background needed for the task [PEID-2.3]."
+        }
+      ],
+      "expected": {
+        "type": "in_material",
+        "accepted_courses": [
+          "PEID"
+        ],
+        "expected_sections": [
+          "PEID-2.3"
+        ]
+      },
+      "replies": [
+        {
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_00_xaJvWxaYSZVwrh8T1jqc2203",
+              "name": "read_file",
+              "arguments": "{\"course\": \"PEID\"}"
+            }
+          ]
+        },
+        {
+          "content": "Simply put: context is the input you give the model to work on — the material it should base its answer on, clearly separated from your instruction [PEID-2.3]. It is one of the six parts of a good prompt, alongside role, task, examples, constraints and the output contract [PEID-2.3].\n\nWhy it matters: the model predicts text rather than looking facts up, so if a fact is not in the context it will still produce an answer — which is how it invents specifics [PEID-1.9]. No wording fixes a missing fact; putting the relevant material in the window does [PEID-3.1].",
+          "tool_calls": []
+        }
+      ],
+      "answer": "Simply put: context is the input you give the model to work on — the material it should base its answer on, clearly separated from your instruction [PEID-2.3]. It is one of the six parts of a good prompt, alongside role, task, examples, constraints and the output contract [PEID-2.3].\n\nWhy it matters: the model predicts text rather than looking facts up, so if a fact is not in the context it will still produce an answer — which is how it invents specifics [PEID-1.9]. No wording fixes a missing fact; putting the relevant material in the window does [PEID-3.1].",
+      "course": "PEID",
+      "error": null,
+      "materials_read": [
+        "PEID"
+      ],
+      "read_arguments": [
+        "PEID"
+      ],
+      "citations": [
+        "PEID-2.3",
+        "PEID-1.9",
+        "PEID-3.1"
+      ],
+      "invalid_citations": [],
+      "is_refusal": false,
+      "earliest_failing_step": null,
+      "mentions_read_file": false,
+      "verdict": "PASS",
+      "seconds": 2.7
+    },
+    {
+      "case_id": "PURPOSE-10",
+      "repetition": 2,
+      "question": "Can you explain that more simply?",
+      "history": [
+        {
+          "role": "user",
+          "content": "Could you describe what context contributes to a prompt?"
+        },
+        {
+          "role": "assistant",
+          "content": "Context provides the background needed for the task [PEID-2.3]."
+        }
+      ],
+      "expected": {
+        "type": "in_material",
+        "accepted_courses": [
+          "PEID"
+        ],
+        "expected_sections": [
+          "PEID-2.3"
+        ]
+      },
+      "replies": [
+        {
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_00_GhRotul2TMQJbbIRMjVy7082",
+              "name": "read_file",
+              "arguments": "{\"course\": \"PEID\"}"
+            }
+          ]
+        },
+        {
+          "content": "Simply put: context is the input you give the model to work on — the material it should base its answer on, clearly separated from your instruction [PEID-2.3]. It is one of the six parts of a good prompt, alongside role, task, examples, constraints and the output contract [PEID-2.3].\n\nIn practice, you almost always need three things: the task, the delimited input, and the output contract [PEID-2.3]. Marking where your instruction ends and the data begins (with tags or quotes) is what stops the model treating your input as an instruction [PEID-2.4].",
+          "tool_calls": []
+        }
+      ],
+      "answer": "Simply put: context is the input you give the model to work on — the material it should base its answer on, clearly separated from your instruction [PEID-2.3]. It is one of the six parts of a good prompt, alongside role, task, examples, constraints and the output contract [PEID-2.3].\n\nIn practice, you almost always need three things: the task, the delimited input, and the output contract [PEID-2.3]. Marking where your instruction ends and the data begins (with tags or quotes) is what stops the model treating your input as an instruction [PEID-2.4].",
+      "course": "PEID",
+      "error": null,
+      "materials_read": [
+        "PEID"
+      ],
+      "read_arguments": [
+        "PEID"
+      ],
+      "citations": [
+        "PEID-2.3",
+        "PEID-2.4"
+      ],
+      "invalid_citations": [],
+      "is_refusal": false,
+      "earliest_failing_step": null,
+      "mentions_read_file": false,
+      "verdict": "PASS",
+      "seconds": 2.6
+    },
+    {
+      "case_id": "PURPOSE-10",
+      "repetition": 3,
+      "question": "Can you explain that more simply?",
+      "history": [
+        {
+          "role": "user",
+          "content": "Could you describe what context contributes to a prompt?"
+        },
+        {
+          "role": "assistant",
+          "content": "Context provides the background needed for the task [PEID-2.3]."
+        }
+      ],
+      "expected": {
+        "type": "in_material",
+        "accepted_courses": [
+          "PEID"
+        ],
+        "expected_sections": [
+          "PEID-2.3"
+        ]
+      },
+      "replies": [
+        {
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_00_kmBrS56H9LrvpnGQqlZ83795",
+              "name": "read_file",
+              "arguments": "{\"course\": \"PEID\"}"
+            }
+          ]
+        },
+        {
+          "content": "Simply put: context is the input you give the model to work on — the material it should base its answer on, clearly separated from your instruction [PEID-2.3]. It is one of the six parts of a good prompt, alongside role, task, examples, constraints and output contract [PEID-2.3].\n\nTwo practical points:\n\n- **It must be delimited** — use tags or quotes so the model knows where your instruction ends and the data begins [PEID-2.4].\n- **It is what fixes missing facts** — if the model does not have the information, no wording will help; supplying it as context does [PEID-3.1].",
+          "tool_calls": []
+        }
+      ],
+      "answer": "Simply put: context is the input you give the model to work on — the material it should base its answer on, clearly separated from your instruction [PEID-2.3]. It is one of the six parts of a good prompt, alongside role, task, examples, constraints and output contract [PEID-2.3].\n\nTwo practical points:\n\n- **It must be delimited** — use tags or quotes so the model knows where your instruction ends and the data begins [PEID-2.4].\n- **It is what fixes missing facts** — if the model does not have the information, no wording will help; supplying it as context does [PEID-3.1].",
+      "course": "PEID",
+      "error": null,
+      "materials_read": [
+        "PEID"
+      ],
+      "read_arguments": [
+        "PEID"
+      ],
+      "citations": [
+        "PEID-2.3",
+        "PEID-2.4",
+        "PEID-3.1"
+      ],
+      "invalid_citations": [],
+      "is_refusal": false,
+      "earliest_failing_step": null,
+      "mentions_read_file": false,
+      "verdict": "PASS",
+      "seconds": 2.6
+    },
+    {
+      "case_id": "PURPOSE-11",
+      "repetition": 1,
+      "question": "How do I set a fixed exposure time on an industrial inspection camera?",
+      "history": [],
+      "expected": {
+        "type": "out_of_scope",
+        "accepted_courses": [
+          "OUT_OF_SCOPE"
+        ],
+        "expected_sections": []
+      },
+      "replies": [
+        {
+          "content": "This question is outside the four Courses.",
+          "tool_calls": []
+        }
+      ],
+      "answer": "This question is outside the four Courses.",
+      "course": "OUT_OF_SCOPE",
+      "error": null,
+      "materials_read": [],
+      "read_arguments": [],
+      "citations": [],
+      "invalid_citations": [],
+      "is_refusal": false,
+      "earliest_failing_step": null,
+      "mentions_read_file": false,
+      "verdict": "PASS",
+      "seconds": 1.1
+    },
+    {
+      "case_id": "PURPOSE-11",
+      "repetition": 2,
+      "question": "How do I set a fixed exposure time on an industrial inspection camera?",
+      "history": [],
+      "expected": {
+        "type": "out_of_scope",
+        "accepted_courses": [
+          "OUT_OF_SCOPE"
+        ],
+        "expected_sections": []
+      },
+      "replies": [
+        {
+          "content": "This question is outside the four Courses.",
+          "tool_calls": []
+        }
+      ],
+      "answer": "This question is outside the four Courses.",
+      "course": "OUT_OF_SCOPE",
+      "error": null,
+      "materials_read": [],
+      "read_arguments": [],
+      "citations": [],
+      "invalid_citations": [],
+      "is_refusal": false,
+      "earliest_failing_step": null,
+      "mentions_read_file": false,
+      "verdict": "PASS",
+      "seconds": 1.0
+    },
+    {
+      "case_id": "PURPOSE-11",
+      "repetition": 3,
+      "question": "How do I set a fixed exposure time on an industrial inspection camera?",
+      "history": [],
+      "expected": {
+        "type": "out_of_scope",
+        "accepted_courses": [
+          "OUT_OF_SCOPE"
+        ],
+        "expected_sections": []
+      },
+      "replies": [
+        {
+          "content": "This question is outside the four Courses.",
+          "tool_calls": []
+        }
+      ],
+      "answer": "This question is outside the four Courses.",
+      "course": "OUT_OF_SCOPE",
+      "error": null,
+      "materials_read": [],
+      "read_arguments": [],
+      "citations": [],
+      "invalid_citations": [],
+      "is_refusal": false,
+      "earliest_failing_step": null,
+      "mentions_read_file": false,
+      "verdict": "PASS",
+      "seconds": 1.0
+    },
+    {
+      "case_id": "PURPOSE-12",
+      "repetition": 1,
+      "question": "Why does a digital transformation programme need changes to staff responsibilities as well as new software?",
+      "history": [],
+      "expected": {
+        "type": "in_material",
+        "accepted_courses": [
+          "DTGS"
+        ],
+        "expected_sections": [
+          "DTGS-1.1"
+        ]
+      },
+      "replies": [
+        {
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_00_K3IskoGOTCVuU6bCan2e2006",
+              "name": "read_file",
+              "arguments": "{\"course\": \"DTGS\"}"
+            }
+          ]
+        },
+        {
+          "content": "A digital transformation programme is not only a technology change, so the people side has to move with the software:\n\n- Transformation means change and alignment across technology infrastructure, processes, the business model, products and services, work procedures **and people** — and \"digital transformation is not only about technology\" [DTGS-1.1].\n- In Vial's process model, changes in value-creation paths are affected by **structural changes** — organisational structure, culture, leadership, and **employee roles and skills** — and held back by organisational barriers such as inertia and resistance [DTGS-1.2].\n- The \"change iceberg\" explains why tooling alone fails: above the waterline sit technology, tools, licences, architecture and the demo; below sit incentives, ownership, skills, trust, status and fear of redundancy [DTGS-3.3].\n- Resistance often comes from exactly these human factors: parochial self-interest, misunderstanding and lack of trust, different assessments, and low tolerance for change (fear of not being able to develop the new skills required) [DTGS-1.4]. Hence change management — defining the need for change, involving everyone, leading the change — and competence and training management are part of a holistic transformation methodology [DTGS-1.7].\n- GenAI specifically requires reshaped and redesigned processes, organisational change, and employee upskilling and reskilling [DTGS-1.11]; and in the canvas, key activities shift so that review, exceptions and escalation become the real work — raising the question \"have we redesigned the workflow, or accelerated the old one?\" [DTGS-3.11].\n- Leadership choice reflects the same point: an insider is favoured over a digital expert because transformation is about changing the organisation and its people [DTGS-1.8].",
+          "tool_calls": []
+        }
+      ],
+      "answer": "A digital transformation programme is not only a technology change, so the people side has to move with the software:\n\n- Transformation means change and alignment across technology infrastructure, processes, the business model, products and services, work procedures **and people** — and \"digital transformation is not only about technology\" [DTGS-1.1].\n- In Vial's process model, changes in value-creation paths are affected by **structural changes** — organisational structure, culture, leadership, and **employee roles and skills** — and held back by organisational barriers such as inertia and resistance [DTGS-1.2].\n- The \"change iceberg\" explains why tooling alone fails: above the waterline sit technology, tools, licences, architecture and the demo; below sit incentives, ownership, skills, trust, status and fear of redundancy [DTGS-3.3].\n- Resistance often comes from exactly these human factors: parochial self-interest, misunderstanding and lack of trust, different assessments, and low tolerance for change (fear of not being able to develop the new skills required) [DTGS-1.4]. Hence change management — defining the need for change, involving everyone, leading the change — and competence and training management are part of a holistic transformation methodology [DTGS-1.7].\n- GenAI specifically requires reshaped and redesigned processes, organisational change, and employee upskilling and reskilling [DTGS-1.11]; and in the canvas, key activities shift so that review, exceptions and escalation become the real work — raising the question \"have we redesigned the workflow, or accelerated the old one?\" [DTGS-3.11].\n- Leadership choice reflects the same point: an insider is favoured over a digital expert because transformation is about changing the organisation and its people [DTGS-1.8].",
+      "course": "DTGS",
+      "error": null,
+      "materials_read": [
+        "DTGS"
+      ],
+      "read_arguments": [
+        "DTGS"
+      ],
+      "citations": [
+        "DTGS-1.1",
+        "DTGS-1.2",
+        "DTGS-3.3",
+        "DTGS-1.4",
+        "DTGS-1.7",
+        "DTGS-1.11",
+        "DTGS-3.11",
+        "DTGS-1.8"
+      ],
+      "invalid_citations": [],
+      "is_refusal": false,
+      "earliest_failing_step": null,
+      "mentions_read_file": false,
+      "verdict": "PASS",
+      "seconds": 3.4
+    },
+    {
+      "case_id": "PURPOSE-12",
+      "repetition": 2,
+      "question": "Why does a digital transformation programme need changes to staff responsibilities as well as new software?",
+      "history": [],
+      "expected": {
+        "type": "in_material",
+        "accepted_courses": [
+          "DTGS"
+        ],
+        "expected_sections": [
+          "DTGS-1.1"
+        ]
+      },
+      "replies": [
+        {
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_00_x7443SxYD1E4pCsiPCw81701",
+              "name": "read_file",
+              "arguments": "{\"course\": \"DTGS\"}"
+            }
+          ]
+        },
+        {
+          "content": "A digital transformation programme is not only a technology effort: \"digital\" and \"transformation\" together mean changing technology infrastructure, processes, the business model, products and services, work procedures **and people**, aligned with business strategy to create value [DTGS-1.1]. Vial's sequence makes the same point structurally — changes in value-creation paths are affected by structural changes such as organisational structure, culture, leadership, and **employee roles and skills**, and are held back by organisational barriers like inertia and resistance [DTGS-1.2].\n\nSo new software alone leaves the human side of the change unaddressed:\n\n- **Resistance is often about roles and skills, not tools.** People resist from parochial self-interest (what they personally lose), misunderstanding and lack of trust, different assessments, and low tolerance for change — including fear of not being able to develop the new skills required [DTGS-1.4]. Facilitation and support is the approach aimed specifically at such adjustment problems [DTGS-1.5].\n- **Change management is a named discipline in the methodology**, alongside technology management: define the need for change, involve everyone, lead the change, plus competence and training management [DTGS-1.7]. ADKAR likewise runs through Awareness, Desire, Knowledge, Ability and Reinforcement for each individual [DTGS-1.7].\n- **The \"change iceberg\"** explains why programmes fail: above the waterline sit technology, tools, licences, architecture and the demo; below sit incentives, ownership, skills, trust, status and fear of redundancy — and roughly 30% of transformation projects fail outright, suggesting the binding constraint was never the technology [DTGS-3.3].\n- **Leadership should come from someone who can change the organisation and its people**, which requires credibility and knowledge of the business more than technical expertise [DTGS-1.8].\n- **GenAI specifically requires reshaped processes, organisational change, and upskilling/reskilling of employees** [DTGS-1.11]; value leaks through weak governance (no owner, no escalation path) and misaligned incentives [DTGS-3.2], and workflow/accountability is one of the layers you must own yourself [DTGS-3.6].",
+          "tool_calls": []
+        }
+      ],
+      "answer": "A digital transformation programme is not only a technology effort: \"digital\" and \"transformation\" together mean changing technology infrastructure, processes, the business model, products and services, work procedures **and people**, aligned with business strategy to create value [DTGS-1.1]. Vial's sequence makes the same point structurally — changes in value-creation paths are affected by structural changes such as organisational structure, culture, leadership, and **employee roles and skills**, and are held back by organisational barriers like inertia and resistance [DTGS-1.2].\n\nSo new software alone leaves the human side of the change unaddressed:\n\n- **Resistance is often about roles and skills, not tools.** People resist from parochial self-interest (what they personally lose), misunderstanding and lack of trust, different assessments, and low tolerance for change — including fear of not being able to develop the new skills required [DTGS-1.4]. Facilitation and support is the approach aimed specifically at such adjustment problems [DTGS-1.5].\n- **Change management is a named discipline in the methodology**, alongside technology management: define the need for change, involve everyone, lead the change, plus competence and training management [DTGS-1.7]. ADKAR likewise runs through Awareness, Desire, Knowledge, Ability and Reinforcement for each individual [DTGS-1.7].\n- **The \"change iceberg\"** explains why programmes fail: above the waterline sit technology, tools, licences, architecture and the demo; below sit incentives, ownership, skills, trust, status and fear of redundancy — and roughly 30% of transformation projects fail outright, suggesting the binding constraint was never the technology [DTGS-3.3].\n- **Leadership should come from someone who can change the organisation and its people**, which requires credibility and knowledge of the business more than technical expertise [DTGS-1.8].\n- **GenAI specifically requires reshaped processes, organisational change, and upskilling/reskilling of employees** [DTGS-1.11]; value leaks through weak governance (no owner, no escalation path) and misaligned incentives [DTGS-3.2], and workflow/accountability is one of the layers you must own yourself [DTGS-3.6].",
+      "course": "DTGS",
+      "error": null,
+      "materials_read": [
+        "DTGS"
+      ],
+      "read_arguments": [
+        "DTGS"
+      ],
+      "citations": [
+        "DTGS-1.1",
+        "DTGS-1.2",
+        "DTGS-1.4",
+        "DTGS-1.5",
+        "DTGS-1.7",
+        "DTGS-3.3",
+        "DTGS-1.8",
+        "DTGS-1.11",
+        "DTGS-3.2",
+        "DTGS-3.6"
+      ],
+      "invalid_citations": [],
+      "is_refusal": false,
+      "earliest_failing_step": null,
+      "mentions_read_file": false,
+      "verdict": "PASS",
+      "seconds": 4.2
+    },
+    {
+      "case_id": "PURPOSE-12",
+      "repetition": 3,
+      "question": "Why does a digital transformation programme need changes to staff responsibilities as well as new software?",
+      "history": [],
+      "expected": {
+        "type": "in_material",
+        "accepted_courses": [
+          "DTGS"
+        ],
+        "expected_sections": [
+          "DTGS-1.1"
+        ]
+      },
+      "replies": [
+        {
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_00_DWZIBUVt9Ep9CmDIrqXg0919",
+              "name": "read_file",
+              "arguments": "{\"course\": \"DTGS\"}"
+            }
+          ]
+        },
+        {
+          "content": "A digital transformation programme is not only a technology effort, so changing responsibilities is part of the change itself:\n\n- Transformation means change and alignment across technology infrastructure, processes, the business model, products and services, work procedures **and people** — and \"digital transformation is not only about technology\" [DTGS-1.1].\n- In Vial's sequence, changes in value-creation paths are affected by **structural changes** — organisational structure, culture, leadership, and **employee roles and skills** — and held back by organisational barriers such as inertia and resistance [DTGS-1.2].\n- Resistance often stems from people's fear that they cannot develop the new skills and behaviour required, or from a sense of personal loss, so the change strategy has to address roles and capabilities, not just systems [DTGS-1.4]. The ADKAR model likewise treats individual Knowledge, Ability and Reinforcement as phases of a change [DTGS-1.7].\n- The \"change iceberg\" explains why programmes fail: above the waterline sit technology, tools, licences and the demo; below sit incentives, ownership, skills, trust, status and fear of redundancy — and the binding constraint was never the technology [DTGS-3.3].\n- GenAI specifically requires processes to be reshaped and redesigned, with employees upskilled and reskilled [DTGS-1.11]; and value leaks where workflows are not redesigned, e.g. where review, exceptions and escalation become the real work [DTGS-3.2] [DTGS-3.11].",
+          "tool_calls": []
+        }
+      ],
+      "answer": "A digital transformation programme is not only a technology effort, so changing responsibilities is part of the change itself:\n\n- Transformation means change and alignment across technology infrastructure, processes, the business model, products and services, work procedures **and people** — and \"digital transformation is not only about technology\" [DTGS-1.1].\n- In Vial's sequence, changes in value-creation paths are affected by **structural changes** — organisational structure, culture, leadership, and **employee roles and skills** — and held back by organisational barriers such as inertia and resistance [DTGS-1.2].\n- Resistance often stems from people's fear that they cannot develop the new skills and behaviour required, or from a sense of personal loss, so the change strategy has to address roles and capabilities, not just systems [DTGS-1.4]. The ADKAR model likewise treats individual Knowledge, Ability and Reinforcement as phases of a change [DTGS-1.7].\n- The \"change iceberg\" explains why programmes fail: above the waterline sit technology, tools, licences and the demo; below sit incentives, ownership, skills, trust, status and fear of redundancy — and the binding constraint was never the technology [DTGS-3.3].\n- GenAI specifically requires processes to be reshaped and redesigned, with employees upskilled and reskilled [DTGS-1.11]; and value leaks where workflows are not redesigned, e.g. where review, exceptions and escalation become the real work [DTGS-3.2] [DTGS-3.11].",
+      "course": "DTGS",
+      "error": null,
+      "materials_read": [
+        "DTGS"
+      ],
+      "read_arguments": [
+        "DTGS"
+      ],
+      "citations": [
+        "DTGS-1.1",
+        "DTGS-1.2",
+        "DTGS-1.4",
+        "DTGS-1.7",
+        "DTGS-3.3",
+        "DTGS-1.11",
+        "DTGS-3.2",
+        "DTGS-3.11"
+      ],
+      "invalid_citations": [],
+      "is_refusal": false,
+      "earliest_failing_step": null,
+      "mentions_read_file": false,
+      "verdict": "PASS",
+      "seconds": 3.0
+    }
+  ]
+}

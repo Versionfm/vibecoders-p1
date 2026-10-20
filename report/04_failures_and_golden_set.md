@@ -49,11 +49,13 @@
 
 - **Style notes from the labeller** (not failures, nothing measures them): over-explains and names the Course;
   reports what "the material says" instead of answering; splits one answer in two.
-- **In the app as it is now** (Agentic Tutor with the read-first guard, run
-  [2026-10-19_205545](../evaluation/runs/2026-10-19_205545_golden_set_v1_judge_v2_read_first_agentic/failures.md)):
-  16 failing Traces of 108, in 7 cases: **2 Reads a Course too many 6** (GS-02 3/3, GS-15 3/3); **1 Wrong Course
-  chosen 3** (GS-05 3/3); **5 Claim beyond the Section 6** (GS-06 1, GS-24 2, GS-27 2, GS-28 1); **7 Related but no
-  answer 1** (GS-27). This run is newer than the taxonomy file; its failures all fit the existing categories.
+- **In the app as it is now** (Agentic Tutor `agentic_tutor_v3`, run
+  [2026-10-20_130617](../evaluation/runs/2026-10-20_130617_golden_set_v1_judge_v2_purpose_v3_agentic/failures.md)):
+  17 failing Traces of 108, in 12 cases: **8 Judge timeout 8** (7 in Run 1, 1 in Run 2; all pass when judged again);
+  **5 Claim beyond the Section 6** (GS-11, GS-23, GS-24, GS-25 once each, GS-27 twice); **1 Wrong Course chosen 3**
+  (GS-05 3/3). **2 Reads a Course too many: 0**, down from 6 with the previous prompt (GS-02 and GS-15 3/3 → 0/3,
+  [previous failure sheet](../evaluation/runs/2026-10-19_205545_golden_set_v1_judge_v2_read_first_agentic/failures.md)).
+  These runs are newer than the taxonomy file; their failures all fit the existing categories.
 - **What it points at:** category 1 is one gap in the Courses' "Covers" descriptions (GAIF does not mention the topic
   of GAIF-1.7); category 2 is the Agentic Tutor's main cost (slide 5); categories 4, 5 and the style notes point at a
   next tutor prompt that answers directly; categories 6 and 8 are measurement, not tutor, failures.
@@ -65,7 +67,7 @@
 - Labels decided by the group (2 reviewers), drafted by the assistant, never edited after the freeze
 - **Taxonomy** from 52 failing Traces + 28 hand-labelled answers: 8 categories
 - Top three: wrong Course (15) · reads a Course too many (11) · claim beyond the Section (8)
-- In the app now: 16 of 108 Traces fail: extra Course Read 6 · claim beyond the Section 6 · wrong Course 3 · no answer 1
+- In the app now: 17 of 108 Traces fail: judge timeout 8 · claim beyond the Section 6 · wrong Course 3 · extra Course Read **0** (was 6)
 
 ## Report paragraph (draft)
 

@@ -82,7 +82,7 @@ The repeatable tool loop lives in `src/agentic.py`. `src/tutor.py` prepares the 
 `src/app.py` keeps the chat history. See [the short workflow guide](docs/AGENTIC_TUTOR_WORKFLOW.md) for the main path,
 Read limits and evaluation details.
 
-The candidate prompt `agentic_tutor_v3` treats identity requests, requests about this app's internals, greetings
+The Agentic Tutor's prompt `agentic_tutor_v3` treats identity requests, requests about this app's internals, greetings
 without a Course question and unrelated requests as Out of scope. Both screens show:
 
 > This tutor answers questions about GAIF, PEID, AITB and DTGS. Please ask a question about one of these Courses.
@@ -95,11 +95,12 @@ answer path; a missing Read alone is never interpreted as Out of scope.
 
 The deterministic tests use fake models and the separate
 [purpose-boundary cases](evaluation/purpose_boundary_cases.json). They verify outcome handling, not live-model
-classification. Ticket #25 must record targeted live probes, including supplied follow-up history, and three Runs
-on unchanged Golden Set v1 before a kept-or-abandoned decision. Real-model acceptance and the candidate's score are
-pending. The last read-first baseline was 85.2% End-to-end Success (83.3% to 86.1%), measured with
-`agentic_tutor_v1` at `5ae0257`; that number is not a measurement of v3. Golden Set v1 contains single questions
-and does not measure contextual follow-ups.
+classification. The live model was checked separately (#25): a probe of the 12 purpose-boundary cases, 3 times each,
+passed 36 of 36 ([evaluation/probes/purpose_boundary_probe.json](evaluation/probes/purpose_boundary_probe.json)).
+On unchanged Golden Set v1, v3 scored 84.3% End-to-end Success (69.4% to 91.7%) over three Runs; 8 judge calls
+timed out in Runs 1 and 2 and count as failures, and judged again they all pass (91.7%, supplementary). The earlier
+85.2% was measured with `agentic_tutor_v1` and is not a measurement of v3. Golden Set v1 contains single questions
+and does not measure contextual follow-ups. Details: [the iteration log](evaluation/ITERATION_LOG.md).
 
 ## Evaluate
 

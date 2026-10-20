@@ -1,6 +1,6 @@
 # Slide 6 · What we abandoned (and what we kept)
 
-Every evaluated change is in [evaluation/ITERATION_LOG.md](../evaluation/ITERATION_LOG.md) (28 entries), including the
+Every evaluated change is in [evaluation/ITERATION_LOG.md](../evaluation/ITERATION_LOG.md) (31 entries), including the
 abandoned ones, with its configuration, run folder, result and reason. The brief asks for at least one change tried,
 measured and abandoned with its reason.
 
@@ -13,6 +13,7 @@ measured and abandoned with its reason.
 | 2026-10-14 | The professor's endpoint (`course-chat`) | Plain answers worked; native tool calls returned 404; the thinking switch returned 400; the model behind it was not disclosed | The Agentic Tutor would need a rewrite, the endpoint is shared by the class, and we could not name the model in the report |
 | 2026-10-18 | `course-chat` again, after the professor fixed the proxy | Tool calls and the Agentic Tutor worked on four throwaway questions | Not adopted: both tutors were already measured on `deepseek-flash`, with no time to measure again under 30 requests per minute before the deadline. Not a quality comparison |
 | 2026-10-18 | **The Agentic Tutor as the app's tutor (#17)** | End-to-end Success 85.2% vs 90.7% (judge v1), then 87.0% vs 92.6% (calibrated judge), against the Routed Tutor | Abandoned twice on the measurement: the gap is extra Course Reads. **Then selected on 2026-10-19 for teaching** ([ADR 0003](../docs/adr/0003-keep-agentic-chat-for-teaching.md)): see below |
+| 2026-10-20 | Prompt `agentic_tutor_v2` (the first purpose-boundary candidate) | Not measured: replaced before any probe or Golden Set run | It put the Out of scope rule after the Reading rules; v3 asks for the scope decision before any Read. No live evidence of v2 was kept, so this one is recorded, not measured |
 | 2026-10-18 | **Correcting our own labels** after seeing the judge (moving five Supported FAILs to the criterion their written reason described) | With corrected labels, held-out Supported agreement fell (57.9% with v1, 68.4% with v2, against 84.2% with the first labels and v2) | The judge's evidence showed three of the first FAILs were right. Changing labels after seeing the judge would move the score toward the judge. The first, blind labels stay official |
 
 Sources: the [iteration log](../evaluation/ITERATION_LOG.md) entries of those dates; probe files in
@@ -35,6 +36,14 @@ Sources: the [iteration log](../evaluation/ITERATION_LOG.md) entries of those da
   alone, with no Read, so every citation was correctly flagged invalid. The loop now sends such an answer back once to
   read first. Measured on the Golden Set: 87.0% → 85.2%, inside the variation, and the guard never fired on single
   questions. Kept, because the Golden Set cannot see the follow-up case it fixes.
+- **The purpose boundary, `agentic_tutor_v3` (2026-10-20), found in the chat:** asked "Who are you?", the tutor
+  replied that it had no question to answer and described its internal `read_file` tool, shown as an Answer with no
+  Course Material read. v3 makes identity, internal-model and tool questions, greetings without a Course question and
+  unrelated requests Out of scope, decided before any Read; the recovery for a reply with no Read now allows either Out
+  of scope or a Read, and a second reply with no Read becomes the retry notice. Both screens show one notice: "This
+  tutor answers questions about GAIF, PEID, AITB and DTGS. Please ask a question about one of these Courses." Live
+  probe: 36 of 36. Golden Set: 84.3% recorded (8 judge timeouts), 91.7% re-judged, Search Step 91.7% → 97.2%. Kept
+  ([05_our_number.md](05_our_number.md)).
 - **Citations only in the footer (2026-10-19):** presentation only. The screen hides the inline markers; evaluation,
   saved Traces and follow-up context keep the original cited answer. An offline check over all 216 saved Traces showed
   answers, judge inputs, Steps and reports unchanged, so no new evaluation was needed. Not a claim of better readability.
@@ -47,9 +56,10 @@ Sources: the [iteration log](../evaluation/ITERATION_LOG.md) entries of those da
   4, 5 and the style notes).
 - Worked examples in the prompt (never Golden Set questions), measured as a new version.
 - Record latency in the Traces; a second labeller for the judge.
-- Observed on 2026-10-19 while taking the screenshots: asked "Can you explain that more simply?", the chat repeated its
-  first answer almost word for word. The prompt asks for facts from the material only, so a simpler explanation is not
-  encouraged. One observation, not measured: a reason for the multi-turn evaluation above.
+- Observed on 2026-10-19 with `agentic_tutor_v1` while taking the screenshots: asked "Can you explain that more
+  simply?", the chat repeated its first answer almost word for word. With v3 the probe's follow-up of the same kind
+  read PEID and answered "Simply put: ..." in 3 of 3 repetitions. One case each, not measured: a reason for the
+  multi-turn evaluation above.
 
 ## Slide
 
@@ -57,6 +67,7 @@ Sources: the [iteration log](../evaluation/ITERATION_LOG.md) entries of those da
 - **Abandoned:** the professor's endpoint: no native tool calls, undisclosed model
 - **Abandoned:** correcting our labels after seeing the judge: it moved the score toward the judge
 - **Measured, abandoned, then chosen:** the Agentic chat, 87.0% vs 92.6%, kept for teaching (ADR 0003)
+- **Kept, found in the chat:** read before answering a follow-up · "Who are you?" is Out of scope (v3, probe 36/36)
 - **Next:** multi-turn evaluation · fix the GAIF "Covers" gap · a tutor prompt that answers directly
 
 ## Report paragraph (draft)
@@ -72,6 +83,8 @@ Sources: the [iteration log](../evaluation/ITERATION_LOG.md) entries of those da
 > teaching through conversation and the Routed screen takes only isolated questions. We report that tradeoff rather
 > than hide it. Using the chat revealed a gap the Golden Set could not: follow-ups answered from the conversation
 > alone, without reading any Course Material. We fixed it in code and measured that single questions did not change.
+> The chat also answered "Who are you?" with a description of its internal tool; a new prompt version now treats such
+> requests as out of scope. It passed all 36 live checks and removed the extra Course Reads on the Golden Set.
 
 ## Sources
 
