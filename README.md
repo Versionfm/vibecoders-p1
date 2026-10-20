@@ -1,12 +1,48 @@
 # Course Tutor
 
-A single-screen tutor for four Courses (GAIF, PEID, AITB, DTGS), answering from Course Material with Section citations (e.g. `[PEID-2.3]`). The chosen teaching experience is the Agentic Tutor chat: one model reads the Course Materials it needs through a `read_file(course)` tool and keeps conversation context for follow-up questions. The Routed Tutor remains available for comparison: a Router picks one Course, then the Course Tutor answers from its Course Material. We kept the chat for its conversational teaching format despite its lower measured single-question End-to-end Success; improved learning has not been measured. The current purpose-boundary candidate is awaiting real-model evaluation; earlier scores describe earlier versions. See [the decision and evidence](docs/adr/0003-keep-agentic-chat-for-teaching.md), [the iteration log](evaluation/ITERATION_LOG.md), [the Agentic Tutor design](docs/adr/0001-agentic-tutor-without-router.md) and [CONTEXT.md](CONTEXT.md) for vocabulary.
+A one-screen Streamlit tutor that answers students' questions using only the group's Course Material and cites
+the Sections behind its claims, such as `[PEID-2.3]`.
+
+| Course | Name |
+| --- | --- |
+| GAIF | Generative AI Foundations |
+| PEID | Prompt Engineering and Interaction Design |
+| AITB | AI Tools for Business Professionals |
+| DTGS | Digital Transformation and Generative AI Strategy |
+
+The chosen teaching experience is the **Agentic Tutor chat**: one model reads the Course Materials it needs through
+`read_file(course)` and uses conversation context for follow-up questions. The **Routed Tutor** remains available
+for comparison: a Router picks one Course, then the Course Tutor answers from its Course Material.
+
+We chose the chat to support conversation and clarification, despite its lower single-question End-to-end Success
+in the original comparison. Improved learning has not been measured. The current prompt, `agentic_tutor_v3`, was
+evaluated and kept on 20 October 2026; see [evaluation results and limits](#evaluation-results-and-limits) for the
+version-specific evidence and [ADR 0003](docs/adr/0003-keep-agentic-chat-for-teaching.md) for the teaching decision.
+
+## Project materials
+
+- [Actual working prompt: `agentic_tutor_v3`](prompts/agentic_tutor_v3.md)
+- [Course Material](data/courses/) and [shared vocabulary](CONTEXT.md)
+- [Golden Set v1](evaluation/golden_set.json), [failure taxonomy](evaluation/FAILURE_TAXONOMY.md) and
+  [iteration log](evaluation/ITERATION_LOG.md)
+- [Report source material and app screenshots](report/README.md)
+- [Editable presentation](https://docs.google.com/presentation/d/19HXoCDeYyv_cvhhZVjpvb6L0LsbZk2xzInvGO-6YdTk/edit)
 
 ## Setup
 
 ```bash
 python -m venv .venv
 .venv/Scripts/python -m pip install -r requirements.txt   # Windows; use .venv/bin/python elsewhere
+```
+
+Activate the virtual environment before using the commands below:
+
+```bash
+source .venv/bin/activate              # Linux / macOS
+```
+
+```powershell
+.\.venv\Scripts\Activate.ps1          # Windows PowerShell
 ```
 
 ## Add your API key locally
@@ -56,10 +92,17 @@ and the screen then asks you to try again.
 ## Run
 
 ```bash
-TUTOR=agentic streamlit run src/app.py
+TUTOR=agentic python -m streamlit run src/app.py
 ```
 
-Alternatively, set `TUTOR=agentic` in `.env` and run `streamlit run src/app.py`. For the Routed Tutor comparison,
+On Windows PowerShell:
+
+```powershell
+$env:TUTOR = "agentic"
+python -m streamlit run src/app.py
+```
+
+Alternatively, set `TUTOR=agentic` in `.env` and run `python -m streamlit run src/app.py`. For the Routed Tutor comparison,
 set `TUTOR=routed`. The chat keeps prior questions and answers in the browser
 session and sends them with each follow-up. Each answer reads its own Course Material; prior
 answers are conversation context, not source material. **New conversation** clears the history.
@@ -67,12 +110,45 @@ answers are conversation context, not source material. **New conversation** clea
 Both tutor screens consolidate standalone Section markers under **Cited Sections** instead of repeating them
 beside each claim. Invalid citations still appear in the footer and warning. Only the displayed answer is cleaned:
 follow-up context, evaluation, saved Traces and reports retain the original cited answer, so the Golden Set and
-judge criteria are unchanged. No new model evaluation was run for this presentation change.
+judge criteria are unchanged. The display formatting has not been evaluated for readability or learning.
 
-Wording for the group's project report:
+## Working prompt
 
-> The screen consolidates references under Cited Sections; evaluation and saved Traces retain the original answer
-> with citations beside its claims. This presentation change does not establish improved readability or learning.
+The [full system prompt](prompts/agentic_tutor_v3.md) is the actual text loaded by
+[src/agentic.py](src/agentic.py), with its version selected in [src/prompts.py](src/prompts.py). It is separate
+from the instructions used to steer Claude Code during development.
+
+Its structure is:
+
+1. **Role:** a university tutor that answers using only the four Courses' Course Material.
+2. **Course boundaries:** a Covers and Does not cover description for each Course.
+3. **Purpose and scope:** decide scope from the request's meaning and conversation context before any Read.
+4. **Reading:** read the relevant Course Material; read a second Course only for genuine overlap.
+5. **Answering and Refusal:** use only facts from the material, cite every claim, keep the answer concise, and use
+   the fixed Refusal for uncovered questions, new calculation exercises or Course logistics.
+
+Two verbatim instructions from the prompt:
+
+> Earlier answers help interpret a follow-up; they are not Course Material or evidence for the new answer.
+
+> Use only facts stated in the Course Material you read. Do not add anything from general knowledge.
+
+Evaluated prompt files are kept unchanged; a revision gets a new version. The Routed Tutor uses
+[router_v2](prompts/router_v2.md) and [tutor_v2](prompts/tutor_v2.md).
+
+## How we steered Claude Code
+
+| Artifact | Purpose |
+| --- | --- |
+| [CLAUDE.md](CLAUDE.md) | Gives Claude Code the project context, conventions and rules to follow. |
+| [Evaluation skill](.claude/skills/evaluate-course-tutor/SKILL.md) | Defines a repeatable evaluation procedure: three Runs, failure analysis and logged results. |
+| [Evaluator agent](.claude/agents/evaluator.md) | Runs the evaluation skill and reports results, with instructions to leave code, prompts and labels unchanged. |
+
+The evaluator is a development sub-agent. The student-facing Agentic Tutor answers Course questions; the LLM judge
+checks Supported and Responsive during evaluation. The evaluator follows the skill, writes run evidence and
+iteration-log entries, and returns suggested fixes to the main coding session. See
+[the workflow record](docs/WORKFLOW_ITERATIONS.md#steering-evidence-2026-10-18) for the documented steering checks
+and their limitations.
 
 ## How the Agentic Tutor works
 
@@ -95,22 +171,50 @@ answer path; a missing Read alone is never interpreted as Out of scope.
 
 The deterministic tests use fake models and the separate
 [purpose-boundary cases](evaluation/purpose_boundary_cases.json). They verify outcome handling, not live-model
-classification. The live model was checked separately (#25): a probe of the 12 purpose-boundary cases, 3 times each,
-passed 36 of 36 ([evaluation/probes/purpose_boundary_probe.json](evaluation/probes/purpose_boundary_probe.json)).
-On unchanged Golden Set v1, v3 scored 84.3% End-to-end Success (69.4% to 91.7%) over three Runs; 8 judge calls
-timed out in Runs 1 and 2 and count as failures, and judged again they all pass (91.7%, supplementary). The earlier
-85.2% was measured with `agentic_tutor_v1` and is not a measurement of v3. Golden Set v1 contains single questions
-and does not measure contextual follow-ups. Details: [the iteration log](evaluation/ITERATION_LOG.md).
+classification. A separate live probe of 12 purpose-boundary cases, repeated three times each, passed **36 of 36**
+([probe evidence](evaluation/probes/purpose_boundary_probe.json)). It includes one contextual follow-up case,
+repeated three times; it is not a general multi-turn evaluation.
+
+## Evaluation results and limits
+
+Golden Set v1 has **36 human-reviewed cases**: 16 in material, 4 near-miss, 8 overlap, 4 Out of scope and 4 Refusal.
+Each evaluation below has three Runs, giving 108 Traces. End-to-end Success requires Search, Path and Answer all
+to pass, including the judge's Supported and Responsive verdicts for an expected answer.
+
+| Configuration and measurement | End-to-end Success, mean (range) | Evidence |
+| --- | --- | --- |
+| Agentic Tutor v3, latest local repeat, 20 October 2026 | **86.1% (80.6% to 88.9%)** | [Report](evaluation/runs/2026-10-20_140231_golden_set_v1_judge_v2_v3_repeat_agentic/report.md), [comparison and limits](evaluation/runs/2026-10-20_140231_golden_set_v1_judge_v2_v3_repeat_agentic/comparison.md) |
+| Agentic Tutor v3, initial evaluation, 20 October 2026 | 84.3% (69.4% to 91.7%) | [Report](evaluation/runs/2026-10-20_130617_golden_set_v1_judge_v2_purpose_v3_agentic/report.md) |
+| Agentic Tutor v1, original teaching-decision comparison, 18 October 2026 | 87.0% (83.3% to 88.9%) | [Report](evaluation/runs/2026-10-18_113506_golden_set_v1_judge_v2_agentic/report.md) |
+| Routed Tutor, original teaching-decision comparison, 18 October 2026 | 92.6% (88.9% to 94.4%) | [Report](evaluation/runs/2026-10-18_040522_golden_set_v1_judge_v2_routed/report.md) |
+
+The latest repeat used the unchanged v3 implementation at `585f47a`, app model `deepseek-flash` with thinking off,
+and judge `openai/gpt-oss-20b` with `judge_supported_v2` and `judge_responsive_v1`. Five judge timeouts remain scored
+as failures. Search passed 97.2% and Path 100.0%. The previous v3 run had eight judge timeouts; re-judging those
+answers gives a **supplementary 91.7%**, not a replacement for its recorded 84.3%. No selective re-judging was used
+in the latest repeat. The previous run did not record judge thinking, so its exact flag cannot be verified;
+the repeat explicitly used `none`. The change from 84.3% to 86.1% does not establish an implementation improvement.
+
+The original 87.0% versus 92.6% comparison explains the teaching decision; those are historical measurements of
+the then-current versions. The current prompt is v3. Golden Set v1 contains isolated questions with no conversation
+history, so these results do **not** measure follow-up quality or student learning. The judge was calibrated with
+one human labeller and can disagree or time out. Full configurations, failures and decisions are in the
+[iteration log](evaluation/ITERATION_LOG.md).
 
 ## Evaluate
 
-One command runs a case file (JSON, in the Golden Set format) through the same answer function the screen uses, three times:
+Configure the app model and `LLM_JUDGE_MODEL` (and the judge's endpoint and key when separate) in `.env` first.
+One command runs the Golden Set through the same answer function the screen uses, three times:
 
 ```bash
-python src/evaluate.py evaluation/sample_cases.json
+python src/evaluate.py evaluation/golden_set.json --tutor agentic --label agentic_v3 --workers 4
 ```
 
-Options: `--runs 3` (default), `--out evaluation/runs` (default), `--label tutor_v3` (added to the run folder name),
+For a smoke check only, use `evaluation/sample_cases.json` in place of the Golden Set; sample scores are not
+Golden Set results. The evaluation command defaults to the Routed Tutor, so pass `--tutor agentic` explicitly even
+when the screen uses `TUTOR=agentic`.
+
+Options: `--runs 3` (default), `--out evaluation/runs` (default), `--label agentic_v3` (added to the run folder name),
 `--workers 4` (cases answered in parallel within a run; default 1, keep it small because of the endpoint's rate limit),
 `--tutor agentic` (run the Agentic Tutor instead of the Routed Tutor; the tutor is added to the run folder name and
 stored in every run).

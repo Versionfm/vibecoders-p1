@@ -764,3 +764,48 @@ Copy this block for each entry:
   a stored Run. Not covered: Golden Set v1 has single questions only, so contextual follow-ups are shown only by the
   probe (one follow-up case, three repetitions); 36 cases and three Runs; one labeller behind the judge calibration; no
   new judge calibration was needed (same judge model, prompts and criteria); improved learning is unmeasured.
+
+## 2026-10-20 Agentic Tutor v3 repeat evaluation, unchanged merged configuration (14:02 UTC)
+
+- **Change:** none to the app, prompts, Course Material, Golden Set or scoring. A fresh three-Run measurement of
+  the merged purpose-boundary implementation. Compared with the previous v3 measurement in
+  `evaluation/runs/2026-10-20_130617_golden_set_v1_judge_v2_purpose_v3_agentic`; its recorded 84.3% is the baseline, not its supplementary re-judged 91.7%.
+- **Configuration:** Agentic Tutor `agentic_tutor_v3`, `deepseek-flash` on DeepSeek, app thinking off, temperature 0;
+  judge `openai/gpt-oss-20b` on NVIDIA, `judge_supported_v2` and `judge_responsive_v1`, judge thinking explicitly
+  `none` (no switch sent), four workers, unchanged `evaluation/golden_set.json` (36 cases), commit `585f47a`.
+  That source tree matches main merge `54e9daf`. All 216 deterministic tests passed before provider calls.
+  The local unset judge-thinking setting would default off; `none` was pinned only in this process to use the
+  documented calibrated-judge setup. The previous Run schema does not store judge thinking, so its exact flag
+  cannot be verified from those records. Model/provider deployments and sampling can also vary between rounds.
+- **Run folder:** `evaluation/runs/2026-10-20_140231_golden_set_v1_judge_v2_v3_repeat_agentic`. All 3 Runs and 108 Traces completed, with `report.md`, `report.html`, `failures.md`,
+  `compare.html`, the full metric table in `comparison.md`, `configuration.json` and `preservation.json`.
+- **Result:** previous -> repeat, mean (range): End-to-end Success 84.3% (69.4% to 91.7%) ->
+  86.1% (80.6% to 88.9%); Search Step 97.2% (97.2% to 97.2%) -> 97.2% (97.2% to 97.2%);
+  Path Step 100.0% (100.0% to 100.0%) -> 100.0% (100.0% to 100.0%); Answer Step 84.3% (69.4% to 91.7%) ->
+  86.1% (80.6% to 88.9%). Runs 1/2/3 passed 29/36, 32/36 and 32/36: 80.6%, 88.9%, 88.9%.
+  Supported 87.7% (74.1% to 96.3%) -> 90.1% (88.9% to 92.6%); Responsive 95.1% (88.9% to 100.0%) ->
+  95.1% (88.9% to 100.0%); Judge undecided 4.9% (0.0% to 13.0%) -> 3.1% (0.0% to 7.4%).
+  Routing, all Course recalls, macro recall, citation, Refusal and Out of scope correctness are unchanged; the full
+  before/after table is in `comparison.md`.
+- **Failures inspected:** 15 failing Traces in 9 cases (previously 17 in 12). GS-05 3/3 (Search, unchanged wrong AITB
+  instead of GAIF); GS-21 2/3, GS-27 3/3 and GS-11 1/3 (Answer; the first two have unsupported additions, GS-11 cites
+  the neighbouring Section for its list). GS-27 includes a Supported timeout in Run 1 and Supported FAILs in Runs 2/3.
+  Other Answer timeouts: GS-03, GS-15, GS-16 and GS-28, each 1/3. GS-10 2/3 (Answer, Responsive FAIL) demands
+  query/key/value mechanics absent from the frozen key facts and PEID-1.4; retained as a likely judge expectation
+  mismatch and `unnamed` in the existing taxonomy, not relabelled as a pass. Every failing case's Trace was inspected
+  across all three Runs, including Reads/arguments, limits, citations, answer text, Refusal, error and earliest Step.
+- **Diagnostics:** 81 answers judged, 162 criterion verdicts: 150 PASS, 7 FAIL, 5 ERROR (all APITimeoutError), no UNKNOWN.
+  Five timeout Traces, down from eight; every timeout remains a scored failure. No selective re-judging or resampling.
+  No tutor errors, Read-limit hits, invalid/repeated Reads or terminal failed-recovery errors; the Golden Run schema
+  does not establish whether intermediate recovery attempts fired. All four Golden Set Out of scope cases, including
+  GS-30, passed all three Runs. Refusal and citation correctness remain 100.0%. All 47 protected configuration,
+  source, material, calibration and previous-evidence files matched their pre-round hashes.
+- **Decision:** pending; this request measured the existing version and supplied no new keep-or-abandon decision.
+  The selected tutor and its existing decision remain unchanged.
+- **Reason:** two additional Traces passed (91 -> 93 of 108), with fewer judge timeouts (8 -> 5), while failures
+  without a judge error changed from 9 to 10. This is repeat variability with a documented judge-setting uncertainty,
+  not a demonstrated implementation improvement. The main remaining app issues are GS-05 selection and extra
+  claims/citation placement; the attention judgement deserves separate calibration review. No fix was applied during
+  measurement. Golden Set v1 contains single questions only: this round does not test contextual follow-ups,
+  student learning, general scope robustness or readability. The repeat evidence is retained alongside this entry
+  and linked from the README.
