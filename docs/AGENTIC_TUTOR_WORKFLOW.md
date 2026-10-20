@@ -63,6 +63,6 @@ sentence and checks citations against Sections of material read during this answ
 Path and Answer. Repeated Reads and reaching the Read limit remain Path Step failures.
 
 The evaluator supplies no chat history. Existing single-message scores do not measure follow-up answer quality.
-The purpose-boundary candidate uses `agentic_tutor_v2` and scope-aware recovery. Its live-model classification,
+The purpose-boundary candidate uses `agentic_tutor_v3` and scope-aware recovery. Its live-model classification,
 contextual follow-ups and Golden Set results are pending ticket #25; deterministic fake-model tests verify handling
 of the scripted outcomes. Earlier scores remain measurements of earlier versions, as recorded in the iteration log.

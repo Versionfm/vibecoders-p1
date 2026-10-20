@@ -703,3 +703,18 @@ Copy this block for each entry:
   Runs, inspect regressions, compare the preserved baseline and update the report. Golden Set v1 has no prior
   conversation, so contextual follow-ups require their separately reported probe. Improved learning remains
   unmeasured; the Agentic Tutor selection in ADR 0003 is unchanged.
+
+## 2026-10-20 Purpose-boundary candidate: agentic_tutor_v2 -> agentic_tutor_v3 before any measurement (#24)
+
+- **Change:** `agentic_tutor_v3` replaces the candidate `agentic_tutor_v2` (commit `097adbf`). The purpose and Out of
+  scope rules move ahead of the Reading rules ("decide before any Read"), and two sentences are added: a request must
+  directly match a topic in a Course's "Covers" list, and "a general request is not in scope merely because it
+  involves digital technology". Two fixtures were added to `evaluation/purpose_boundary_cases.json`: PURPOSE-11, an
+  off-topic technical request (an industrial camera's exposure time), and PURPOSE-12, a DTGS control question.
+- **Configuration:** same recovery instruction and code as the entry above; only the prompt version changed.
+- **Run folder:** none. `agentic_tutor_v2` was never run on the Golden Set, and no probe output of v2 was stored, so
+  the reason for the change is recorded only by the commit and the two new fixtures.
+- **Result:** not measured. 216 deterministic tests pass with v3.
+- **Decision:** v2 abandoned before measurement; v3 is the candidate measured by #25.
+- **Reason:** v2 placed the Out of scope rule after the Reading rules, so the model was asked to read before deciding
+  scope; v3 asks for the scope decision first. No evidence of v2's live behaviour exists to compare.

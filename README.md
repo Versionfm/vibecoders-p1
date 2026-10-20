@@ -82,7 +82,7 @@ The repeatable tool loop lives in `src/agentic.py`. `src/tutor.py` prepares the 
 `src/app.py` keeps the chat history. See [the short workflow guide](docs/AGENTIC_TUTOR_WORKFLOW.md) for the main path,
 Read limits and evaluation details.
 
-The candidate prompt `agentic_tutor_v2` treats identity requests, requests about this app's internals, greetings
+The candidate prompt `agentic_tutor_v3` treats identity requests, requests about this app's internals, greetings
 without a Course question and unrelated requests as Out of scope. Both screens show:
 
 > This tutor answers questions about GAIF, PEID, AITB and DTGS. Please ask a question about one of these Courses.
@@ -98,7 +98,7 @@ The deterministic tests use fake models and the separate
 classification. Ticket #25 must record targeted live probes, including supplied follow-up history, and three Runs
 on unchanged Golden Set v1 before a kept-or-abandoned decision. Real-model acceptance and the candidate's score are
 pending. The last read-first baseline was 85.2% End-to-end Success (83.3% to 86.1%), measured with
-`agentic_tutor_v1` at `5ae0257`; that number is not a measurement of v2. Golden Set v1 contains single questions
+`agentic_tutor_v1` at `5ae0257`; that number is not a measurement of v3. Golden Set v1 contains single questions
 and does not measure contextual follow-ups.
 
 ## Evaluate
