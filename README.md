@@ -1,6 +1,6 @@
 # Course Tutor
 
-A single-screen tutor for four Courses (GAIF, PEID, AITB, DTGS), answering from Course Material with Section citations (e.g. `[PEID-2.3]`). The chosen teaching experience is the Agentic Tutor chat: one model reads the Course Materials it needs through a `read_file(course)` tool and keeps conversation context for follow-up questions. The Routed Tutor remains available for comparison: a Router picks one Course, then the Course Tutor answers from its Course Material. We kept the chat for its conversational teaching format despite lower measured single-question End-to-end Success (87.0% versus 92.6%); improved learning has not been measured. See [the decision and evidence](docs/adr/0003-keep-agentic-chat-for-teaching.md), [the Agentic Tutor design](docs/adr/0001-agentic-tutor-without-router.md) and [CONTEXT.md](CONTEXT.md) for vocabulary.
+A single-screen tutor for four Courses (GAIF, PEID, AITB, DTGS), answering from Course Material with Section citations (e.g. `[PEID-2.3]`). The chosen teaching experience is the Agentic Tutor chat: one model reads the Course Materials it needs through a `read_file(course)` tool and keeps conversation context for follow-up questions. The Routed Tutor remains available for comparison: a Router picks one Course, then the Course Tutor answers from its Course Material. We kept the chat for its conversational teaching format despite its lower measured single-question End-to-end Success; improved learning has not been measured. The current purpose-boundary candidate is awaiting real-model evaluation; earlier scores describe earlier versions. See [the decision and evidence](docs/adr/0003-keep-agentic-chat-for-teaching.md), [the iteration log](evaluation/ITERATION_LOG.md), [the Agentic Tutor design](docs/adr/0001-agentic-tutor-without-router.md) and [CONTEXT.md](CONTEXT.md) for vocabulary.
 
 ## Setup
 
@@ -81,6 +81,25 @@ Student message → LLM requests Course Material → Python reads it → LLM ans
 The repeatable tool loop lives in `src/agentic.py`. `src/tutor.py` prepares the shared result and checks citations;
 `src/app.py` keeps the chat history. See [the short workflow guide](docs/AGENTIC_TUTOR_WORKFLOW.md) for the main path,
 Read limits and evaluation details.
+
+The candidate prompt `agentic_tutor_v2` treats identity requests, requests about this app's internals, greetings
+without a Course question and unrelated requests as Out of scope. Both screens show:
+
+> This tutor answers questions about GAIF, PEID, AITB and DTGS. Please ask a question about one of these Courses.
+
+The model still returns the exact internal Out of scope Sentence, without a Read. A noncanonical reply without
+a Read gets one recovery attempt: either return that sentence or read the relevant Course Material and answer.
+Another unsupported reply produces the existing retry notice and stays out of successful conversation history.
+Course questions about models or tools, mixed greeting/Course questions and contextual follow-ups keep the grounded
+answer path; a missing Read alone is never interpreted as Out of scope.
+
+The deterministic tests use fake models and the separate
+[purpose-boundary cases](evaluation/purpose_boundary_cases.json). They verify outcome handling, not live-model
+classification. Ticket #25 must record targeted live probes, including supplied follow-up history, and three Runs
+on unchanged Golden Set v1 before a kept-or-abandoned decision. Real-model acceptance and the candidate's score are
+pending. The last read-first baseline was 85.2% End-to-end Success (83.3% to 86.1%), measured with
+`agentic_tutor_v1` at `5ae0257`; that number is not a measurement of v2. Golden Set v1 contains single questions
+and does not measure contextual follow-ups.
 
 ## Evaluate
 

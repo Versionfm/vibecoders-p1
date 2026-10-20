@@ -11,8 +11,8 @@ from screen import answer_for_display, ask, markdown_safe, tutor_setting
 from tutor import AGENTIC_TUTOR, OUT_OF_SCOPE
 
 OUT_OF_SCOPE_MESSAGE = (
-    "This question is outside the four Courses (GAIF, PEID, AITB, DTGS), so the Course Tutor cannot answer it. "
-    "Try a question about one of those Courses."
+    "This tutor answers questions about GAIF, PEID, AITB and DTGS. "
+    "Please ask a question about one of these Courses."
 )
 RETRY_MESSAGE = "Something went wrong while preparing your answer. Please try again in a moment."
 REFUSAL_MESSAGE = "The Course Material does not cover this question, so there is no answer to show."

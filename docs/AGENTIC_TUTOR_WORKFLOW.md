@@ -19,7 +19,8 @@ sequenceDiagram
 
 A typical question takes two LLM calls and one Read. The LLM chooses the Course; Python validates the request and
 returns the whole Course Material. If the model needs another Course, the same loop runs again. A reply without
-tool calls ends the loop.
+tool calls ends the loop after a Read, or immediately for the exact Out of scope Sentence. A different reply without
+a Read gets one scope-aware recovery attempt.
 
 ## Where to read the code
 
@@ -48,7 +49,12 @@ answers provide conversational context, not evidence for new claims. **New conve
 - Several tool calls in one reply are supported. Calls beyond the limit receive `Read limit reached.` without reading.
 - Each tool result carries the ID of its matching assistant tool call, as required by the provider protocol.
 - A failed model call returns an error with the Read records collected so far; the screen offers a retry.
-- The model may answer Out of scope without a Read. An in-scope answer or Refusal without a Read fails evaluation.
+- The model gives the exact Out of scope Sentence without a Read for requests outside the tutor's purpose,
+  including identity requests and greetings without a Course question. Both screens show the shared purpose notice.
+- A different reply without a Read gets one recovery attempt: reconsider the original request and conversation,
+  return the Out of scope Sentence if appropriate, or read the relevant Course Material before answering.
+- If recovery again returns a noncanonical reply with no Read, the result is an error. The screen shows the retry
+  notice and excludes the failed exchange from successful history. Absence of a Read alone never means Out of scope.
 
 ## Evaluation is separate
 
@@ -57,4 +63,6 @@ sentence and checks citations against Sections of material read during this answ
 Path and Answer. Repeated Reads and reaching the Read limit remain Path Step failures.
 
 The evaluator supplies no chat history. Existing single-message scores do not measure follow-up answer quality.
-The refactor changes code organization, keeping the prompt, model settings, tool behaviour and result fields intact.
+The purpose-boundary candidate uses `agentic_tutor_v2` and scope-aware recovery. Its live-model classification,
+contextual follow-ups and Golden Set results are pending ticket #25; deterministic fake-model tests verify handling
+of the scripted outcomes. Earlier scores remain measurements of earlier versions, as recorded in the iteration log.

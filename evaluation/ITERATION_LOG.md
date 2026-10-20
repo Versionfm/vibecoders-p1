@@ -671,3 +671,35 @@ Copy this block for each entry:
   measured; End-to-end Success is 1.8 points lower, inside the variation of three Runs. Not covered: the Golden Set
   has no conversation history, so how often follow-ups skipped the Read, and how often the guard now fixes it, is
   shown only by the tests with fake models; 36 cases and three Runs; one labeller behind the judge calibration.
+
+## 2026-10-20 Purpose-boundary candidate: prompt v2 and scope-aware recovery (#24)
+
+- **Change:** create `agentic_tutor_v2`, preserving the evaluated v1. It explicitly treats identity, personal and
+  internal-model/tool requests, greetings without a Course question and unrelated requests as Out of scope.
+  Interpretation uses the request and conversation context: mixed greeting/Course questions, technical Course
+  questions about models or tools, and contextual follow-ups retain the grounded path. The exact internal
+  Out of scope Sentence is unchanged.
+- **Recovery change:** keep one recovery attempt for a noncanonical reply with no Read or tool calls. The
+  instruction now permits the fixed Out of scope Sentence without a Read, or a grounded Course answer after a
+  Read. Repeated unsupported prose returns the existing error outcome, with the last reply in the diagnostic;
+  the screen shows its retry notice and excludes that failed exchange from successful history.
+- **Screen:** both tutors show “This tutor answers questions about GAIF, PEID, AITB and DTGS. Please ask a question
+  about one of these Courses.” for Out of scope, without an Answer heading, read-none row or citation footer.
+  Routed Tutor classification and prompts are unchanged.
+- **Deterministic checks:** 216 tests pass, with no provider calls or credentials. Red-green checks covered the
+  recorded v2 prompt, screenshot-like reply recovery, repeated no-Read failure and shared screen notice. Public
+  answer tests cover direct Out of scope without recovery, Course and contextual follow-up recovery through a
+  Read, retained conversation inputs and error scoring. Real Streamlit screen tests cover both tutors, retry
+  presentation, successful-history filtering, grounded answers and citation footers. Existing invalid/repeated
+  Read, limit, provider, Refusal, citation, scoring and judge tests pass. The ten purpose-boundary cases are kept
+  separately in `evaluation/purpose_boundary_cases.json`; scripted outcomes do not prove model classification.
+- **Evidence preserved:** Golden Set v1, frozen Course Material, human labels, earlier prompts, Run schema, judge
+  prompts/criteria and prior reports are unchanged. The last read-first baseline remains commit `5ae0257`,
+  `agentic_tutor_v1`, 85.2% End-to-end Success (83.3% to 86.1%) over three Runs of 36 cases in
+  `evaluation/runs/2026-10-19_205545_golden_set_v1_judge_v2_read_first_agentic`.
+- **Decision:** candidate implemented; real-model acceptance, Golden Set measurement and a final kept-or-abandoned
+  decision are pending #25. No candidate score or demo readiness is claimed. #25 must pin this implementation's
+  commit and recovery instruction, run the separate live purpose/context probe and three unchanged Golden Set
+  Runs, inspect regressions, compare the preserved baseline and update the report. Golden Set v1 has no prior
+  conversation, so contextual follow-ups require their separately reported probe. Improved learning remains
+  unmeasured; the Agentic Tutor selection in ADR 0003 is unchanged.
