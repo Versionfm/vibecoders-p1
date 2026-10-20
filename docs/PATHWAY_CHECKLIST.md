@@ -53,7 +53,7 @@ check date.
 
 | Item | Status | Evidence or what is left |
 | --- | --- | --- |
-| App: one number we can defend (the metric, why, what it does not cover) | Partial | Selected Agentic Tutor: 87.0% End-to-end Success (83.3% to 88.9%) over 3 Runs ([report](../evaluation/runs/2026-10-18_113506_golden_set_v1_judge_v2_agentic/report.md)); Routed Tutor comparison: 92.6%. [ADR 0003](adr/0003-keep-agentic-chat-for-teaching.md) explains the teaching rationale and the unmeasured conversational benefit. Still to include this distinction in the report. |
+| App: one number we can defend (the metric, why, what it does not cover) | Done (to put in the report) | The app as it runs now, the Agentic Tutor with the read-first guard: 85.2% End-to-end Success (83.3% to 86.1%) over 3 Runs ([report](../evaluation/runs/2026-10-19_205545_golden_set_v1_judge_v2_read_first_agentic/report.md)); before the guard 87.0%, Routed Tutor 92.6%. The metric, why, and what it does not cover: [report/05_our_number.md](../report/05_our_number.md). [ADR 0003](adr/0003-keep-agentic-chat-for-teaching.md) explains the teaching rationale. |
 | App: one change tried, measured, and kept or abandoned with a reason | Done | [ITERATION_LOG.md](../evaluation/ITERATION_LOG.md): Lightning → Super (Lightning abandoned: no citations), the professor's endpoint (not adopted), Nemotron → DeepSeek (kept). The Agentic Tutor was initially abandoned under #17, then selected for conversation on 2026-10-19 ([ADR 0003](adr/0003-keep-agentic-chat-for-teaching.md)); do not present the earlier abandonment as the current decision. |
 | Copilot: evidence for every steering file, at least two in the report | Partial | Commits that show the files changing: `9f83b7a` (evaluator skill and agent), `b4f8482` (both learn the Agentic Tutor). Still to collect: what changed *because of* `CLAUDE.md` and the skill (screenshots or before/after outputs). Context in [WORKFLOW_ITERATIONS.md](WORKFLOW_ITERATIONS.md). |
 
@@ -61,17 +61,17 @@ check date.
 
 | Item | Status | Evidence or what is left |
 | --- | --- | --- |
-| Deck: at most 6 slides, in order: idea · prompt · how we steered the coding assistant · failure taxonomy and Golden Set · our number · what we abandoned | Missing | Not started. |
-| Report: at most 5 pages, no appendices: screenshots, actual prompts, dataset, evaluation method and result, what did not work, repo link | Missing | Notes to draw on: [WORKFLOW_ITERATIONS.md](WORKFLOW_ITERATIONS.md), [ITERATION_LOG.md](../evaluation/ITERATION_LOG.md), the run reports. |
-| Repo: public at submission, link in the report, no commits after the deadline; secrets scan green; `.env` never in history | Partial | [secrets-scan.yml](../.github/workflows/secrets-scan.yml) exists; `.env` is not in the history of any branch (checked 2026-10-17). **The repository is private**, and `main` has only the first two commits: the work on `golden-set`, `course-tutor` and `agent-tutor` must be merged into `main` before it is made public. |
+| Deck: at most 6 slides, in order: idea · prompt · how we steered the coding assistant · failure taxonomy and Golden Set · our number · what we abandoned | Partial | Facts and draft bullets per slide in [report/](../report/README.md) (one file per slide). The deck itself is not made. |
+| Report: at most 5 pages, no appendices: screenshots, actual prompts, dataset, evaluation method and result, what did not work, repo link | Partial | Draft paragraphs, facts and app screenshots in [report/](../report/README.md); team roles still to write. The report itself is not written. |
+| Repo: public at submission, link in the report, no commits after the deadline; secrets scan green; `.env` never in history | Partial | [secrets-scan.yml](../.github/workflows/secrets-scan.yml) exists; `.env` is not in the history of any branch (checked 2026-10-17). **The repository is private** (checked 2026-10-19): make it public before submitting. The work is merged into `main` (PRs #19 and #22). |
 | Demo: rehearsed with a timer (8 min: about 4 slides, 4 live, plus 2 for questions) and a backup recording | Outside the repo | Rehearsal and recording not verified. Demo with `TUTOR=agentic` ([ADR 0003](adr/0003-keep-agentic-chat-for-teaching.md)); configure it explicitly because the code still falls back to `routed` when unset. |
 
 ## Open work, in order
 
 1. Confirm or rename the categories in `evaluation/FAILURE_TAXONOMY.md`.
 2. Screenshots of the steering evidence (sessions A, B2 and D2).
-3. Merge into `main`, make the repo public, check the secrets scan.
-4. Report, deck, rehearsal and backup recording.
+3. Make the repo public and check the secrets scan (the work is merged into `main`, PR #22, 2026-10-19).
+4. Report and deck from [report/](../report/README.md), rehearsal and backup recording.
 
 Done since 2026-10-17: the LLM judge (#7) and its baselines; Routed vs Agentic Tutor decided (#17); judge calibration (#8), with `judge_supported_v2` and the baseline judged again (92.6%).
 
