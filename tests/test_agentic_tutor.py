@@ -240,6 +240,13 @@ class ReadBeforeAnswerTest(unittest.TestCase):
         self.assertEqual(result.materials_read, ["PEID"])
         self.assertEqual(result.invalid_citations, [])
 
+    def test_recovery_names_the_current_question_not_the_first_one_in_history(self):
+        model = FakeChatModel(["From memory.", reads("GAIF"), ANSWER])
+        answer_question("What is adaline", model, tutor="agentic", history=self.HISTORY)
+        recovery = model.calls[1]["messages"][-1]["content"]
+        self.assertIn('"What is adaline"', recovery)
+        self.assertNotIn(QUESTION, recovery)
+
     def test_failed_recovery_is_an_error_with_no_successful_answer_and_no_third_call(self):
         model = FakeChatModel(["From memory [PEID-2.3].", "Still from memory [PEID-2.3]."])
         result = answer_question(QUESTION, model, tutor="agentic")

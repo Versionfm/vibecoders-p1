@@ -13,9 +13,11 @@ TEMPERATURE = 0.0
 UNKNOWN_COURSE = "Unknown Course."
 READ_LIMIT_REACHED = "Read limit reached."
 OUT_OF_SCOPE_SENTENCE = "This question is outside the four Courses."  # the Agentic Tutor's, given with no Read
-# Sent once when the model answers with no Read; the original request may be Out of scope.
+# Sent once when the model answers with no Read; the current request may be Out of scope. Quoted, because in a
+# multi-turn chat "the original request" was read as the first question of the conversation.
 READ_FIRST = (
-    "Reconsider the original student request using its meaning and the conversation context. If it is Out of "
+    "Reconsider the current student request, reproduced here as JSON: {question} using its meaning and the "
+    "conversation context. If it is Out of "
     "scope under the tutor's purpose, do not read anything and reply with exactly: "
     + OUT_OF_SCOPE_SENTENCE + " Otherwise, read the relevant Course Material with read_file before answering. "
     "Earlier answers in this conversation are context, not Course Material. Do not explain internal tools or execution."
@@ -70,7 +72,8 @@ def run_agentic(
                 run.error = ValueError(f"No Course Material read after recovery. Unsupported reply: {reply.content!r}")
                 return run
             sent_back = True
-            messages += [{"role": "assistant", "content": reply.content}, {"role": "user", "content": READ_FIRST}]
+            read_first = READ_FIRST.replace("{question}", json.dumps(question))
+            messages += [{"role": "assistant", "content": reply.content}, {"role": "user", "content": read_first}]
             continue
         if run.read_limit_hit or not reply.tool_calls:
             run.answer = reply.content
